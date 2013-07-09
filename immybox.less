@@ -1,23 +1,30 @@
-ul.immybox_results {
+.immybox_results {
   position: absolute;
   overflow: auto;
   max-height: 20em;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
   background-color: white;
   border: 1px solid #ccc;
 
-  li.choice {
-    cursor: pointer;
-
-    &.active {
-      background-color: #f1f1f1;
-    }
-  }
-
-  li.moreinfo, li.noresults {
+  p.moreinfo, p.noresults {
     color: #ccc;
     font-style: italic;
+  }
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      padding: 0 1em;
+
+      &.choice {
+        cursor: pointer;
+
+        &.active {
+          background-color: #f1f1f1;
+        }
+      }
+    }
   }
 }

@@ -43,7 +43,7 @@
       @selectChoiceByValue @element.val()
 
       id = nextId()
-      $('body').append "<ul id=#{id} class='#{pluginName}_results'></ul>"
+      $('body').append "<div id=#{id} class='#{pluginName}_results'></div>"
       @queryResultArea = $ "##{id}"
       @queryResultArea.hide()
 
@@ -72,11 +72,13 @@
             truncatedChoices = filteredChoices[0...@options.maxResults]
             difference = filteredChoices.length - truncatedChoices.length
             results = truncatedChoices.map (choice) -> "<li class='choice' data-value='#{esc choice.value}'>#{esc choice.text}</li>"
-            if difference > 0
-              results.push "<li class='moreinfo'>showing #{addCommas truncatedChoices.length} of #{addCommas filteredChoices.length}"
+            info = if difference > 0
+              "<p class='moreinfo'>showing #{addCommas truncatedChoices.length} of #{addCommas filteredChoices.length}</p>"
             else if results.length is 0
-              results.push "<li class='noresults'>no matches</li>"
-            @queryResultArea.html results.join "\n"
+              "<p class='noresults'>no matches</p>"
+            else
+              ''
+            @queryResultArea.html "<ul>#{results.join '\n'}</ul>#{info}"
             @queryResultArea.find('li.choice:first').addClass 'active'
 
       @element.on 'keydown', (e) =>
