@@ -6,8 +6,9 @@
     blankIfNull: true
     maxResults: 50
     filterFn: (query) ->
+      # default filer function does case insensitive "contains" matching
       (choice) ->
-        choice.text.indexOf(query) >= 0
+        choice.text.toLowerCase().indexOf(query.toLowerCase()) >= 0
 
   _id = 1
   nextId = -> "#{pluginName}_#{_id++}"
@@ -99,6 +100,9 @@
     # @element.on 'keydown'
     # select the highlighted choice
     doSelection: (e) =>
+      if e.which is 27
+        @display()
+        @hideResults()
       if @queryResultArea.is(':visible')
         switch e.which
           when 9 # tab
