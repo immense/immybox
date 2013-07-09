@@ -50,6 +50,7 @@
       @hideResults()
 
       @_val = @element.val() # to keep track of what WAS in the text box
+      @oldQuery = @_val
 
       @queryResultArea.on 'mousedown', 'li.choice', ->
         value = $(@).data 'value'
@@ -80,22 +81,11 @@
       query = @element.val()
       if @_val isnt query # user has changed input value, do a search and display the search results
         @_val = query
+        @oldQuery = query
         if query is ''
           @hideResults()
         else
-          filteredChoices = (@choices.filter @options.filterFn query)
-          truncatedChoices = filteredChoices[0...@options.maxResults]
-          difference = filteredChoices.length - truncatedChoices.length
-          results = truncatedChoices.map (choice) -> "<li class='choice' data-value='#{esc choice.value}'>#{esc choice.text}</li>"
-          info = if difference > 0
-            "<p class='moreinfo'>showing #{addCommas truncatedChoices.length} of #{addCommas filteredChoices.length}</p>"
-          else if results.length is 0
-            "<p class='noresults'>no matches</p>"
-          else
-            ''
-          @queryResultArea.html "<ul>#{results.join '\n'}</ul>#{info}"
-          @queryResultArea.find('li.choice:first').addClass 'active'
-          @showResults()
+          @insertFilteredChoiceElements query
 
     # @element.on 'keydown'
     # select the highlighted choice
@@ -116,6 +106,13 @@
           when 40 # down
             e.preventDefault() # prevent cursor from moving
             @highlightNextChoice()
+      else
+        switch e.which
+          when 40
+            if @selectedChoice?
+              @insertFilteredChoiceElements @oldQuery
+            else
+              @insertFilteredChoiceElements ''
 
     # @element.on 'blur'
     # revert or set to null after losing focus
@@ -137,6 +134,24 @@
     ###################
     # private methods #
     ###################
+
+    insertFilteredChoiceElements: (query) ->
+      if query is ''
+        filteredChoices = @choices
+      else
+        filteredChoices = (@choices.filter @options.filterFn @oldQuery)
+      truncatedChoices = filteredChoices[0...@options.maxResults]
+      difference = filteredChoices.length - truncatedChoices.length
+      results = truncatedChoices.map (choice) -> "<li class='choice' data-value='#{esc choice.value}'>#{esc choice.text}</li>"
+      info = if difference > 0
+        "<p class='moreinfo'>showing #{addCommas truncatedChoices.length} of #{addCommas filteredChoices.length}</p>"
+      else if results.length is 0
+        "<p class='noresults'>no matches</p>"
+      else
+        ''
+      @queryResultArea.html "<ul>#{results.join '\n'}</ul>#{info}"
+      @queryResultArea.find('li.choice:first').addClass 'active'
+      @showResults()
 
     positionResultsArea: ->
 
