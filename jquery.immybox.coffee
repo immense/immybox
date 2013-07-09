@@ -31,6 +31,7 @@
       self = @
 
       @element = $ element
+      @element.addClass pluginName
 
       @_defaults = defaults
       @_name = pluginName
@@ -204,14 +205,18 @@
     # select the first choice with matching value
     # Note: values should be unique
     selectChoiceByValue: (value) ->
+      oldValue = @getValue()
       if value? and value isnt ''
         matches = @choices.filter (choice) -> `choice.value == value` # use type coersive equals
         if matches[0]?
           @selectedChoice = matches[0]
         else
-          @selectedChoice = matches[0]
+          @selectedChoice = null
       else
         @selectedChoice = null
+      newValue = @getValue()
+      if newValue isnt oldValue
+        @element.trigger 'update', [newValue]
       @display()
 
     ####################
@@ -249,6 +254,8 @@
       @element.off 'keydown', @doSelection
       @element.off 'blur', @revert
       $(window).off 'resize', @reposition
+
+      @element.removeClass pluginName
 
       @queryResultArea.remove() # removes query result area and all related event listeners
       $.removeData @element[0], "plugin_#{pluginName}" # remove reference to plugin instance
