@@ -63,52 +63,75 @@
         highlightedChoice.removeClass 'active'
         $(@).addClass 'active'
 
-      @element.on 'keyup change search', =>
-        query = @element.val()
-        if @_val isnt query # user has changed input value, do a search and display the search results
-          @_val = query
-          if query is ''
-            @hideResults()
-          else
-            filteredChoices = (@choices.filter @options.filterFn query)
-            truncatedChoices = filteredChoices[0...@options.maxResults]
-            difference = filteredChoices.length - truncatedChoices.length
-            results = truncatedChoices.map (choice) -> "<li class='choice' data-value='#{esc choice.value}'>#{esc choice.text}</li>"
-            info = if difference > 0
-              "<p class='moreinfo'>showing #{addCommas truncatedChoices.length} of #{addCommas filteredChoices.length}</p>"
-            else if results.length is 0
-              "<p class='noresults'>no matches</p>"
-            else
-              ''
-            @queryResultArea.html "<ul>#{results.join '\n'}</ul>#{info}"
-            @queryResultArea.find('li.choice:first').addClass 'active'
-            @showResults()
+      @element.on 'keyup change search', @doQuery
+      @element.on 'keydown', @doSelection
+      @element.on 'blur', @revert
+      $(window).on 'resize', @reposition
 
-      @element.on 'keydown', (e) =>
-        if @queryResultArea.is(':visible')
-          switch e.which
-            when 9 # tab
-              @selectHighlightedChoice()
-            when 13 # enter
-              e.preventDefault() # prevent form from submitting (i think; test this!)
-              @selectHighlightedChoice()
-            when 38 # up
-              e.preventDefault() # prevent cursor from moving
-              @highlightPreviousChoice()
-            when 40 # down
-              e.preventDefault() # prevent cursor from moving
-              @highlightNextChoice()
+    ###################
+    # event listeners #
+    ###################
 
-      @element.on 'blur', =>
-        if @queryResultArea.is(':visible')
-          @display()
+    # @element.on 'keyup change search'
+    # perform a query on the choices
+    doQuery: =>
+      query = @element.val()
+      if @_val isnt query # user has changed input value, do a search and display the search results
+        @_val = query
+        if query is ''
           @hideResults()
-        else if @element.val() is ''
-          @selectChoiceByValue null
+        else
+          filteredChoices = (@choices.filter @options.filterFn query)
+          truncatedChoices = filteredChoices[0...@options.maxResults]
+          difference = filteredChoices.length - truncatedChoices.length
+          results = truncatedChoices.map (choice) -> "<li class='choice' data-value='#{esc choice.value}'>#{esc choice.text}</li>"
+          info = if difference > 0
+            "<p class='moreinfo'>showing #{addCommas truncatedChoices.length} of #{addCommas filteredChoices.length}</p>"
+          else if results.length is 0
+            "<p class='noresults'>no matches</p>"
+          else
+            ''
+          @queryResultArea.html "<ul>#{results.join '\n'}</ul>#{info}"
+          @queryResultArea.find('li.choice:first').addClass 'active'
+          @showResults()
 
-      $(window).on 'resize', =>
-        if @queryResultArea.is(':visible')
-          @positionResultsArea()
+    # @element.on 'keydown'
+    # select the highlighted choice
+    doSelection: (e) =>
+      if @queryResultArea.is(':visible')
+        switch e.which
+          when 9 # tab
+            @selectHighlightedChoice()
+          when 13 # enter
+            e.preventDefault() # prevent form from submitting (i think; test this!)
+            @selectHighlightedChoice()
+          when 38 # up
+            e.preventDefault() # prevent cursor from moving
+            @highlightPreviousChoice()
+          when 40 # down
+            e.preventDefault() # prevent cursor from moving
+            @highlightNextChoice()
+
+    # @element.on 'blur'
+    # revert or set to null after losing focus
+    revert: =>
+      if @queryResultArea.is(':visible')
+        # revert to last set value
+        @display()
+        @hideResults()
+      else if @element.val() is ''
+        # set to null
+        @selectChoiceByValue null
+
+    # $(window).on 'resize'
+    # if visible, re-position the results area on window resize
+    reposition: =>
+      if @queryResultArea.is(':visible')
+        @positionResultsArea()
+
+    ###################
+    # private methods #
+    ###################
 
     positionResultsArea: ->
 
@@ -191,6 +214,12 @@
         @selectedChoice = null
       @display()
 
+    ####################
+    # "public" methods #
+    ####################
+
+    publicMethods: ['getChoices', 'setChoices', 'getValue', 'setValue', 'destroy']
+
     # return array of choices
     getChoices: ->
       @choices
@@ -213,6 +242,17 @@
       @selectChoiceByValue newValue
       @getValue()
 
+    # destroy this instance of the plugin
+    destroy: ->
+      #remove event listeners
+      @element.off 'keyup change search', @doQuery
+      @element.off 'keydown', @doSelection
+      @element.off 'blur', @revert
+      $(window).off 'resize', @reposition
+
+      @queryResultArea.remove() # removes query result area and all related event listeners
+      $.removeData @element[0], "plugin_#{pluginName}" # remove reference to plugin instance
+
   $.fn[pluginName] = (options) ->
     args = Array.prototype.slice.call(arguments, 1)
     outputs = []
@@ -221,7 +261,10 @@
         if options? and typeof options is 'string'
           plugin = $.data(this, "plugin_" + pluginName)
           method = options
-          outputs.push plugin[method].apply plugin, args
+          if method in plugin.publicMethods
+            outputs.push plugin[method].apply plugin, args
+          else
+            throw new Error "#{pluginName} has no method '#{method}'"
       else
         outputs.push $.data this, "plugin_" + pluginName, new ImmyBox this, options
 
