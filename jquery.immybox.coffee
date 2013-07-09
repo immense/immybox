@@ -3,7 +3,7 @@
   pluginName = "immybox"
   defaults =
     choices: []
-    # blankIfNull: true
+    blankIfNull: true
     maxResults: 50
     filterFn: (query) ->
       (choice) ->
@@ -45,7 +45,7 @@
       id = nextId()
       $('body').append "<div id=#{id} class='#{pluginName}_results'></div>"
       @queryResultArea = $ "##{id}"
-      @queryResultArea.hide()
+      @hideResults()
 
       @_val = @element.val() # to keep track of what WAS in the text box
 
@@ -54,6 +54,9 @@
         self.selectChoiceByValue value
         self.hideResults()
         @_val = self.element.val()
+        setTimeout -> # wait for mouseup event a focus to be lost
+          self.element.focus()
+        , 100
 
       @queryResultArea.on 'mouseenter', 'li.choice', ->
         highlightedChoice = self.queryResultArea.find('li.choice.active')
@@ -67,7 +70,6 @@
           if query is ''
             @hideResults()
           else
-            @showResults()
             filteredChoices = (@choices.filter @options.filterFn query)
             truncatedChoices = filteredChoices[0...@options.maxResults]
             difference = filteredChoices.length - truncatedChoices.length
@@ -80,6 +82,7 @@
               ''
             @queryResultArea.html "<ul>#{results.join '\n'}</ul>#{info}"
             @queryResultArea.find('li.choice:first').addClass 'active'
+            @showResults()
 
       @element.on 'keydown', (e) =>
         if @queryResultArea.is(':visible')
@@ -108,31 +111,49 @@
           @positionResultsArea()
 
     positionResultsArea: ->
-      # TODO make this detect screen edge; go up if at bottom
-      offset = @element.offset()
-      height = @element.outerHeight()
-      width = @element.outerWidth() - 2 # TODO make this more robust by detecting border widths and such
-      @queryResultArea.css top: offset.top + height, left: offset.left, width: width
+
+      # gather some info
+      inputOffset = @element.offset()
+      inputHeight = @element.outerHeight()
+      inputWidth = @element.outerWidth()
+      resultsHeight = @queryResultArea.outerHeight()
+      windowHeight = $(window).height()
+
+      # set the dimmensions and position
+      @queryResultArea.outerWidth inputWidth
+      @queryResultArea.css left: inputOffset.left
+
+      if inputOffset.top + inputHeight + resultsHeight > windowHeight
+        @queryResultArea.css top: inputOffset.top - resultsHeight
+      else
+        @queryResultArea.css top: inputOffset.top + inputHeight
+
+    getHighlightedChoice: ->
+      choice = @queryResultArea.find('li.choice.active')
+      if choice.length is 1
+        choice
+      else
+        null
 
     highlightNextChoice: ->
-      highlightedChoice = @queryResultArea.find('li.choice.active')
-      if highlightedChoice.length is 1
+      highlightedChoice = @getHighlightedChoice()
+      if highlightedChoice?
         nextChoice = highlightedChoice.next('li.choice')
         if nextChoice.length is 1
           highlightedChoice.removeClass 'active'
           nextChoice.addClass 'active'
 
     highlightPreviousChoice: ->
-      highlightedChoice = @queryResultArea.find('li.choice.active')
-      if highlightedChoice.length is 1
+      highlightedChoice = @getHighlightedChoice()
+      if highlightedChoice?
         previousChoice = highlightedChoice.prev('li.choice')
         if previousChoice.length is 1
           highlightedChoice.removeClass 'active'
           previousChoice.addClass 'active'
 
     selectHighlightedChoice: ->
-      highlightedChoice = @queryResultArea.find('li.choice.active')
-      if highlightedChoice.length is 1
+      highlightedChoice = @getHighlightedChoice()
+      if highlightedChoice?
         value = highlightedChoice.data 'value'
         @selectChoiceByValue value
         @_val = @element.val()
@@ -161,7 +182,7 @@
     # Note: values should be unique
     selectChoiceByValue: (value) ->
       if value? and value isnt ''
-        matches = @choices.filter (choice) -> `choice.value == value`
+        matches = @choices.filter (choice) -> `choice.value == value` # use type coersive equals
         if matches[0]?
           @selectedChoice = matches[0]
         else
@@ -169,18 +190,6 @@
       else
         @selectedChoice = null
       @display()
-
-    # select the first choice with matching text
-    # I don't think we should use this...
-    # selectChoiceByText: (text) ->
-    #   if text? and text isnt ''
-    #     matches = @choices.filter (choice) -> `choice.text == text`
-    #     if matches[0]?
-    #       @selectedChoice = matches[0]
-    #       @display()
-    #     else
-    #       @selectedChoice = matches[0]
-    #       @display()
 
     # return array of choices
     getChoices: ->
