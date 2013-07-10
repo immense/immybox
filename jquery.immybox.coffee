@@ -251,7 +251,8 @@
     # update the array of choices
     setChoices: (newChoices) ->
       @choices = newChoices
-      @selectChoiceByValue @selectedChoice.value
+      if @selectedChoice?
+        @selectChoiceByValue @selectedChoice.value
       newChoices
 
     # get the value of the currently selected choice
