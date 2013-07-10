@@ -145,9 +145,9 @@
       truncatedChoices = filteredChoices[0...@options.maxResults]
       difference = filteredChoices.length - truncatedChoices.length
       results = truncatedChoices.map (choice) -> "<li class='choice' data-value='#{esc choice.value}'>#{esc choice.text}</li>"
-      info = if difference > 0
-        "<p class='moreinfo'>showing #{addCommas truncatedChoices.length} of #{addCommas filteredChoices.length}</p>"
-      else if results.length is 0
+      # info = if difference > 0
+      #   "<p class='moreinfo'>showing #{addCommas truncatedChoices.length} of #{addCommas filteredChoices.length}</p>"
+      info = if results.length is 0
         "<p class='noresults'>no matches</p>"
       else
         ''
