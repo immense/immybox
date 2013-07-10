@@ -103,9 +103,11 @@
           when 38 # up
             e.preventDefault() # prevent cursor from moving
             @highlightPreviousChoice()
+            @scroll()
           when 40 # down
             e.preventDefault() # prevent cursor from moving
             @highlightNextChoice()
+            @scroll()
       else
         switch e.which
           when 40
@@ -152,6 +154,18 @@
       @queryResultArea.html "<ul>#{results.join '\n'}</ul>#{info}"
       @queryResultArea.find('li.choice:first').addClass 'active'
       @showResults()
+
+    scroll: ->
+      resultsHeight = @queryResultArea.height()
+      resultsTop = @queryResultArea.scrollTop()
+      highlightedChoice = @getHighlightedChoice()
+      highlightedChoiceTop = highlightedChoice.position().top
+      highlightedChoiceHeight = highlightedChoice.height()
+
+      if highlightedChoiceTop + highlightedChoiceHeight <= 0
+        @queryResultArea.scrollTop resultsTop - highlightedChoiceHeight
+      else if (highlightedChoiceTop + highlightedChoiceHeight) > resultsHeight
+        @queryResultArea.scrollTop highlightedChoiceTop + highlightedChoiceHeight - resultsHeight + resultsTop
 
     positionResultsArea: ->
 
@@ -205,6 +219,7 @@
     # show the results area
     showResults: ->
       @queryResultArea.show()
+      @queryResultArea.scrollTop 0
       @positionResultsArea()
 
     # hide the results area
