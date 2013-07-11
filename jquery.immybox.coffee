@@ -110,7 +110,8 @@
             @scroll()
       else
         switch e.which
-          when 40
+          when 40 # down
+            e.preventDefault() # prevent cursor from moving
             if @selectedChoice?
               @insertFilteredChoiceElements @oldQuery
             else
