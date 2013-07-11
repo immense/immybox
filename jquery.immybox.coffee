@@ -158,14 +158,17 @@
     scroll: ->
       resultsHeight = @queryResultArea.height()
       resultsTop = @queryResultArea.scrollTop()
-      highlightedChoice = @getHighlightedChoice()
-      highlightedChoiceTop = highlightedChoice.position().top
-      highlightedChoiceHeight = highlightedChoice.height()
+      resultsBottom = resultsTop + resultsHeight
 
-      if highlightedChoiceTop + highlightedChoiceHeight <= 0
-        @queryResultArea.scrollTop resultsTop - highlightedChoiceHeight
-      else if (highlightedChoiceTop + highlightedChoiceHeight) > resultsHeight
-        @queryResultArea.scrollTop highlightedChoiceTop + highlightedChoiceHeight - resultsHeight + resultsTop
+      highlightedChoice = @getHighlightedChoice()
+      highlightedChoiceHeight = highlightedChoice.outerHeight()
+      highlightedChoiceTop = highlightedChoice.position().top + resultsTop
+      highlightedChoiceBottom = highlightedChoiceTop + highlightedChoiceHeight
+
+      if highlightedChoiceTop < resultsTop
+        @queryResultArea.scrollTop highlightedChoiceTop
+      if highlightedChoiceBottom > resultsBottom
+        @queryResultArea.scrollTop highlightedChoiceBottom - resultsHeight
 
     positionResultsArea: ->
 
