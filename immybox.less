@@ -16,7 +16,14 @@
 .immybox.immybox_witharrow[type="text"] {
   z-index: 5;
   padding-right: 23px;
+
   width: 189px;
+  &.input-mini       { width: 43px; }
+  &.input-small      { width: 73px; }
+  &.input-medium     { width: 133px; }
+  &.input-large      { width: 193px; }
+  &.input-xlarge     { width: 253px; }
+  &.input-xxlarge    { width: 513px; }
 }
 
 .immybox_results {
@@ -39,7 +46,7 @@
     padding: 0;
 
     li {
-      padding: 0 1em;
+      padding: 0.25em 1em;
 
       &.immybox_choice {
         cursor: pointer;

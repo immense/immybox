@@ -47,15 +47,14 @@
 
       if @options.showArrow
         @element.addClass "#{pluginName}_witharrow"
+        @downArrow = $ "<i class='#{pluginName}_downarrow icon-chevron-down'></i>"
+        @element.after @downArrow
+        @downArrow.on 'click', @openResults
 
       # init with the value that's in the text box
       @selectChoiceByValue @element.val()
 
       @queryResultArea = $ "<div class='#{pluginName}_results'></div>"
-
-      if @options.showArrow
-        @downArrow = $ "<i class='#{pluginName}_downarrow icon-chevron-down'></i>"
-        @element.after @downArrow
 
       @_val = @element.val() # to keep track of what WAS in the text box
       @oldQuery = @_val
@@ -80,9 +79,6 @@
 
       if @options.openOnClick
         @element.on 'click', @openResults
-
-      if @options.showArrow
-        @downArrow.on 'click', @openResults
 
       $(window).on 'resize', @reposition
 
@@ -153,11 +149,11 @@
     # @downArrow.on 'click'
     # show the results box on click
     openResults: =>
-      @element.focus()
       if @selectedChoice?
         @insertFilteredChoiceElements @oldQuery
       else
         @insertFilteredChoiceElements ''
+      @element.focus()
 
     ###################
     # private methods #
