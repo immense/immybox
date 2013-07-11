@@ -5,31 +5,30 @@
     choices: []
     blankIfNull: true
     maxResults: 50
+    showArrow: true
+    openOnClick: true
     filterFn: (query) ->
       # default filter function does case insensitive "contains" matching
       (choice) ->
         choice.text.toLowerCase().indexOf(query.toLowerCase()) >= 0
-    highlightFn: (query, text) ->
-      i = text.toLowerCase().indexOf query.toLowerCase()
+    formatChoice: (choice, query) ->
+      i = choice.text.toLowerCase().indexOf query.toLowerCase()
       if i >= 0 # should always be since we only attempt to highlight things that passed the filterFn
-        matchedText = text[i...i+query.length]
-        [head, tail...] = text.split(matchedText)
+        matchedText = choice.text[i...i+query.length]
+        [head, tail...] = choice.text.split(matchedText)
         "#{head}<span class='highlight'>#{matchedText}</span>#{tail.join matchedText}"
       else
-        text
+        choice.text
 
-  addCommas = (nStr) ->
-    nStr += '';
-    x = nStr.split '.'
-    x1 = x[0]
-    x2 = if x.length > 1 then '.' + x[1] else ''
-    rgx = /(\d+)(\d{3})/
-    while (rgx.test(x1))
-      x1 = x1.replace rgx, '$1' + ',' + '$2'
-    return x1 + x2
-
-  # TODO get a proper escape function
-  esc = (x) -> x
+  # addCommas = (nStr) ->
+  #   nStr += '';
+  #   x = nStr.split '.'
+  #   x1 = x[0]
+  #   x2 = if x.length > 1 then '.' + x[1] else ''
+  #   rgx = /(\d+)(\d{3})/
+  #   while (rgx.test(x1))
+  #     x1 = x1.replace rgx, '$1' + ',' + '$2'
+  #   return x1 + x2
 
   class ImmyBox
 
@@ -51,6 +50,10 @@
 
       @queryResultArea = $ "<div class='#{pluginName}_results'></div>"
 
+      if @options.showArrow
+        @downArrow = $ "<i class='#{pluginName}_downarrow icon-chevron-down'></i>"
+        @element.after @downArrow
+
       @_val = @element.val() # to keep track of what WAS in the text box
       @oldQuery = @_val
 
@@ -71,6 +74,13 @@
       @element.on 'keyup change search', @doQuery
       @element.on 'keydown', @doSelection
       @element.on 'blur', @revert
+
+      if @options.openOnClick
+        @element.on 'click', @openResults
+
+      if @options.showArrow
+        @downArrow.on 'click', @openResults
+
       $(window).on 'resize', @reposition
 
     ###################
@@ -136,6 +146,16 @@
       if @queryResultArea.is(':visible')
         @positionResultsArea()
 
+    # @element.on 'click'
+    # @downArrow.on 'click'
+    # show the results box on click
+    openResults: =>
+      @element.focus()
+      if @selectedChoice?
+        @insertFilteredChoiceElements @oldQuery
+      else
+        @insertFilteredChoiceElements ''
+
     ###################
     # private methods #
     ###################
@@ -146,17 +166,33 @@
       else
         filteredChoices = (@choices.filter @options.filterFn @oldQuery)
       truncatedChoices = filteredChoices[0...@options.maxResults]
-      difference = filteredChoices.length - truncatedChoices.length
-      hl = @options.highlightFn
-      results = truncatedChoices.map (choice) -> "<li class='#{pluginName}_choice' data-value='#{esc choice.value}'>#{esc hl query, choice.text}</li>"
-      # info = if difference > 0
-      #   "<p class='#{pluginName}_moreinfo'>showing #{addCommas truncatedChoices.length} of #{addCommas filteredChoices.length}</p>"
-      info = if results.length is 0
-        "<p class='#{pluginName}_noresults'>no matches</p>"
+      # difference = filteredChoices.length - truncatedChoices.length
+
+      format = @options.formatChoice
+
+      results = truncatedChoices.map (choice) ->
+        # "<li class='#{pluginName}_choice' data-value='#{esc choice.value}'>#{esc hl query, choice.text}</li>"
+        li = $ "<li class='#{pluginName}_choice'></li>"
+        li.attr 'data-value', choice.value
+        li.html format choice, query
+        return li
+
+      if results.length is 0
+        info = $ "<p class='#{pluginName}_noresults'>no matches</p>"
+
+        @queryResultArea
+          .empty()
+          .append(info)
       else
-        ''
-      @queryResultArea.html "<ul>#{results.join '\n'}</ul>#{info}"
-      @queryResultArea.find("li.#{pluginName}_choice:first").addClass 'active'
+        results[0].addClass 'active'
+
+        list = $('<ul></ul>')
+          .append(results)
+
+        @queryResultArea
+          .empty()
+          .append(list)
+
       @showResults()
 
     scroll: ->
@@ -295,9 +331,16 @@
       @element.off 'keyup change search', @doQuery
       @element.off 'keydown', @doSelection
       @element.off 'blur', @revert
+
+      if @options.openOnClick
+        @element.off 'click', @openResults
+
       $(window).off 'resize', @reposition
 
       @element.removeClass pluginName
+
+      if @options.showArrow
+        @downArrow.remove() # removes down arrow element and all related event listeners
 
       @queryResultArea.remove() # removes query result area and all related event listeners
       $.removeData @element[0], "plugin_#{pluginName}" # remove reference to plugin instance
