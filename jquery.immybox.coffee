@@ -10,9 +10,6 @@
       (choice) ->
         choice.text.toLowerCase().indexOf(query.toLowerCase()) >= 0
 
-  _id = 1
-  nextId = -> "#{pluginName}_#{_id++}"
-
   addCommas = (nStr) ->
     nStr += '';
     x = nStr.split '.'
@@ -44,15 +41,15 @@
       # init with the value that's in the text box
       @selectChoiceByValue @element.val()
 
-      id = nextId()
-      $('body').append "<div id=#{id} class='#{pluginName}_results'></div>"
-      @queryResultArea = $ "##{id}"
-      @hideResults()
+      @queryResultArea = $ "<div class='#{pluginName}_results'></div>"
+      # $('body').append "<div id=#{id} class='#{pluginName}_results'></div>"
+      # @queryResultArea = $ "##{id}"
+      # @hideResults()
 
       @_val = @element.val() # to keep track of what WAS in the text box
       @oldQuery = @_val
 
-      @queryResultArea.on 'mousedown', 'li.choice', ->
+      @queryResultArea.on 'mousedown', "li.#{pluginName}_choice", ->
         value = $(@).data 'value'
         self.selectChoiceByValue value
         self.hideResults()
@@ -61,8 +58,8 @@
           self.element.focus()
         , 100
 
-      @queryResultArea.on 'mouseenter', 'li.choice', ->
-        highlightedChoice = self.queryResultArea.find('li.choice.active')
+      @queryResultArea.on 'mouseenter', "li.#{pluginName}_choice", ->
+        highlightedChoice = self.queryResultArea.find("li.#{pluginName}_choice.active")
         highlightedChoice.removeClass 'active'
         $(@).addClass 'active'
 
@@ -145,15 +142,15 @@
         filteredChoices = (@choices.filter @options.filterFn @oldQuery)
       truncatedChoices = filteredChoices[0...@options.maxResults]
       difference = filteredChoices.length - truncatedChoices.length
-      results = truncatedChoices.map (choice) -> "<li class='choice' data-value='#{esc choice.value}'>#{esc choice.text}</li>"
+      results = truncatedChoices.map (choice) -> "<li class='#{pluginName}_choice' data-value='#{esc choice.value}'>#{esc choice.text}</li>"
       # info = if difference > 0
-      #   "<p class='moreinfo'>showing #{addCommas truncatedChoices.length} of #{addCommas filteredChoices.length}</p>"
+      #   "<p class='#{pluginName}_moreinfo'>showing #{addCommas truncatedChoices.length} of #{addCommas filteredChoices.length}</p>"
       info = if results.length is 0
-        "<p class='noresults'>no matches</p>"
+        "<p class='#{pluginName}_noresults'>no matches</p>"
       else
         ''
       @queryResultArea.html "<ul>#{results.join '\n'}</ul>#{info}"
-      @queryResultArea.find('li.choice:first').addClass 'active'
+      @queryResultArea.find("li.#{pluginName}_choice:first").addClass 'active'
       @showResults()
 
     scroll: ->
@@ -190,7 +187,7 @@
         @queryResultArea.css top: inputOffset.top + inputHeight
 
     getHighlightedChoice: ->
-      choice = @queryResultArea.find('li.choice.active')
+      choice = @queryResultArea.find("li.#{pluginName}_choice.active")
       if choice.length is 1
         choice
       else
@@ -199,7 +196,7 @@
     highlightNextChoice: ->
       highlightedChoice = @getHighlightedChoice()
       if highlightedChoice?
-        nextChoice = highlightedChoice.next('li.choice')
+        nextChoice = highlightedChoice.next("li.#{pluginName}_choice")
         if nextChoice.length is 1
           highlightedChoice.removeClass 'active'
           nextChoice.addClass 'active'
@@ -207,7 +204,7 @@
     highlightPreviousChoice: ->
       highlightedChoice = @getHighlightedChoice()
       if highlightedChoice?
-        previousChoice = highlightedChoice.prev('li.choice')
+        previousChoice = highlightedChoice.prev("li.#{pluginName}_choice")
         if previousChoice.length is 1
           highlightedChoice.removeClass 'active'
           previousChoice.addClass 'active'
@@ -222,13 +219,13 @@
 
     # show the results area
     showResults: ->
-      @queryResultArea.show()
+      $('body').append @queryResultArea
       @queryResultArea.scrollTop 0
       @positionResultsArea()
 
     # hide the results area
     hideResults: ->
-      @queryResultArea.hide()
+      @queryResultArea.detach()
 
     # display the selected choice in the input box
     display: ->
