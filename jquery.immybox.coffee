@@ -13,8 +13,8 @@
       i = text.toLowerCase().indexOf query.toLowerCase()
       if i >= 0 # should always be since we only attempt to highlight things that passed the filterFn
         matchedText = text[i...i+query.length]
-        [head, tail] = text.split(matchedText)
-        "#{head}<span class='highlight'>#{matchedText}</span>#{tail}"
+        [head, tail...] = text.split(matchedText)
+        "#{head}<span class='highlight'>#{matchedText}</span>#{tail.join matchedText}"
       else
         text
 
