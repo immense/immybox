@@ -45,6 +45,9 @@
       @choices = @options.choices
       @selectedChoice = null
 
+      if @options.showArrow
+        @element.addClass "#{pluginName}_witharrow"
+
       # init with the value that's in the text box
       @selectChoiceByValue @element.val()
 
@@ -340,6 +343,7 @@
       @element.removeClass pluginName
 
       if @options.showArrow
+        @element.removeClass "#{pluginName}_witharrow"
         @downArrow.remove() # removes down arrow element and all related event listeners
 
       @queryResultArea.remove() # removes query result area and all related event listeners
