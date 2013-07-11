@@ -6,9 +6,17 @@
     blankIfNull: true
     maxResults: 50
     filterFn: (query) ->
-      # default filer function does case insensitive "contains" matching
+      # default filter function does case insensitive "contains" matching
       (choice) ->
         choice.text.toLowerCase().indexOf(query.toLowerCase()) >= 0
+    highlightFn: (query, text) ->
+      i = text.toLowerCase().indexOf query.toLowerCase()
+      if i >= 0 # should always be since we only attempt to highlight things that passed the filterFn
+        matchedText = text[i...i+query.length]
+        [head, tail] = text.split(matchedText)
+        "#{head}<span class='highlight'>#{matchedText}</span>#{tail}"
+      else
+        text
 
   addCommas = (nStr) ->
     nStr += '';
@@ -42,9 +50,6 @@
       @selectChoiceByValue @element.val()
 
       @queryResultArea = $ "<div class='#{pluginName}_results'></div>"
-      # $('body').append "<div id=#{id} class='#{pluginName}_results'></div>"
-      # @queryResultArea = $ "##{id}"
-      # @hideResults()
 
       @_val = @element.val() # to keep track of what WAS in the text box
       @oldQuery = @_val
@@ -142,7 +147,8 @@
         filteredChoices = (@choices.filter @options.filterFn @oldQuery)
       truncatedChoices = filteredChoices[0...@options.maxResults]
       difference = filteredChoices.length - truncatedChoices.length
-      results = truncatedChoices.map (choice) -> "<li class='#{pluginName}_choice' data-value='#{esc choice.value}'>#{esc choice.text}</li>"
+      hl = @options.highlightFn
+      results = truncatedChoices.map (choice) -> "<li class='#{pluginName}_choice' data-value='#{esc choice.value}'>#{esc hl query, choice.text}</li>"
       # info = if difference > 0
       #   "<p class='#{pluginName}_moreinfo'>showing #{addCommas truncatedChoices.length} of #{addCommas filteredChoices.length}</p>"
       info = if results.length is 0
