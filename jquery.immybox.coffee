@@ -147,6 +147,7 @@
     # show the results box on click
     openResults: (e) =>
       e.stopPropagation() # stop the event from bubbling up and the body click event catching it
+      @revertOtherInstances() # because the event isn't bubbling, other instances won't revert
       if @selectedChoice?
         @insertFilteredChoiceElements @oldQuery
       else
@@ -156,6 +157,7 @@
     # toggle the results box on click
     toggleResults: (e) =>
       e.stopPropagation() # stop the event from bubbling up and the body click event catching it
+      @revertOtherInstances() # because the event isn't bubbling, other instances won't revert
       if @queryResultArea.is(':visible')
         @hideResults()
       else
@@ -310,6 +312,13 @@
         @element.trigger 'update', [newValue]
       @display()
 
+    revertOtherInstances: ->
+      self = @
+      $('.'+pluginName).each ->
+        otherPlugin = $.data(@, "plugin_" + pluginName)
+        if otherPlugin isnt self
+          otherPlugin.revert()
+
     ####################
     # "public" methods #
     ####################
@@ -364,16 +373,16 @@
     args = Array.prototype.slice.call(arguments, 1)
     outputs = []
     @each ->
-      if $.data(this, "plugin_" + pluginName)
+      if $.data(@, "plugin_" + pluginName)
         if options? and typeof options is 'string'
-          plugin = $.data(this, "plugin_" + pluginName)
+          plugin = $.data(@, "plugin_" + pluginName)
           method = options
           if method in plugin.publicMethods
             outputs.push plugin[method].apply plugin, args
           else
             throw new Error "#{pluginName} has no method '#{method}'"
       else
-        outputs.push $.data this, "plugin_" + pluginName, new ImmyBox this, options
+        outputs.push $.data @, "plugin_" + pluginName, new ImmyBox @, options
 
     return outputs
 
