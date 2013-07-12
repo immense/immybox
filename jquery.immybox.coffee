@@ -49,7 +49,10 @@
         @element.addClass "#{pluginName}_witharrow"
         @downArrow = $ "<i class='#{pluginName}_downarrow icon-chevron-down'></i>"
         @element.after @downArrow
-        @downArrow.on 'click', @openResults
+        @downArrow.on 'click', @toggleResults
+
+      if @options.openOnClick
+        @element.on 'click', @openResults
 
       # init with the value that's in the text box
       @selectChoiceByValue @element.val()
@@ -59,14 +62,12 @@
       @_val = @element.val() # to keep track of what WAS in the text box
       @oldQuery = @_val
 
-      @queryResultArea.on 'mousedown', "li.#{pluginName}_choice", ->
+      @queryResultArea.on 'click', "li.#{pluginName}_choice", ->
         value = $(@).data 'value'
         self.selectChoiceByValue value
         self.hideResults()
         @_val = self.element.val()
-        setTimeout -> # wait for mouseup event a focus to be lost
-          self.element.focus()
-        , 100
+        self.element.focus()
 
       @queryResultArea.on 'mouseenter', "li.#{pluginName}_choice", ->
         highlightedChoice = self.queryResultArea.find("li.#{pluginName}_choice.active")
@@ -75,11 +76,8 @@
 
       @element.on 'keyup change search', @doQuery
       @element.on 'keydown', @doSelection
-      @element.on 'blur', @revert
 
-      if @options.openOnClick
-        @element.on 'click', @openResults
-
+      $('body').on 'click', @revert
       $(window).on 'resize', @reposition
 
     ###################
@@ -146,13 +144,26 @@
         @positionResultsArea()
 
     # @element.on 'click'
-    # @downArrow.on 'click'
     # show the results box on click
-    openResults: =>
+    openResults: (e) =>
+      e.stopPropagation() # stop the event from bubbling up and the body click event catching it
       if @selectedChoice?
         @insertFilteredChoiceElements @oldQuery
       else
         @insertFilteredChoiceElements ''
+
+    # @downArrow.on 'click'
+    # toggle the results box on click
+    toggleResults: (e) =>
+      e.stopPropagation() # stop the event from bubbling up and the body click event catching it
+      if @queryResultArea.is(':visible')
+        @hideResults()
+      else
+        if @selectedChoice?
+          @insertFilteredChoiceElements @oldQuery
+        else
+          @insertFilteredChoiceElements ''
+
       @element.focus()
 
     ###################
@@ -169,11 +180,15 @@
 
       format = @options.formatChoice
 
-      results = truncatedChoices.map (choice) ->
-        # "<li class='#{pluginName}_choice' data-value='#{esc choice.value}'>#{esc hl query, choice.text}</li>"
+      selectedOne = false
+      results = truncatedChoices.map (choice) =>
         li = $ "<li class='#{pluginName}_choice'></li>"
         li.attr 'data-value', choice.value
         li.html format choice, query
+        if choice is @selectedChoice
+          console.log 'found selected choice!'
+          selectedOne = true
+          li.addClass 'active'
         return li
 
       if results.length is 0
@@ -183,7 +198,8 @@
           .empty()
           .append(info)
       else
-        results[0].addClass 'active'
+        if not selectedOne
+          results[0].addClass 'active'
 
         list = $('<ul></ul>')
           .append(results)
@@ -261,7 +277,7 @@
     # show the results area
     showResults: ->
       $('body').append @queryResultArea
-      @queryResultArea.scrollTop 0
+      @scroll()
       @positionResultsArea()
 
     # hide the results area
@@ -329,11 +345,11 @@
       #remove event listeners
       @element.off 'keyup change search', @doQuery
       @element.off 'keydown', @doSelection
-      @element.off 'blur', @revert
 
       if @options.openOnClick
         @element.off 'click', @openResults
 
+      $('body').off 'click', @revert
       $(window).off 'resize', @reposition
 
       @element.removeClass pluginName
