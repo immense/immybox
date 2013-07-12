@@ -186,7 +186,6 @@
         li.attr 'data-value', choice.value
         li.html format choice, query
         if choice is @selectedChoice
-          console.log 'found selected choice!'
           selectedOne = true
           li.addClass 'active'
         return li
