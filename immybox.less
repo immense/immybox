@@ -2,7 +2,6 @@
   margin-left: -2.25em;
   font-size: 10px;
   color: #bdbdbd;
-  border-left: 1px solid #bdbdbd;
   display: inline-block;
   padding: 0 0.5em;
   line-height: 2.5em;
@@ -12,11 +11,11 @@
     color: #000;
   }
 
-  user-select: none;
   -o-user-select:none;
   -moz-user-select: none;
   -khtml-user-select: none;
   -webkit-user-select: none;
+  user-select: none;
 }
 
 .immybox.immybox_witharrow[type="text"] {
@@ -53,11 +52,12 @@
 
     li {
       padding: 0.25em 1em;
-      user-select: none;
+
       -o-user-select:none;
       -moz-user-select: none;
       -khtml-user-select: none;
       -webkit-user-select: none;
+      user-select: none;
 
       &.immybox_choice {
         cursor: pointer;

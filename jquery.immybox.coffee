@@ -78,7 +78,7 @@
       @element.on 'keydown', @doSelection
 
       $('body').on 'click', @revert
-      $(window).on 'resize', @reposition
+      $(window).on 'resize scroll', @reposition
 
     ###################
     # event listeners #
@@ -233,13 +233,14 @@
       inputHeight = @element.outerHeight()
       inputWidth = @element.outerWidth()
       resultsHeight = @queryResultArea.outerHeight()
-      windowHeight = $(window).height()
+      resultsBottom = inputOffset.top + inputHeight + resultsHeight
+      windowBottom = $(window).height() + $(window).scrollTop()
 
       # set the dimmensions and position
       @queryResultArea.outerWidth inputWidth
       @queryResultArea.css left: inputOffset.left
 
-      if inputOffset.top + inputHeight + resultsHeight > windowHeight
+      if resultsBottom > windowBottom
         @queryResultArea.css top: inputOffset.top - resultsHeight
       else
         @queryResultArea.css top: inputOffset.top + inputHeight
@@ -358,7 +359,7 @@
         @element.off 'click', @openResults
 
       $('body').off 'click', @revert
-      $(window).off 'resize', @reposition
+      $(window).off 'resize scroll', @reposition
 
       @element.removeClass pluginName
 
