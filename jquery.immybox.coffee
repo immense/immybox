@@ -159,15 +159,16 @@
     toggleResults: (e) =>
       e.stopPropagation() # stop the event from bubbling up and the body click event catching it
       @revertOtherInstances() # because the event isn't bubbling, other instances won't revert
-      if @queryResultArea.is(':visible')
-        @hideResults()
-      else
-        if @selectedChoice?
-          @insertFilteredChoiceElements @oldQuery
+      if @element.is ':enabled'
+        if @queryResultArea.is(':visible')
+          @hideResults()
         else
-          @insertFilteredChoiceElements ''
+          if @selectedChoice?
+            @insertFilteredChoiceElements @oldQuery
+          else
+            @insertFilteredChoiceElements ''
 
-      @element.focus()
+        @element.focus()
 
     ###################
     # private methods #
