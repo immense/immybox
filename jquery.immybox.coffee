@@ -58,6 +58,7 @@
       @selectChoiceByValue @element.val()
 
       @queryResultArea = $ "<div class='#{pluginName}_results'></div>"
+      @queryResultArea.scrollLock?()
 
       @_val = @element.val() # to keep track of what WAS in the text box
       @oldQuery = @_val
