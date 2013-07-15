@@ -218,6 +218,7 @@
       resultsBottom = resultsTop + resultsHeight
 
       highlightedChoice = @getHighlightedChoice()
+      return true if not highlightedChoice?
       highlightedChoiceHeight = highlightedChoice.outerHeight()
       highlightedChoiceTop = highlightedChoice.position().top + resultsTop
       highlightedChoiceBottom = highlightedChoiceTop + highlightedChoiceHeight
