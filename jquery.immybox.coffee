@@ -67,12 +67,11 @@
         value = $(@).data 'value'
         self.selectChoiceByValue value
         self.hideResults()
-        @_val = self.element.val()
+        self._val = self.element.val()
         self.element.focus()
 
       @queryResultArea.on 'mouseenter', "li.#{pluginName}_choice", ->
-        highlightedChoice = self.queryResultArea.find("li.#{pluginName}_choice.active")
-        highlightedChoice.removeClass 'active'
+        self.queryResultArea.find("li.#{pluginName}_choice.active").removeClass 'active'
         $(@).addClass 'active'
 
       @element.on 'keyup change search', @doQuery
@@ -100,7 +99,7 @@
     # @element.on 'keydown'
     # select the highlighted choice
     doSelection: (e) =>
-      if e.which is 27
+      if e.which is 27 # escape
         @display()
         @hideResults()
       if @queryResultArea.is(':visible')
@@ -127,7 +126,7 @@
             else
               @insertFilteredChoiceElements ''
 
-    # @element.on 'blur'
+    # $('body').on 'click'
     # revert or set to null after losing focus
     revert: =>
       if @queryResultArea.is(':visible')
@@ -278,6 +277,8 @@
         @selectChoiceByValue value
         @_val = @element.val()
         @hideResults()
+      else
+        @revert()
 
     # show the results area
     showResults: ->
