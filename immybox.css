@@ -1,0 +1,10 @@
+.immybox_downarrow{margin-left:-2.25em;font-size:10px;color:#bdbdbd;display:inline-block;padding:0 0.5em;line-height:2.5em;z-index:10;-o-user-select:none;-moz-user-select:none;-khtml-user-select:none;-webkit-user-select:none;user-select:none}.immybox_downarrow:hover,.immybox_downarrow:focus{cursor:pointer;color:#000}
+.immybox.immybox_witharrow[type="text"]{z-index:5;padding-right:23px;width:189px}.immybox.immybox_witharrow[type="text"].input-mini{width:43px}
+.immybox.immybox_witharrow[type="text"].input-small{width:73px}
+.immybox.immybox_witharrow[type="text"].input-medium{width:133px}
+.immybox.immybox_witharrow[type="text"].input-large{width:193px}
+.immybox.immybox_witharrow[type="text"].input-xlarge{width:253px}
+.immybox.immybox_witharrow[type="text"].input-xxlarge{width:513px}
+.immybox_results{position:absolute;overflow:auto;max-height:20em;background-color:white;border:1px solid #ccc;z-index:9001}.immybox_results p.immybox_moreinfo,.immybox_results p.immybox_noresults{color:#ccc;font-style:italic;padding:0 1em;margin:0}
+.immybox_results ul{list-style-type:none;margin:0;padding:0}.immybox_results ul li{padding:0.25em 1em;-o-user-select:none;-moz-user-select:none;-khtml-user-select:none;-webkit-user-select:none;user-select:none}.immybox_results ul li.immybox_choice{cursor:pointer}.immybox_results ul li.immybox_choice.active{background-color:#f1f1f1}
+.immybox_results ul li.immybox_choice .highlight{text-decoration:underline}
