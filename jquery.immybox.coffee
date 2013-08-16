@@ -125,6 +125,8 @@
               @insertFilteredChoiceElements @oldQuery
             else
               @insertFilteredChoiceElements ''
+          when 9 # tab
+            @revert()
 
     # $('body').on 'click'
     # revert or set to null after losing focus

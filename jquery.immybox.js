@@ -124,6 +124,9 @@
               } else {
                 return this.insertFilteredChoiceElements('');
               }
+              break;
+            case 9:
+              return this.revert();
           }
         }
       };
