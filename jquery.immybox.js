@@ -363,6 +363,7 @@
         if (this.selectedChoice != null) {
           this.selectChoiceByValue(this.selectedChoice.value);
         }
+        this.oldQuery = '';
         return newChoices;
       };
 

@@ -341,6 +341,7 @@
       @choices = newChoices
       if @selectedChoice?
         @selectChoiceByValue @selectedChoice.value
+      @oldQuery = ''
       newChoices
 
     # get the value of the currently selected choice
