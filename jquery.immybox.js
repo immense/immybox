@@ -375,8 +375,15 @@
       };
 
       ImmyBox.prototype.setValue = function(newValue) {
-        this.selectChoiceByValue(newValue);
-        return this.getValue();
+        var currentValue;
+        currentValue = this.getValue();
+        if (currentValue !== newValue) {
+          this.selectChoiceByValue(newValue);
+          this.oldQuery = '';
+          return this.getValue();
+        } else {
+          return currentValue;
+        }
       };
 
       ImmyBox.prototype.destroy = function() {

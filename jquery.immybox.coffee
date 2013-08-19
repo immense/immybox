@@ -352,8 +352,13 @@
 
     # set the value
     setValue: (newValue) ->
-      @selectChoiceByValue newValue
-      @getValue()
+      currentValue = @getValue()
+      if currentValue isnt newValue
+        @selectChoiceByValue newValue
+        @oldQuery = ''
+        @getValue()
+      else
+        currentValue
 
     # destroy this instance of the plugin
     destroy: ->
