@@ -298,16 +298,6 @@
         }
       };
 
-      ImmyBox.prototype.showResults = function() {
-        $('body').append(this.queryResultArea);
-        this.scroll();
-        return this.positionResultsArea();
-      };
-
-      ImmyBox.prototype.hideResults = function() {
-        return this.queryResultArea.detach();
-      };
-
       ImmyBox.prototype.display = function() {
         if (this.selectedChoice != null) {
           this.selectedChoice.text;
@@ -352,7 +342,17 @@
         });
       };
 
-      ImmyBox.prototype.publicMethods = ['getChoices', 'setChoices', 'getValue', 'setValue', 'destroy'];
+      ImmyBox.prototype.publicMethods = ['showResults', 'hideResults', 'getChoices', 'setChoices', 'getValue', 'setValue', 'destroy'];
+
+      ImmyBox.prototype.showResults = function() {
+        $('body').append(this.queryResultArea);
+        this.scroll();
+        return this.positionResultsArea();
+      };
+
+      ImmyBox.prototype.hideResults = function() {
+        return this.queryResultArea.detach();
+      };
 
       ImmyBox.prototype.getChoices = function() {
         return this.choices;

@@ -282,16 +282,6 @@
       else
         @revert()
 
-    # show the results area
-    showResults: ->
-      $('body').append @queryResultArea
-      @scroll()
-      @positionResultsArea()
-
-    # hide the results area
-    hideResults: ->
-      @queryResultArea.detach()
-
     # display the selected choice in the input box
     display: ->
       if @selectedChoice?
@@ -330,7 +320,17 @@
     # "public" methods #
     ####################
 
-    publicMethods: ['getChoices', 'setChoices', 'getValue', 'setValue', 'destroy']
+    publicMethods: ['showResults', 'hideResults', 'getChoices', 'setChoices', 'getValue', 'setValue', 'destroy']
+
+    # show the results area
+    showResults: ->
+      $('body').append @queryResultArea
+      @scroll()
+      @positionResultsArea()
+
+    # hide the results area
+    hideResults: ->
+      @queryResultArea.detach()
 
     # return array of choices
     getChoices: ->
