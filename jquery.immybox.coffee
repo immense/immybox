@@ -20,6 +20,8 @@
       else
         choice.text
 
+  objects = [] # keep references to all plugin instances
+
   # addCommas = (nStr) ->
   #   nStr += '';
   #   x = nStr.split '.'
@@ -59,6 +61,7 @@
 
       @queryResultArea = $ "<div class='#{pluginName}_results'></div>"
       @queryResultArea.scrollLock?()
+      @queryResultAreaVisible = false
 
       @_val = @element.val() # to keep track of what WAS in the text box
       @oldQuery = @_val
@@ -76,9 +79,6 @@
 
       @element.on 'keyup change search', @doQuery
       @element.on 'keydown', @doSelection
-
-      $('body').on 'click', @revert
-      $(window).on 'resize scroll', @reposition
 
     ###################
     # event listeners #
@@ -102,7 +102,7 @@
       if e.which is 27 # escape
         @display()
         @hideResults()
-      if @queryResultArea.is(':visible')
+      if @queryResultAreaVisible
         switch e.which
           when 9 # tab
             @selectHighlightedChoice()
@@ -128,23 +128,6 @@
           when 9 # tab
             @revert()
 
-    # $('body').on 'click'
-    # revert or set to null after losing focus
-    revert: =>
-      if @queryResultArea.is(':visible')
-        # revert to last set value
-        @display()
-        @hideResults()
-      else if @element.val() is ''
-        # set to null
-        @selectChoiceByValue null
-
-    # $(window).on 'resize'
-    # if visible, re-position the results area on window resize
-    reposition: =>
-      if @queryResultArea.is(':visible')
-        @positionResultsArea()
-
     # @element.on 'click'
     # show the results box on click
     openResults: (e) =>
@@ -161,7 +144,7 @@
       e.stopPropagation() # stop the event from bubbling up and the body click event catching it
       @revertOtherInstances() # because the event isn't bubbling, other instances won't revert
       if @element.is ':enabled'
-        if @queryResultArea.is(':visible')
+        if @queryResultAreaVisible
           @hideResults()
         else
           if @selectedChoice?
@@ -174,6 +157,22 @@
     ###################
     # private methods #
     ###################
+
+    # revert or set to null after losing focus
+    revert: =>
+      if @queryResultAreaVisible
+        # revert to last set value
+        @display()
+        @hideResults()
+      else if @element.val() is ''
+        # set to null
+        @selectChoiceByValue null
+
+    # if visible, re-position the results area on window resize
+    reposition: =>
+      console.log 'reposition'
+      if @queryResultAreaVisible
+        @positionResultsArea()
 
     insertFilteredChoiceElements: (query) ->
       if query is ''
@@ -310,11 +309,7 @@
       @display()
 
     revertOtherInstances: ->
-      self = @
-      $('.'+pluginName).each ->
-        otherPlugin = $.data(@, "plugin_" + pluginName)
-        if otherPlugin isnt self
-          otherPlugin.revert()
+      o.revert() for o in objects when o isnt @
 
     ####################
     # "public" methods #
@@ -325,12 +320,14 @@
     # show the results area
     showResults: ->
       $('body').append @queryResultArea
+      @queryResultAreaVisible = true
       @scroll()
       @positionResultsArea()
 
     # hide the results area
     hideResults: ->
       @queryResultArea.detach()
+      @queryResultAreaVisible = false
 
     # return array of choices
     getChoices: ->
@@ -370,9 +367,6 @@
       if @options.openOnClick
         @element.off 'click', @openResults
 
-      $('body').off 'click', @revert
-      $(window).off 'resize scroll', @reposition
-
       @element.removeClass pluginName
 
       if @options.showArrow
@@ -381,6 +375,14 @@
 
       @queryResultArea.remove() # removes query result area and all related event listeners
       $.removeData @element[0], "plugin_#{pluginName}" # remove reference to plugin instance
+
+      objects = objects.filter (o) => o isnt @ # remove reference from objects array
+
+  # use one global click event listener to close/revert ones that are open
+  $('body').on 'click', -> o.revert() for o in objects
+
+  # use one global scoll/resize listener to reposition any result areas that are open
+  $(window).on 'resize scroll', -> o.reposition() for o in objects when o.queryResultAreaVisible
 
   $.fn[pluginName] = (options) ->
     args = Array.prototype.slice.call(arguments, 1)
@@ -395,7 +397,9 @@
           else
             throw new Error "#{pluginName} has no method '#{method}'"
       else
-        outputs.push $.data @, "plugin_" + pluginName, new ImmyBox @, options
+        newObject = new ImmyBox @, options
+        objects.push newObject
+        outputs.push $.data @, "plugin_" + pluginName, newObject
 
     return outputs
 
