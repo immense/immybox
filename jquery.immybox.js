@@ -168,7 +168,6 @@
       };
 
       ImmyBox.prototype.reposition = function() {
-        console.log('reposition');
         if (this.queryResultAreaVisible) {
           return this.positionResultsArea();
         }

@@ -170,7 +170,6 @@
 
     # if visible, re-position the results area on window resize
     reposition: =>
-      console.log 'reposition'
       if @queryResultAreaVisible
         @positionResultsArea()
 
