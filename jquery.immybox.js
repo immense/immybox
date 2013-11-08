@@ -34,7 +34,6 @@
       function ImmyBox(element, options) {
         this.reposition = __bind(this.reposition, this);
         this.revert = __bind(this.revert, this);
-        this.toggleResults = __bind(this.toggleResults, this);
         this.openResults = __bind(this.openResults, this);
         this.doSelection = __bind(this.doSelection, this);
         this.doQuery = __bind(this.doQuery, this);
@@ -49,9 +48,6 @@
         this.selectedChoice = null;
         if (this.options.showArrow) {
           this.element.addClass("" + pluginName + "_witharrow");
-          this.downArrow = $("<i class='" + pluginName + "_downarrow icon-chevron-down'></i>");
-          this.element.after(this.downArrow);
-          this.downArrow.on('click', this.toggleResults);
         }
         if (this.options.openOnClick) {
           this.element.on('click', this.openResults);
@@ -138,23 +134,6 @@
           return this.insertFilteredChoiceElements(this.oldQuery);
         } else {
           return this.insertFilteredChoiceElements('');
-        }
-      };
-
-      ImmyBox.prototype.toggleResults = function(e) {
-        e.stopPropagation();
-        this.revertOtherInstances();
-        if (this.element.is(':enabled')) {
-          if (this.queryResultAreaVisible) {
-            this.hideResults();
-          } else {
-            if (this.selectedChoice != null) {
-              this.insertFilteredChoiceElements(this.oldQuery);
-            } else {
-              this.insertFilteredChoiceElements('');
-            }
-          }
-          return this.element.focus();
         }
       };
 
@@ -397,10 +376,6 @@
           this.element.off('click', this.openResults);
         }
         this.element.removeClass(pluginName);
-        if (this.options.showArrow) {
-          this.element.removeClass("" + pluginName + "_witharrow");
-          this.downArrow.remove();
-        }
         this.queryResultArea.remove();
         $.removeData(this.element[0], "plugin_" + pluginName);
         return objects = objects.filter(function(o) {

@@ -49,9 +49,6 @@
 
       if @options.showArrow
         @element.addClass "#{pluginName}_witharrow"
-        @downArrow = $ "<i class='#{pluginName}_downarrow icon-chevron-down'></i>"
-        @element.after @downArrow
-        @downArrow.on 'click', @toggleResults
 
       if @options.openOnClick
         @element.on 'click', @openResults
@@ -137,22 +134,6 @@
         @insertFilteredChoiceElements @oldQuery
       else
         @insertFilteredChoiceElements ''
-
-    # @downArrow.on 'click'
-    # toggle the results box on click
-    toggleResults: (e) =>
-      e.stopPropagation() # stop the event from bubbling up and the body click event catching it
-      @revertOtherInstances() # because the event isn't bubbling, other instances won't revert
-      if @element.is ':enabled'
-        if @queryResultAreaVisible
-          @hideResults()
-        else
-          if @selectedChoice?
-            @insertFilteredChoiceElements @oldQuery
-          else
-            @insertFilteredChoiceElements ''
-
-        @element.focus()
 
     ###################
     # private methods #
@@ -367,10 +348,6 @@
         @element.off 'click', @openResults
 
       @element.removeClass pluginName
-
-      if @options.showArrow
-        @element.removeClass "#{pluginName}_witharrow"
-        @downArrow.remove() # removes down arrow element and all related event listeners
 
       @queryResultArea.remove() # removes query result area and all related event listeners
       $.removeData @element[0], "plugin_#{pluginName}" # remove reference to plugin instance
