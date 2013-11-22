@@ -8,7 +8,6 @@
     pluginName = "immybox";
     defaults = {
       choices: [],
-      blankIfNull: true,
       maxResults: 50,
       showArrow: true,
       openOnClick: true,
@@ -281,7 +280,7 @@
         if (this.selectedChoice != null) {
           this.selectedChoice.text;
           this.element.val(this.selectedChoice.text);
-        } else if (this.options.blankIfNull) {
+        } else {
           this.element.val('');
         }
         return this._val = this.element.val();
