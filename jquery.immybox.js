@@ -386,7 +386,7 @@
       return ImmyBox;
 
     })();
-    $('body').on('click', function() {
+    $('html').on('click', function() {
       var o, _i, _len, _results;
       _results = [];
       for (_i = 0, _len = objects.length; _i < _len; _i++) {

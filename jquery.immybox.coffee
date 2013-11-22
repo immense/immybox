@@ -3,7 +3,6 @@
   pluginName = "immybox"
   defaults =
     choices: []
-    blankIfNull: true
     maxResults: 50
     showArrow: true
     openOnClick: true
@@ -266,7 +265,7 @@
       if @selectedChoice?
         @selectedChoice.text
         @element.val @selectedChoice.text
-      else if @options.blankIfNull
+      else
         @element.val ''
 
       @_val = @element.val()
@@ -355,7 +354,7 @@
       objects = objects.filter (o) => o isnt @ # remove reference from objects array
 
   # use one global click event listener to close/revert ones that are open
-  $('body').on 'click', -> o.revert() for o in objects
+  $('html').on 'click', -> o.revert() for o in objects
 
   # use one global scoll/resize listener to reposition any result areas that are open
   $(window).on 'resize scroll', -> o.reposition() for o in objects when o.queryResultAreaVisible
