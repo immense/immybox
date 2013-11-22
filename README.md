@@ -5,7 +5,7 @@ input boxes that act like select boxes.
 
 ## Demo
 
-Check out the [demo](http://htmlpreview.github.com/?https://github.com/immense/immybox/blob/master/demo.html) to get a quick idea of how it works and how to use it.
+Check out the [demo](http://rawgithub.com/immense/immybox/master/demo.html) to get a quick idea of how it works and how to use it.
 
 ## Installation
 
@@ -22,7 +22,7 @@ Include a link to the javascript and css files in your page:
 <script src='jquery.immybox.min.js'></script>
 ```
 
-And then refer to the [demo](http://htmlpreview.github.com/?https://github.com/immense/immybox/blob/master/demo.html) page on detailed usage instructions.
+And then refer to the [demo](http://rawgithub.com/immense/immybox/master/demo.html) page on detailed usage instructions.
 
 ## Building
 
