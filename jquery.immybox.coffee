@@ -68,10 +68,12 @@
         self.hideResults()
         self._val = self.element.val()
         self.element.focus()
+        return
 
       @queryResultArea.on 'mouseenter', "li.#{pluginName}_choice", ->
         self.queryResultArea.find("li.#{pluginName}_choice.active").removeClass 'active'
         $(@).addClass 'active'
+        return
 
       @element.on 'keyup change search', @doQuery
       @element.on 'keydown', @doSelection
@@ -91,6 +93,7 @@
           @hideResults()
         else
           @insertFilteredChoiceElements query
+      return
 
     # @element.on 'keydown'
     # select the highlighted choice
@@ -123,6 +126,7 @@
               @insertFilteredChoiceElements ''
           when 9 # tab
             @revert()
+      return
 
     # @element.on 'click'
     # show the results box on click
@@ -133,6 +137,7 @@
         @insertFilteredChoiceElements @oldQuery
       else
         @insertFilteredChoiceElements ''
+      return
 
     ###################
     # private methods #
@@ -147,11 +152,13 @@
       else if @element.val() is ''
         # set to null
         @selectChoiceByValue null
+      return
 
     # if visible, re-position the results area on window resize
     reposition: =>
       if @queryResultAreaVisible
         @positionResultsArea()
+      return
 
     insertFilteredChoiceElements: (query) ->
       if query is ''
@@ -191,6 +198,7 @@
           .append(list)
 
       @showResults()
+      return
 
     scroll: ->
       resultsHeight = @queryResultArea.height()
@@ -198,7 +206,7 @@
       resultsBottom = resultsTop + resultsHeight
 
       highlightedChoice = @getHighlightedChoice()
-      return true if not highlightedChoice?
+      return if not highlightedChoice?
       highlightedChoiceHeight = highlightedChoice.outerHeight()
       highlightedChoiceTop = highlightedChoice.position().top + resultsTop
       highlightedChoiceBottom = highlightedChoiceTop + highlightedChoiceHeight
@@ -207,6 +215,8 @@
         @queryResultArea.scrollTop highlightedChoiceTop
       if highlightedChoiceBottom > resultsBottom
         @queryResultArea.scrollTop highlightedChoiceBottom - resultsHeight
+
+      return
 
     positionResultsArea: ->
 
@@ -227,12 +237,14 @@
       else
         @queryResultArea.css top: inputOffset.top + inputHeight
 
+      return
+
     getHighlightedChoice: ->
       choice = @queryResultArea.find("li.#{pluginName}_choice.active")
       if choice.length is 1
-        choice
+        return choice
       else
-        null
+        return null
 
     highlightNextChoice: ->
       highlightedChoice = @getHighlightedChoice()
@@ -241,6 +253,7 @@
         if nextChoice.length is 1
           highlightedChoice.removeClass 'active'
           nextChoice.addClass 'active'
+      return
 
     highlightPreviousChoice: ->
       highlightedChoice = @getHighlightedChoice()
@@ -249,6 +262,7 @@
         if previousChoice.length is 1
           highlightedChoice.removeClass 'active'
           previousChoice.addClass 'active'
+      return
 
     selectHighlightedChoice: ->
       highlightedChoice = @getHighlightedChoice()
@@ -259,6 +273,7 @@
         @hideResults()
       else
         @revert()
+      return
 
     # display the selected choice in the input box
     display: ->
@@ -269,13 +284,14 @@
         @element.val ''
 
       @_val = @element.val()
+      return
 
     # select the first choice with matching value
     # Note: values should be unique
     selectChoiceByValue: (value) ->
       oldValue = @getValue()
       if value? and value isnt ''
-        matches = @choices.filter (choice) -> `choice.value == value` # use type coersive equals
+        matches = @choices.filter (choice) -> return `choice.value == value` # use type coersive equals
         if matches[0]?
           @selectedChoice = matches[0]
         else
@@ -286,9 +302,11 @@
       if newValue isnt oldValue
         @element.trigger 'update', [newValue]
       @display()
+      return
 
     revertOtherInstances: ->
       o.revert() for o in objects when o isnt @
+      return
 
     ####################
     # "public" methods #
@@ -302,15 +320,17 @@
       @queryResultAreaVisible = true
       @scroll()
       @positionResultsArea()
+      return
 
     # hide the results area
     hideResults: ->
       @queryResultArea.detach()
       @queryResultAreaVisible = false
+      return
 
     # return array of choices
     getChoices: ->
-      @choices
+      return @choices
 
     # update the array of choices
     setChoices: (newChoices) ->
@@ -318,14 +338,14 @@
       if @selectedChoice?
         @selectChoiceByValue @selectedChoice.value
       @oldQuery = ''
-      newChoices
+      return newChoices
 
     # get the value of the currently selected choice
     getValue: ->
       if @selectedChoice?
-        @selectedChoice.value
+        return @selectedChoice.value
       else
-        null
+        return null
 
     # set the value
     setValue: (newValue) ->
@@ -333,9 +353,9 @@
       if currentValue isnt newValue
         @selectChoiceByValue newValue
         @oldQuery = ''
-        @getValue()
+        return @getValue()
       else
-        currentValue
+        return currentValue
 
     # destroy this instance of the plugin
     destroy: ->
@@ -351,13 +371,18 @@
       @queryResultArea.remove() # removes query result area and all related event listeners
       $.removeData @element[0], "plugin_#{pluginName}" # remove reference to plugin instance
 
-      objects = objects.filter (o) => o isnt @ # remove reference from objects array
+      objects = objects.filter (o) => return o isnt @ # remove reference from objects array
+      return
 
   # use one global click event listener to close/revert ones that are open
-  $('html').on 'click', -> o.revert() for o in objects
+  $('html').on 'click', ->
+    o.revert() for o in objects
+    return
 
   # use one global scoll/resize listener to reposition any result areas that are open
-  $(window).on 'resize scroll', -> o.reposition() for o in objects when o.queryResultAreaVisible
+  $(window).on 'resize scroll', ->
+    o.reposition() for o in objects when o.queryResultAreaVisible
+    return
 
   $.fn[pluginName] = (options) ->
     args = Array.prototype.slice.call(arguments, 1)
@@ -375,7 +400,10 @@
         newObject = new ImmyBox @, options
         objects.push newObject
         outputs.push $.data @, "plugin_" + pluginName, newObject
+      return
 
     return outputs
+
+  return
 
 ) jQuery, window, document

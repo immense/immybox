@@ -65,11 +65,11 @@
           self.selectChoiceByValue(value);
           self.hideResults();
           self._val = self.element.val();
-          return self.element.focus();
+          self.element.focus();
         });
         this.queryResultArea.on('mouseenter', "li." + pluginName + "_choice", function() {
           self.queryResultArea.find("li." + pluginName + "_choice.active").removeClass('active');
-          return $(this).addClass('active');
+          $(this).addClass('active');
         });
         this.element.on('keyup change search', this.doQuery);
         this.element.on('keydown', this.doSelection);
@@ -82,9 +82,9 @@
           this._val = query;
           this.oldQuery = query;
           if (query === '') {
-            return this.hideResults();
+            this.hideResults();
           } else {
-            return this.insertFilteredChoiceElements(query);
+            this.insertFilteredChoiceElements(query);
           }
         }
       };
@@ -97,31 +97,34 @@
         if (this.queryResultAreaVisible) {
           switch (e.which) {
             case 9:
-              return this.selectHighlightedChoice();
+              this.selectHighlightedChoice();
+              break;
             case 13:
               e.preventDefault();
-              return this.selectHighlightedChoice();
+              this.selectHighlightedChoice();
+              break;
             case 38:
               e.preventDefault();
               this.highlightPreviousChoice();
-              return this.scroll();
+              this.scroll();
+              break;
             case 40:
               e.preventDefault();
               this.highlightNextChoice();
-              return this.scroll();
+              this.scroll();
           }
         } else {
           switch (e.which) {
             case 40:
               e.preventDefault();
               if (this.selectedChoice != null) {
-                return this.insertFilteredChoiceElements(this.oldQuery);
+                this.insertFilteredChoiceElements(this.oldQuery);
               } else {
-                return this.insertFilteredChoiceElements('');
+                this.insertFilteredChoiceElements('');
               }
               break;
             case 9:
-              return this.revert();
+              this.revert();
           }
         }
       };
@@ -130,24 +133,24 @@
         e.stopPropagation();
         this.revertOtherInstances();
         if (this.selectedChoice != null) {
-          return this.insertFilteredChoiceElements(this.oldQuery);
+          this.insertFilteredChoiceElements(this.oldQuery);
         } else {
-          return this.insertFilteredChoiceElements('');
+          this.insertFilteredChoiceElements('');
         }
       };
 
       ImmyBox.prototype.revert = function() {
         if (this.queryResultAreaVisible) {
           this.display();
-          return this.hideResults();
+          this.hideResults();
         } else if (this.element.val() === '') {
-          return this.selectChoiceByValue(null);
+          this.selectChoiceByValue(null);
         }
       };
 
       ImmyBox.prototype.reposition = function() {
         if (this.queryResultAreaVisible) {
-          return this.positionResultsArea();
+          this.positionResultsArea();
         }
       };
 
@@ -183,7 +186,7 @@
           list = $('<ul></ul>').append(results);
           this.queryResultArea.empty().append(list);
         }
-        return this.showResults();
+        this.showResults();
       };
 
       ImmyBox.prototype.scroll = function() {
@@ -193,7 +196,7 @@
         resultsBottom = resultsTop + resultsHeight;
         highlightedChoice = this.getHighlightedChoice();
         if (highlightedChoice == null) {
-          return true;
+          return;
         }
         highlightedChoiceHeight = highlightedChoice.outerHeight();
         highlightedChoiceTop = highlightedChoice.position().top + resultsTop;
@@ -202,7 +205,7 @@
           this.queryResultArea.scrollTop(highlightedChoiceTop);
         }
         if (highlightedChoiceBottom > resultsBottom) {
-          return this.queryResultArea.scrollTop(highlightedChoiceBottom - resultsHeight);
+          this.queryResultArea.scrollTop(highlightedChoiceBottom - resultsHeight);
         }
       };
 
@@ -219,11 +222,11 @@
           left: inputOffset.left
         });
         if (resultsBottom > windowBottom) {
-          return this.queryResultArea.css({
+          this.queryResultArea.css({
             top: inputOffset.top - resultsHeight
           });
         } else {
-          return this.queryResultArea.css({
+          this.queryResultArea.css({
             top: inputOffset.top + inputHeight
           });
         }
@@ -246,7 +249,7 @@
           nextChoice = highlightedChoice.next("li." + pluginName + "_choice");
           if (nextChoice.length === 1) {
             highlightedChoice.removeClass('active');
-            return nextChoice.addClass('active');
+            nextChoice.addClass('active');
           }
         }
       };
@@ -258,7 +261,7 @@
           previousChoice = highlightedChoice.prev("li." + pluginName + "_choice");
           if (previousChoice.length === 1) {
             highlightedChoice.removeClass('active');
-            return previousChoice.addClass('active');
+            previousChoice.addClass('active');
           }
         }
       };
@@ -270,9 +273,9 @@
           value = highlightedChoice.data('value');
           this.selectChoiceByValue(value);
           this._val = this.element.val();
-          return this.hideResults();
+          this.hideResults();
         } else {
-          return this.revert();
+          this.revert();
         }
       };
 
@@ -283,7 +286,7 @@
         } else {
           this.element.val('');
         }
-        return this._val = this.element.val();
+        this._val = this.element.val();
       };
 
       ImmyBox.prototype.selectChoiceByValue = function(value) {
@@ -305,19 +308,17 @@
         if (newValue !== oldValue) {
           this.element.trigger('update', [newValue]);
         }
-        return this.display();
+        this.display();
       };
 
       ImmyBox.prototype.revertOtherInstances = function() {
-        var o, _i, _len, _results;
-        _results = [];
+        var o, _i, _len;
         for (_i = 0, _len = objects.length; _i < _len; _i++) {
           o = objects[_i];
           if (o !== this) {
-            _results.push(o.revert());
+            o.revert();
           }
         }
-        return _results;
       };
 
       ImmyBox.prototype.publicMethods = ['showResults', 'hideResults', 'getChoices', 'setChoices', 'getValue', 'setValue', 'destroy'];
@@ -326,12 +327,12 @@
         $('body').append(this.queryResultArea);
         this.queryResultAreaVisible = true;
         this.scroll();
-        return this.positionResultsArea();
+        this.positionResultsArea();
       };
 
       ImmyBox.prototype.hideResults = function() {
         this.queryResultArea.detach();
-        return this.queryResultAreaVisible = false;
+        this.queryResultAreaVisible = false;
       };
 
       ImmyBox.prototype.getChoices = function() {
@@ -377,7 +378,7 @@
         this.element.removeClass(pluginName);
         this.queryResultArea.remove();
         $.removeData(this.element[0], "plugin_" + pluginName);
-        return objects = objects.filter(function(o) {
+        objects = objects.filter(function(o) {
           return o !== _this;
         });
       };
@@ -386,26 +387,22 @@
 
     })();
     $('html').on('click', function() {
-      var o, _i, _len, _results;
-      _results = [];
+      var o, _i, _len;
       for (_i = 0, _len = objects.length; _i < _len; _i++) {
         o = objects[_i];
-        _results.push(o.revert());
+        o.revert();
       }
-      return _results;
     });
     $(window).on('resize scroll', function() {
-      var o, _i, _len, _results;
-      _results = [];
+      var o, _i, _len;
       for (_i = 0, _len = objects.length; _i < _len; _i++) {
         o = objects[_i];
         if (o.queryResultAreaVisible) {
-          _results.push(o.reposition());
+          o.reposition();
         }
       }
-      return _results;
     });
-    return $.fn[pluginName] = function(options) {
+    $.fn[pluginName] = function(options) {
       var args, outputs;
       args = Array.prototype.slice.call(arguments, 1);
       outputs = [];
@@ -416,7 +413,7 @@
             plugin = $.data(this, "plugin_" + pluginName);
             method = options;
             if (__indexOf.call(plugin.publicMethods, method) >= 0) {
-              return outputs.push(plugin[method].apply(plugin, args));
+              outputs.push(plugin[method].apply(plugin, args));
             } else {
               throw new Error("" + pluginName + " has no method '" + method + "'");
             }
@@ -424,7 +421,7 @@
         } else {
           newObject = new ImmyBox(this, options);
           objects.push(newObject);
-          return outputs.push($.data(this, "plugin_" + pluginName, newObject));
+          outputs.push($.data(this, "plugin_" + pluginName, newObject));
         }
       });
       return outputs;
