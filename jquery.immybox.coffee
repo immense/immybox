@@ -38,6 +38,7 @@
 
       @element = $ element
       @element.addClass pluginName
+      @element.attr 'autocomplete', 'off'
 
       @_defaults = defaults
       @_name = pluginName
