@@ -40,6 +40,7 @@
         self = this;
         this.element = $(element);
         this.element.addClass(pluginName);
+        this.element.attr('autocomplete', 'off');
         this._defaults = defaults;
         this._name = pluginName;
         this.options = $.extend({}, defaults, options);
@@ -155,8 +156,7 @@
       };
 
       ImmyBox.prototype.insertFilteredChoiceElements = function(query) {
-        var filteredChoices, format, info, list, results, selectedOne, truncatedChoices,
-          _this = this;
+        var filteredChoices, format, info, list, results, selectedOne, truncatedChoices;
         if (query === '') {
           filteredChoices = this.choices;
         } else {
@@ -165,17 +165,19 @@
         truncatedChoices = filteredChoices.slice(0, this.options.maxResults);
         format = this.options.formatChoice;
         selectedOne = false;
-        results = truncatedChoices.map(function(choice) {
-          var li;
-          li = $("<li class='" + pluginName + "_choice'></li>");
-          li.attr('data-value', choice.value);
-          li.html(format(choice, query));
-          if (choice === _this.selectedChoice) {
-            selectedOne = true;
-            li.addClass('active');
-          }
-          return li;
-        });
+        results = truncatedChoices.map((function(_this) {
+          return function(choice) {
+            var li;
+            li = $("<li class='" + pluginName + "_choice'></li>");
+            li.attr('data-value', choice.value);
+            li.html(format(choice, query));
+            if (choice === _this.selectedChoice) {
+              selectedOne = true;
+              li.addClass('active');
+            }
+            return li;
+          };
+        })(this));
         if (results.length === 0) {
           info = $("<p class='" + pluginName + "_noresults'>no matches</p>");
           this.queryResultArea.empty().append(info);
@@ -369,7 +371,6 @@
       };
 
       ImmyBox.prototype.destroy = function() {
-        var _this = this;
         this.element.off('keyup change search', this.doQuery);
         this.element.off('keydown', this.doSelection);
         if (this.options.openOnClick) {
@@ -378,9 +379,11 @@
         this.element.removeClass(pluginName);
         this.queryResultArea.remove();
         $.removeData(this.element[0], "plugin_" + pluginName);
-        objects = objects.filter(function(o) {
-          return o !== _this;
-        });
+        objects = objects.filter((function(_this) {
+          return function(o) {
+            return o !== _this;
+          };
+        })(this));
       };
 
       return ImmyBox;
