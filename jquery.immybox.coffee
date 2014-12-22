@@ -6,6 +6,7 @@
     maxResults: 50
     showArrow: true
     openOnClick: true
+    defaultSelectedValue: undefined
     filterFn: (query) ->
       # default filter function does case insensitive "contains" matching
       (choice) ->
@@ -46,6 +47,12 @@
       @options = $.extend {}, defaults, options
       @choices = @options.choices
       @selectedChoice = null
+      @defaultSelectedChoice =
+        if @options.defaultSelectedValue?
+          @choices.filter((c) -> c.value is self.options.defaultSelectedValue)[0] or null
+        else
+          # return null / undefined
+          @options.defaultSelectedValue
 
       if @options.showArrow
         @element.addClass "#{pluginName}_witharrow"
@@ -167,6 +174,18 @@
       else
         filteredChoices = (@choices.filter @options.filterFn @oldQuery)
       truncatedChoices = filteredChoices[0...@options.maxResults]
+
+      if defaultChoice = @defaultSelectedChoice
+        if defaultChoice in filteredChoices
+          if defaultChoice not in truncatedChoices
+            # add defaultChoice to the beginning of the truncatedChoices so the user sees it first
+            truncatedChoices.unshift(defaultChoice)
+            truncatedChoices.pop()
+          else
+            unless truncatedChoices[0] is defaultChoice
+              # move defaultChoice from where it is in the array to the first value
+              truncatedChoices = truncatedChoices.filter((c) -> c.value isnt defaultChoice.value)
+              truncatedChoices.unshift(defaultChoice)
       # difference = filteredChoices.length - truncatedChoices.length
 
       format = @options.formatChoice
@@ -189,7 +208,8 @@
           .append(info)
       else
         if not selectedOne
-          results[0].addClass 'active'
+          unless defaultChoice is null
+            results[0].addClass 'active'
 
         list = $('<ul></ul>')
           .append(results)
@@ -254,6 +274,10 @@
         if nextChoice.length is 1
           highlightedChoice.removeClass 'active'
           nextChoice.addClass 'active'
+      else
+        choices = @queryResultArea.find("li.#{pluginName}_choice")
+        if choices.length
+          $(choices[0]).addClass('active')
       return
 
     highlightPreviousChoice: ->
@@ -263,6 +287,10 @@
         if previousChoice.length is 1
           highlightedChoice.removeClass 'active'
           previousChoice.addClass 'active'
+      else
+        choices = @queryResultArea.find("li.#{pluginName}_choice")
+        if choices.length
+          $(choices[choices.length - 1]).addClass('active')
       return
 
     selectHighlightedChoice: ->
