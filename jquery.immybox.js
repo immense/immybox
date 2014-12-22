@@ -11,6 +11,7 @@
       maxResults: 50,
       showArrow: true,
       openOnClick: true,
+      defaultSelectedValue: void 0,
       filterFn: function(query) {
         return function(choice) {
           return choice.text.toLowerCase().indexOf(query.toLowerCase()) >= 0;
@@ -46,6 +47,9 @@
         this.options = $.extend({}, defaults, options);
         this.choices = this.options.choices;
         this.selectedChoice = null;
+        this.defaultSelectedChoice = this.options.defaultSelectedValue != null ? this.choices.filter(function(c) {
+          return c.value === self.options.defaultSelectedValue;
+        })[0] || null : this.options.defaultSelectedValue;
         if (this.options.showArrow) {
           this.element.addClass("" + pluginName + "_witharrow");
         }
@@ -156,13 +160,28 @@
       };
 
       ImmyBox.prototype.insertFilteredChoiceElements = function(query) {
-        var filteredChoices, format, info, list, results, selectedOne, truncatedChoices;
+        var defaultChoice, filteredChoices, format, info, list, results, selectedOne, truncatedChoices;
         if (query === '') {
           filteredChoices = this.choices;
         } else {
           filteredChoices = this.choices.filter(this.options.filterFn(this.oldQuery));
         }
         truncatedChoices = filteredChoices.slice(0, this.options.maxResults);
+        if (defaultChoice = this.defaultSelectedChoice) {
+          if (__indexOf.call(filteredChoices, defaultChoice) >= 0) {
+            if (__indexOf.call(truncatedChoices, defaultChoice) < 0) {
+              truncatedChoices.unshift(defaultChoice);
+              truncatedChoices.pop();
+            } else {
+              if (truncatedChoices[0] !== defaultChoice) {
+                truncatedChoices = truncatedChoices.filter(function(c) {
+                  return c.value !== defaultChoice.value;
+                });
+                truncatedChoices.unshift(defaultChoice);
+              }
+            }
+          }
+        }
         format = this.options.formatChoice;
         selectedOne = false;
         results = truncatedChoices.map((function(_this) {
@@ -183,7 +202,9 @@
           this.queryResultArea.empty().append(info);
         } else {
           if (!selectedOne) {
-            results[0].addClass('active');
+            if (defaultChoice !== null) {
+              results[0].addClass('active');
+            }
           }
           list = $('<ul></ul>').append(results);
           this.queryResultArea.empty().append(list);
@@ -245,7 +266,7 @@
       };
 
       ImmyBox.prototype.highlightNextChoice = function() {
-        var highlightedChoice, nextChoice;
+        var choices, highlightedChoice, nextChoice;
         highlightedChoice = this.getHighlightedChoice();
         if (highlightedChoice != null) {
           nextChoice = highlightedChoice.next("li." + pluginName + "_choice");
@@ -253,17 +274,27 @@
             highlightedChoice.removeClass('active');
             nextChoice.addClass('active');
           }
+        } else {
+          choices = this.queryResultArea.find("li." + pluginName + "_choice");
+          if (choices.length) {
+            $(choices[0]).addClass('active');
+          }
         }
       };
 
       ImmyBox.prototype.highlightPreviousChoice = function() {
-        var highlightedChoice, previousChoice;
+        var choices, highlightedChoice, previousChoice;
         highlightedChoice = this.getHighlightedChoice();
         if (highlightedChoice != null) {
           previousChoice = highlightedChoice.prev("li." + pluginName + "_choice");
           if (previousChoice.length === 1) {
             highlightedChoice.removeClass('active');
             previousChoice.addClass('active');
+          }
+        } else {
+          choices = this.queryResultArea.find("li." + pluginName + "_choice");
+          if (choices.length) {
+            $(choices[choices.length - 1]).addClass('active');
           }
         }
       };
