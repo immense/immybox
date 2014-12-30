@@ -9,16 +9,12 @@
     defaultSelectedValue: undefined
     filterFn: (query) ->
       # default filter function does case insensitive "contains" matching
-      (choice) ->
-        choice.text.toLowerCase().indexOf(query.toLowerCase()) >= 0
-    formatChoice: (choice, query) ->
-      i = choice.text.toLowerCase().indexOf query.toLowerCase()
-      if i >= 0 # should always be since we only attempt to highlight things that passed the filterFn
-        matchedText = choice.text[i...i+query.length]
-        [head, tail...] = choice.text.split(matchedText)
-        "#{head}<span class='highlight'>#{matchedText}</span>#{tail.join matchedText}"
-      else
-        choice.text
+      (choice) -> choice.text.toLowerCase().indexOf(query.toLowerCase()) >= 0
+    formatChoice: (query) ->
+      # default choice formatter function wraps all instances of query in a
+      # span.highlight
+      reg = new RegExp(query, 'gi')
+      (choice) -> choice.text.replace(reg, '<span class="highlight">$&</span>')
 
   objects = [] # keep references to all plugin instances
 
@@ -189,6 +185,11 @@
       # difference = filteredChoices.length - truncatedChoices.length
 
       format = @options.formatChoice
+
+      # for backwards-compatibility, only assume formatChoice returns a function
+      # if it only takes in one param
+      if format.length is 1
+        format = format(query)
 
       selectedOne = false
       results = truncatedChoices.map (choice) =>

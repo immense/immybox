@@ -1,6 +1,5 @@
 (function() {
-  var __slice = [].slice,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   (function($, window, document) {
@@ -17,16 +16,12 @@
           return choice.text.toLowerCase().indexOf(query.toLowerCase()) >= 0;
         };
       },
-      formatChoice: function(choice, query) {
-        var head, i, matchedText, tail, _ref;
-        i = choice.text.toLowerCase().indexOf(query.toLowerCase());
-        if (i >= 0) {
-          matchedText = choice.text.slice(i, i + query.length);
-          _ref = choice.text.split(matchedText), head = _ref[0], tail = 2 <= _ref.length ? __slice.call(_ref, 1) : [];
-          return "" + head + "<span class='highlight'>" + matchedText + "</span>" + (tail.join(matchedText));
-        } else {
-          return choice.text;
-        }
+      formatChoice: function(query) {
+        var reg;
+        reg = new RegExp(query, 'gi');
+        return function(choice) {
+          return choice.text.replace(reg, '<span class="highlight">$&</span>');
+        };
       }
     };
     objects = [];
@@ -183,6 +178,9 @@
           }
         }
         format = this.options.formatChoice;
+        if (format.length === 1) {
+          format = format(query);
+        }
         selectedOne = false;
         results = truncatedChoices.map((function(_this) {
           return function(choice) {

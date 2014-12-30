@@ -218,7 +218,7 @@ $('#input1').immybox({
             <dd>A function for determining whether or not a choice matches the entered query. Accepts <code>query</code> as arguments and must return a function that takes <code>choice</code> as argument and returns a boolean. Default function case insensitive "contains" matching.</dd>
 
             <dt><code>formatChoice</code></dt>
-            <dd>A function for formatting choices. It expects two arguments: <code>choice</code> and <code>query</code> and is expected to return a string (optionally containing HTML). The default formatter just returns <code>choice.text</code>, possibly underlining the parts of it that match <code>query</code>.</dd>
+            <dd>A function for formatting choices. Accepts <code>query</code> as arguments and must return a function that takes <code>choice</code> as argument and returns a string (optionally containing HTML). The default formatter just returns <code>choice.text</code>, underlining all parts of it that match <code>query</code>.<br><br><strong>NB</strong>: for backward-compatibility with earlier versions of immybox, formatChoice can take two arguments <code>(choice, query)</code>. If two arguments are provided, the function will be called for each choice</dd>
 
             <dt><code>defaultSelectedValue</code></dt>
             <dd>The value that will be selected by default in the autocomplete list. Default: <code>undefined</code> Possible values: <code>String</code> (the value of the choice; if not found in the choices array, it will act like null), <code>null</code> (will tell immybox that nothing should be selected by default).</dd>
@@ -227,7 +227,7 @@ $('#input1').immybox({
         </div>
       </div>
       <div class='footer'>
-        <p>&copy; Immense Networks 2013</p>
+        <p>&copy; Immense Networks 2014</p>
       </div>
     </div>
   </body>
