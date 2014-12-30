@@ -18,10 +18,16 @@
       },
       formatChoice: function(query) {
         var reg;
-        reg = new RegExp(query, 'gi');
-        return function(choice) {
-          return choice.text.replace(reg, '<span class="highlight">$&</span>');
-        };
+        if ((query != null) && query !== '') {
+          reg = new RegExp(query.replace(/[#-.]|[[-^]|[?|{}]/g, '\\$&'), 'gi');
+          return function(choice) {
+            return choice.text.replace(reg, '<span class="highlight">$&</span>');
+          };
+        } else {
+          return function(choice) {
+            return choice.text;
+          };
+        }
       }
     };
     objects = [];

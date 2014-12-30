@@ -13,8 +13,12 @@
     formatChoice: (query) ->
       # default choice formatter function wraps all instances of query in a
       # span.highlight
-      reg = new RegExp(query, 'gi')
-      (choice) -> choice.text.replace(reg, '<span class="highlight">$&</span>')
+      if query? and query isnt ''
+        reg = new RegExp(query.replace(/[#-.]|[[-^]|[?|{}]/g, '\\$&'), 'gi')
+        return (choice) ->
+          choice.text.replace(reg, '<span class="highlight">$&</span>')
+      else
+        return (choice) -> choice.text
 
   objects = [] # keep references to all plugin instances
 
