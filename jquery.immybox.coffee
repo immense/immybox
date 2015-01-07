@@ -103,7 +103,7 @@
           # If user has backspaced everything in the field, we can safely clear
           # clear the currently-selected value (since clicking out of the field
           # this point would call @revert() anyway)
-          @selectChoiceByValue()
+          @selectChoiceByValue(null)
         else
           @insertFilteredChoiceElements query
       return
