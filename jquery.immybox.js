@@ -89,6 +89,7 @@
           this.oldQuery = query;
           if (query === '') {
             this.hideResults();
+            this.selectChoiceByValue();
           } else {
             this.insertFilteredChoiceElements(query);
           }
