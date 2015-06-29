@@ -1,6 +1,6 @@
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   (function($, window, document) {
     var ImmyBox, defaults, objects, pluginName;
@@ -33,12 +33,12 @@
     objects = [];
     ImmyBox = (function() {
       function ImmyBox(element, options) {
-        this.reposition = __bind(this.reposition, this);
-        this.revert = __bind(this.revert, this);
-        this.openResults = __bind(this.openResults, this);
-        this.doSelection = __bind(this.doSelection, this);
-        this.doQuery = __bind(this.doQuery, this);
-        var self, _base;
+        this.reposition = bind(this.reposition, this);
+        this.revert = bind(this.revert, this);
+        this.openResults = bind(this.openResults, this);
+        this.doSelection = bind(this.doSelection, this);
+        this.doQuery = bind(this.doQuery, this);
+        var base, self;
         self = this;
         this.element = $(element);
         this.element.addClass(pluginName);
@@ -52,15 +52,15 @@
           return c.value === self.options.defaultSelectedValue;
         })[0] || null : this.options.defaultSelectedValue;
         if (this.options.showArrow) {
-          this.element.addClass("" + pluginName + "_witharrow");
+          this.element.addClass(pluginName + "_witharrow");
         }
         if (this.options.openOnClick) {
           this.element.on('click', this.openResults);
         }
         this.selectChoiceByValue(this.element.val());
         this.queryResultArea = $("<div class='" + pluginName + "_results'></div>");
-        if (typeof (_base = this.queryResultArea).scrollLock === "function") {
-          _base.scrollLock();
+        if (typeof (base = this.queryResultArea).scrollLock === "function") {
+          base.scrollLock();
         }
         this.queryResultAreaVisible = false;
         this._val = this.element.val();
@@ -170,8 +170,8 @@
         }
         truncatedChoices = filteredChoices.slice(0, this.options.maxResults);
         if (defaultChoice = this.defaultSelectedChoice) {
-          if (__indexOf.call(filteredChoices, defaultChoice) >= 0) {
-            if (__indexOf.call(truncatedChoices, defaultChoice) < 0) {
+          if (indexOf.call(filteredChoices, defaultChoice) >= 0) {
+            if (indexOf.call(truncatedChoices, defaultChoice) < 0) {
               truncatedChoices.unshift(defaultChoice);
               truncatedChoices.pop();
             } else {
@@ -350,9 +350,9 @@
       };
 
       ImmyBox.prototype.revertOtherInstances = function() {
-        var o, _i, _len;
-        for (_i = 0, _len = objects.length; _i < _len; _i++) {
-          o = objects[_i];
+        var i, len, o;
+        for (i = 0, len = objects.length; i < len; i++) {
+          o = objects[i];
           if (o !== this) {
             o.revert();
           }
@@ -426,16 +426,16 @@
 
     })();
     $('html').on('click', function() {
-      var o, _i, _len;
-      for (_i = 0, _len = objects.length; _i < _len; _i++) {
-        o = objects[_i];
+      var i, len, o;
+      for (i = 0, len = objects.length; i < len; i++) {
+        o = objects[i];
         o.revert();
       }
     });
     $(window).on('resize scroll', function() {
-      var o, _i, _len;
-      for (_i = 0, _len = objects.length; _i < _len; _i++) {
-        o = objects[_i];
+      var i, len, o;
+      for (i = 0, len = objects.length; i < len; i++) {
+        o = objects[i];
         if (o.queryResultAreaVisible) {
           o.reposition();
         }
@@ -451,10 +451,10 @@
           if ((options != null) && typeof options === 'string') {
             plugin = $.data(this, "plugin_" + pluginName);
             method = options;
-            if (__indexOf.call(plugin.publicMethods, method) >= 0) {
+            if (indexOf.call(plugin.publicMethods, method) >= 0) {
               outputs.push(plugin[method].apply(plugin, args));
             } else {
-              throw new Error("" + pluginName + " has no method '" + method + "'");
+              throw new Error(pluginName + " has no method '" + method + "'");
             }
           }
         } else {
