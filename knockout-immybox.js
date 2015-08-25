@@ -8,8 +8,8 @@
         options.choices = choices;
         elem = $(element);
         elem.immybox(options);
-        return ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
-          return $(element).immybox('destroy');
+        ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+          $(element).immybox('destroy');
         });
       },
       update: function(element, valueAccessor, allBindings) {
@@ -19,7 +19,7 @@
         elem.immybox('setChoices', choices);
         if (allBindings.has('immybox_value')) {
           observable = allBindings.get('immybox_value');
-          return observable.valueHasMutated();
+          observable.valueHasMutated();
         }
       }
     };
@@ -28,15 +28,15 @@
         var elem, valueObservable;
         valueObservable = valueAccessor();
         elem = $(element);
-        return elem.on('update', function(e, newValue) {
-          return valueObservable(newValue);
+        elem.on('update', function(e, newValue) {
+          valueObservable(newValue);
         });
       },
       update: function(element, valueAccessor) {
         var elem, value;
         value = ko.utils.unwrapObservable(valueAccessor());
         elem = $(element);
-        return elem.immybox('setValue', value);
+        elem.immybox('setValue', value);
       }
     };
   });

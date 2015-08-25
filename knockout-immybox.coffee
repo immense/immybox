@@ -6,7 +6,10 @@ $ ->
       options.choices = choices
       elem = $ element
       elem.immybox options
-      ko.utils.domNodeDisposal.addDisposeCallback element, -> $(element).immybox 'destroy'
+      ko.utils.domNodeDisposal.addDisposeCallback element, ->
+        $(element).immybox 'destroy'
+        return
+      return
 
     update: (element, valueAccessor, allBindings) ->
       choices = ko.utils.unwrapObservable valueAccessor()
@@ -15,6 +18,7 @@ $ ->
       if allBindings.has 'immybox_value'
         observable = allBindings.get 'immybox_value'
         observable.valueHasMutated()
+      return
 
   ko.bindingHandlers.immybox_value =
     init: (element, valueAccessor) ->
@@ -22,8 +26,11 @@ $ ->
       elem = $ element
       elem.on 'update', (e, newValue) ->
         valueObservable newValue
+        return
+      return
 
     update: (element, valueAccessor) ->
       value = ko.utils.unwrapObservable valueAccessor()
       elem = $ element
       elem.immybox 'setValue', value
+      return
