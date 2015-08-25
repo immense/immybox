@@ -12,11 +12,15 @@
           return $(element).immybox('destroy');
         });
       },
-      update: function(element, valueAccessor) {
-        var choices, elem;
+      update: function(element, valueAccessor, allBindings) {
+        var choices, elem, observable;
         choices = ko.utils.unwrapObservable(valueAccessor());
         elem = $(element);
-        return elem.immybox('setChoices', choices);
+        elem.immybox('setChoices', choices);
+        if (allBindings.has('immybox_value')) {
+          observable = allBindings.get('immybox_value');
+          return observable.valueHasMutated();
+        }
       }
     };
     return ko.bindingHandlers.immybox_value = {
