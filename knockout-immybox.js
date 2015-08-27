@@ -13,13 +13,14 @@
         });
       },
       update: function(element, valueAccessor, allBindings) {
-        var choices, elem, observable;
+        var base, choices, elem;
         choices = ko.utils.unwrapObservable(valueAccessor());
         elem = $(element);
         elem.immybox('setChoices', choices);
         if (allBindings.has('immybox_value')) {
-          observable = allBindings.get('immybox_value');
-          observable.valueHasMutated();
+          if (typeof (base = allBindings.get('immybox_value')).valueHasMutated === "function") {
+            base.valueHasMutated();
+          }
         }
       }
     };

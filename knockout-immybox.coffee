@@ -16,8 +16,7 @@ $ ->
       elem = $ element
       elem.immybox 'setChoices', choices
       if allBindings.has 'immybox_value'
-        observable = allBindings.get 'immybox_value'
-        observable.valueHasMutated()
+        allBindings.get('immybox_value').valueHasMutated?()
       return
 
   ko.bindingHandlers.immybox_value =
