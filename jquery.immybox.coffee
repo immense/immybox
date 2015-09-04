@@ -43,6 +43,7 @@
 
       @_defaults = defaults
       @_name = pluginName
+      @_element = element
 
       @options = $.extend {}, defaults, options
       @choices = @options.choices
@@ -327,19 +328,25 @@
 
     # select the first choice with matching value
     # Note: values should be unique
-    selectChoiceByValue: (value) ->
-      oldValue = @getValue()
-      if value? and value isnt ''
-        matches = @choices.filter (choice) -> return `choice.value == value` # use type coersive equals
+    selectChoiceByValue: (value_to_select) ->
+      old_value = @getValue()
+      if value_to_select? and value_to_select isnt ''
+        matches = @choices.filter (choice) -> return `choice.value == value_to_select` # use type coersive equals
         if matches[0]?
           @selectedChoice = matches[0]
         else
           @selectedChoice = null
       else
         @selectedChoice = null
-      newValue = @getValue()
-      if newValue isnt oldValue
-        @element.trigger 'update', [newValue]
+      value = @getValue()
+      if value isnt old_value
+        @element.trigger 'update', [value]
+        # @_element.dispatchEvent new CustomEvent('update', {
+        #   detail: value
+        # })
+        if typeof Event isnt 'undefined'
+          @_element.dispatchEvent new Event('input')
+
       @display()
       return
 
