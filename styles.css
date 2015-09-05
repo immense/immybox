@@ -217,10 +217,7 @@ html, body {
   margin-bottom: 48px;
 }
 .mdl-demo section.section--center {
-  max-width: 860px;
-}
-.mdl-demo #features section.section--center {
-  max-width: 620px;
+  max-width: 1000px;
 }
 .mdl-demo section > header{
   display: -webkit-box;
@@ -352,4 +349,16 @@ html, body {
 }
 .mdl-demo .mdl-menu__container {
   z-index: 99;
+}
+
+.mdl-demo .mdl-textfield {
+	width: 100%;
+}
+
+.mdl-demo .mdl-grid.mdl-grid--small-spacing {
+	padding: 2px;
+}
+
+.mdl-demo i.material-icons--2x {
+	font-size: 30px;
 }
