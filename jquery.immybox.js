@@ -325,6 +325,9 @@
         } else {
           this.element.val('');
         }
+        if (typeof Event !== 'undefined') {
+          this._element.dispatchEvent(new Event('input'));
+        }
         this._val = this.element.val();
       };
 
@@ -346,9 +349,6 @@
         value = this.getValue();
         if (value !== old_value) {
           this.element.trigger('update', [value]);
-          if (typeof Event !== 'undefined') {
-            this._element.dispatchEvent(new Event('input'));
-          }
         }
         this.display();
       };

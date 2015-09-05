@@ -323,6 +323,9 @@
       else
         @element.val ''
 
+      if typeof Event isnt 'undefined'
+        @_element.dispatchEvent new Event('input')
+
       @_val = @element.val()
       return
 
@@ -344,8 +347,6 @@
         # @_element.dispatchEvent new CustomEvent('update', {
         #   detail: value
         # })
-        if typeof Event isnt 'undefined'
-          @_element.dispatchEvent new Event('input')
 
       @display()
       return
