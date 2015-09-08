@@ -45,6 +45,7 @@
         this.element.attr('autocomplete', 'off');
         this._defaults = defaults;
         this._name = pluginName;
+        this._element = element;
         this.options = $.extend({}, defaults, options);
         this.choices = this.options.choices;
         this.selectedChoice = null;
@@ -324,15 +325,18 @@
         } else {
           this.element.val('');
         }
+        if (typeof Event !== 'undefined') {
+          this._element.dispatchEvent(new Event('input'));
+        }
         this._val = this.element.val();
       };
 
-      ImmyBox.prototype.selectChoiceByValue = function(value) {
-        var matches, newValue, oldValue;
-        oldValue = this.getValue();
-        if ((value != null) && value !== '') {
+      ImmyBox.prototype.selectChoiceByValue = function(value_to_select) {
+        var matches, old_value, value;
+        old_value = this.getValue();
+        if ((value_to_select != null) && value_to_select !== '') {
           matches = this.choices.filter(function(choice) {
-            return choice.value == value;
+            return choice.value == value_to_select;
           });
           if (matches[0] != null) {
             this.selectedChoice = matches[0];
@@ -342,9 +346,9 @@
         } else {
           this.selectedChoice = null;
         }
-        newValue = this.getValue();
-        if (newValue !== oldValue) {
-          this.element.trigger('update', [newValue]);
+        value = this.getValue();
+        if (value !== old_value) {
+          this.element.trigger('update', [value]);
         }
         this.display();
       };
