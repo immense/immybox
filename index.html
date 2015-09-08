@@ -128,10 +128,17 @@
           formatChoice: function(query) {
             var reg = new RegExp("(" + query + ")", "i");
             return function(choice) {
-              return "<em class='pull-right'> " +
-                choice.employer +
-              "</em>" +
-              [choice.text.replace(reg, "<u>$1</u>"), choice.age].join(", ");
+              return "<div class='mdl-grid mdl-grid--no-spacing'>" +
+                       "<div class='mdl-cell mdl-cell--6-col'>" +
+                         [
+                           choice.text.replace(reg, "<u>$1</u>"),
+                           choice.age
+                         ].join(", ") +
+                       "</div>" +
+                       "<div class='mdl-cell mdl-cell--6-col'>" +
+                         choice.employer +
+                       "</div>" +
+                     "</div>";
             };
           }
         });
@@ -152,10 +159,17 @@
           formatChoice: function(query) {
             var reg = new RegExp("(" + query + ")", 'i');
             return function(choice) {
-              return "<em class='pull-right'> " +
-                choice.employer.replace(reg, "<u>$1</u>") +
-              "</em>" +
-              [choice.text.replace(reg, "<u>$1</u>"), String(choice.age).replace(reg, "<u>$1</u>")].join(", ");
+              return "<div class='mdl-grid mdl-grid--no-spacing'>" +
+                       "<div class='mdl-cell mdl-cell--6-col'>" +
+                         [
+                           choice.text.replace(reg, "<u>$1</u>"),
+                           String(choice.age).replace(reg, "<u>$1</u>")
+                         ].join(", ") +
+                       "</div>" +
+                       "<div class='mdl-cell mdl-cell--6-col'>" +
+                         choice.employer.replace(reg, "<u>$1</u>") +
+                       "</div>" +
+                     "</div>";
             };
           }
         });
@@ -192,7 +206,7 @@
             </div>
           </section>
           <section class="section--center mdl-grid mdl-grid--no-spacing">
-            <div class="mdl-cell mdl-cell--2-col">
+            <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
               <h5></h5>
               Call&nbsp;
               <code class="language-javascript">.immybox()</code>
@@ -200,10 +214,9 @@
               <code class="language-javascript">input[type="text"]</code>
               &nbsp;element, and pass in some choices.
             </div>
-            <div class="mdl-card mdl-cell mdl-cell--10-col">
-              <div class="mdl-card__supporting-text mdl-grid">
-                <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-                  <pre><code class="language-javascript">  $('#input-1').immybox({
+            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                <pre><code class="language-javascript">  $('#input-1').immybox({
     choices: [
       {text: 'Alabama', value: 'AL'},
       {text: 'Alaska', value: 'AK'},
@@ -213,15 +226,13 @@
     ],
     defaultSelectedValue: 'LA'
   });</code></pre>
-                </div>
-                <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-                  <div class="mdl-textfield mdl-js-textfield">
-                    <input class="mdl-textfield__input" type="text" id="input-1" />
-                    <label class="mdl-textfield__label" for="input-1">Select a State</label>
-                  </div>
+              </div>
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="input-1" />
+                  <label class="mdl-textfield__label" for="input-1">Select a State</label>
                 </div>
               </div>
-            </div>
           </section>
           <section id="options" class="section--center mdl-grid mdl-grid--no-spacing">
             <div class="mdl-cell mdl-cell--12-col">
@@ -239,21 +250,19 @@
               Default:
               <code class="language-javascript">[]</code>
             </div>
-            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-              <div class="mdl-card__supporting-text mdl-grid">
-                <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-  <pre><code class="language-javascript">  $('#input-2').immybox({
-    choices: [
-      {text: 'Foo', value: 'foo'},
-      {text: 'Bar', value: 'bar'}
-    ]
-  });</code></pre>
-                </div>
-                <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
-                  <div class="mdl-textfield mdl-js-textfield">
-                    <input class="mdl-textfield__input" type="text" id="input-2" />
-                    <label class="mdl-textfield__label" for="input-2">Select One</label>
-                  </div>
+            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+<pre><code class="language-javascript">  $('#input-2').immybox({
+  choices: [
+    {text: 'Foo', value: 'foo'},
+    {text: 'Bar', value: 'bar'}
+  ]
+});</code></pre>
+              </div>
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="input-2" />
+                  <label class="mdl-textfield__label" for="input-2">Select One</label>
                 </div>
               </div>
             </div>
@@ -266,9 +275,8 @@
               Default:
               <code class="language-javascript">50</code>
             </div>
-            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-              <div class="mdl-card__supporting-text mdl-grid">
-                <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
   <pre><code class="language-javascript">  $('#input-3').immybox({
     choices: [
       {text: 'Foo', value: 'foo'},
@@ -276,12 +284,11 @@
     ],
     maxResults: 1
   });</code></pre>
-                </div>
-                <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
-                  <div class="mdl-textfield mdl-js-textfield">
-                    <input class="mdl-textfield__input" type="text" id="input-3" />
-                    <label class="mdl-textfield__label" for="input-3">Select One</label>
-                  </div>
+              </div>
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="input-3" />
+                  <label class="mdl-textfield__label" for="input-3">Select One</label>
                 </div>
               </div>
             </div>
@@ -295,9 +302,8 @@
               Default:
               <code class="language-javascript">true</code>
             </div>
-            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-              <div class="mdl-card__supporting-text mdl-grid">
-                <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
   <pre><code class="language-javascript">  $('#input-4').immybox({
     choices: [
       {text: 'Foo', value: 'foo'},
@@ -305,12 +311,11 @@
     ],
     showArrow: false
   });</code></pre>
-                </div>
-                <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
-                  <div class="mdl-textfield mdl-js-textfield">
-                    <input class="mdl-textfield__input" type="text" id="input-4" />
-                    <label class="mdl-textfield__label" for="input-4">Select One</label>
-                  </div>
+              </div>
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="input-4" />
+                  <label class="mdl-textfield__label" for="input-4">Select One</label>
                 </div>
               </div>
             </div>
@@ -324,9 +329,8 @@
               Default:
               <code class="language-javascript">true</code>
             </div>
-            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-              <div class="mdl-card__supporting-text mdl-grid">
-                <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
   <pre><code class="language-javascript">  $('#input-5').immybox({
     choices: [
       {text: 'Foo', value: 'foo'},
@@ -334,12 +338,11 @@
     ],
     openOnClick: false
   });</code></pre>
-                </div>
-                <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
-                  <div class="mdl-textfield mdl-js-textfield">
-                    <input class="mdl-textfield__input" type="text" id="input-5" />
-                    <label class="mdl-textfield__label" for="input-5">Select One</label>
-                  </div>
+              </div>
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="input-5" />
+                  <label class="mdl-textfield__label" for="input-5">Select One</label>
                 </div>
               </div>
             </div>
@@ -357,29 +360,35 @@
               underlining all parts of it that match
               <code class="language-javascript">query</code>.
             </div>
-            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-              <div class="mdl-card__supporting-text mdl-grid">
-                <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+              <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
   <pre><code class="language-javascript">  $('#input-6').immybox({
     choices: [
       {text: 'John Smith', value: 'jsmith', age: 31, employer: 'Smith Enterprises'},
       {text: 'Jane Doe', value: 'jdoe', age: 20, employer: 'National Security Agency'}
     ],
-    formatChoice: function(query) {
-      return function(choice) {
-        return "&lt;em class='pull-right'&gt; " +
-          choice.employer +
-        "&lt;/em&gt;" +
-        [choice.text.replace(query, "&lt;u&gt;" + query + "&lt;/u&gt;"), choice.age].join(", ");
-      };
+    formatChoice(query) {
+      const reg = new RegExp("(" + query + ")", "i");
+      return choice => (
+        "&lt;div class='mdl-grid mdl-grid--no-spacing'&gt;" +
+          "&lt;div class='mdl-cell mdl-cell--6-col'&gt;" +
+            [
+              choice.text.replace(reg, "&lt;u&gt;$1&lt;/u&gt;"),
+              choice.age
+            ].join(", ") +
+          "&lt;/div&gt;" +
+          "&lt;div class='mdl-cell mdl-cell--6-col'&gt;" +
+            choice.employer +
+          "&lt;/div&gt;" +
+        "&lt;/div&gt;"
+      );
     }
   });</code></pre>
-                </div>
-                <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
-                  <div class="mdl-textfield mdl-js-textfield">
-                    <input class="mdl-textfield__input" type="text" id="input-6" />
-                    <label class="mdl-textfield__label" for="input-6">Select One</label>
-                  </div>
+              </div>
+              <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="input-6" />
+                  <label class="mdl-textfield__label" for="input-6">Select One</label>
                 </div>
               </div>
             </div>
@@ -394,37 +403,43 @@
               <code class="language-javascript">choice</code>
               as argument and returns a boolean. Default function case insensitive "contains" matching.
             </div>
-            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-              <div class="mdl-card__supporting-text mdl-grid">
-                <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+              <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
   <pre><code class="language-javascript">  $('#input-7').immybox({
     choices: [
       {text: 'John Smith', value: 'jsmith', age: 31, employer: 'Smith Enterprises'},
       {text: 'Jane Doe', value: 'jdoe', age: 20, employer: 'National Security Agency'}
     ],
-    filterFn: function(query) {
-      var lowercase_query = query.toLowerCase();
-      return function(choice) {
-        return choice.text.indexOf(lowercase_query) >= 0 ||
-        String(choice.age).indexOf(lowercase_query) >= 0 ||
-        choice.employer.indexOf(lowercase_query) >= 0;
-      };
-    }
-    formatChoice: function(query) {
-      return function(choice) {
-        return "&lt;em class='pull-right'&gt; " +
-          choice.employer.replace(query, "&lt;u&gt;" + query + "&lt;/u&gt;") +
-        "&lt;/em&gt;" +
-        [choice.text.replace(query, "&lt;u&gt;" + query + "&lt;/u&gt;"), String(choice.age).replace(query, "&lt;u&gt;" + query + "&lt;/u&gt;")].join(", ");
-      };
+    filterFn(query) {
+      const lowercase_query = query.toLowerCase();
+      return choice => (
+        choice.text.toLowerCase().indexOf(lowercase_query) >= 0 ||
+        String(choice.age).toLowerCase().indexOf(lowercase_query) >= 0 ||
+        choice.employer.toLowerCase().indexOf(lowercase_query) >= 0
+      );
+    },
+    formatChoice(query) {
+      const reg = new RegExp("(" + query + ")", 'i');
+      return choice => (
+        "&lt;div class='mdl-grid mdl-grid--no-spacing'&gt;" +
+          "&lt;div class='mdl-cell mdl-cell--6-col'&gt;" +
+            [
+              choice.text.replace(reg, "&lt;u&gt;$1&lt;/u&gt;"),
+              String(choice.age).replace(reg, "&lt;u&gt;$1&lt;/u&gt;")
+            ].join(", ") +
+          "&lt;/div&gt;" +
+          "&lt;div class='mdl-cell mdl-cell--6-col'&gt;" +
+            choice.employer.replace(reg, "&lt;u&gt;$1&lt;/u&gt;") +
+          "&lt;/div&gt;" +
+        "&lt;/div&gt;"
+      );
     }
   });</code></pre>
-                </div>
-                <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
-                  <div class="mdl-textfield mdl-js-textfield">
-                    <input class="mdl-textfield__input" type="text" id="input-7" />
-                    <label class="mdl-textfield__label" for="input-7">Select One</label>
-                  </div>
+              </div>
+              <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="input-7" />
+                  <label class="mdl-textfield__label" for="input-7">Select One</label>
                 </div>
               </div>
             </div>
@@ -444,9 +459,8 @@
               <code class="language-javascript">null</code>
               (will tell immybox that nothing should be selected by default).
             </div>
-            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-              <div class="mdl-card__supporting-text mdl-grid">
-                <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
   <pre><code class="language-javascript">  $('#input-8').immybox({
     choices: [
       {text: 'Foo', value: 'foo'},
@@ -454,12 +468,11 @@
     ],
     defaultSelectedValue: 'bar'
   });</code></pre>
-                </div>
-                <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
-                  <div class="mdl-textfield mdl-js-textfield">
-                    <input class="mdl-textfield__input" type="text" id="input-8" />
-                    <label class="mdl-textfield__label" for="input-8">Select One</label>
-                  </div>
+              </div>
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="input-8" />
+                  <label class="mdl-textfield__label" for="input-8">Select One</label>
                 </div>
               </div>
             </div>
