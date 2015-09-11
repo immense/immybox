@@ -6,9 +6,7 @@
     "compile": "grunt"
   },
   "devDependencies": {
-    "grunt": "*",
-    "grunt-contrib-uglify": "*",
-    "grunt-contrib-coffee": "*",
-    "grunt-contrib-less": "*"
+    "babel-core": "5.x",
+    "babel-loader": "5.x"
   }
 }
