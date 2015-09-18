@@ -5,7 +5,9 @@
   "private": false,
   "license": "MIT",
   "main": [
-    "jquery.immybox.js",
-    "immybox.css"
+    "build/immybox.js",
+    "build/jquery.immybox.js",
+    "build/immybox.css",
+    "src/immybox-arrow.png"
   ]
 }

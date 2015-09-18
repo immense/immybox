@@ -1,7 +1,7 @@
 // Polyfills
 Number.isNaN = Number.isNaN || function(value) {
-  return typeof value === "number" && isNaN(value);
-}
+  return typeof value === 'number' && isNaN(value);
+};
 if (!Array.prototype.find) {
   Array.prototype.find = function(predicate) {
     if (this === null) {
@@ -25,6 +25,35 @@ if (!Array.prototype.find) {
   };
 }
 
+if (!Array.prototype.includes) {
+  Array.prototype.includes = function(searchElement /*, fromIndex*/ ) {
+    'use strict';
+    var O = Object(this);
+    var len = parseInt(O.length) || 0;
+    if (len === 0) {
+      return false;
+    }
+    var n = parseInt(arguments[1]) || 0;
+    var k;
+    if (n >= 0) {
+      k = n;
+    } else {
+      k = len + n;
+      if (k < 0) {k = 0;}
+    }
+    var currentElement;
+    while (k < len) {
+      currentElement = O[k];
+      if (searchElement === currentElement ||
+         (searchElement !== searchElement && currentElement !== currentElement)) {
+        return true;
+      }
+      k++;
+    }
+    return false;
+  };
+}
+
 // Exported utility methods
 export function assert(bool, message) {
   if (!bool) throw new Error(message);
@@ -32,22 +61,22 @@ export function assert(bool, message) {
 
 export function hasClass(element, class_name) {
   return !!element.className.match(new RegExp(`(\\s|^)${class_name}(\\s|$)`));
-},
+}
 export function addClass(element, class_name) {
   if (!hasClass(element, class_name)) element.className += ` ${class_name}`;
-},
+}
 export function removeClass(element, class_name) {
   if (hasClass(element, class_name)) {
     var reg = new RegExp(`(\\s|^)${class_name}(\\s|$)`);
     element.className = element.className.replace(reg, ' ');
   }
-},
+}
 export function matchesSelector(element, selector) {
   if (element.matches) {
     return element.matches(selector);
   } else {
-    let matches = (element.document || element.ownerDocument).querySelectorAll(selector),
-        i = 0;
+    let matches = (element.document || element.ownerDocument).querySelectorAll(selector);
+    let i = 0;
     while (matches[i] && matches[i] !== element) i++;
     return matches[i] ? true : false;
   }

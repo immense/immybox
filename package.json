@@ -3,10 +3,19 @@
   "version": "0.4.1",
   "private": true,
   "scripts": {
-    "compile": "grunt"
+    "build:less": "echo '=> compiling less' && lessc src/immybox.less build/immybox.css && echo 'Done!'",
+    "build": "echo '=> building' && webpack",
+    "lint": "echo '=> linting' && eslint src && echo 'All good!'",
+    "watch": "watch 'npm run lint -s && npm run build -s && npm run build:less -s' src",
+    "watch:lint": "watch 'npm run lint -s' src"
   },
   "devDependencies": {
     "babel-core": "5.x",
-    "babel-loader": "5.x"
+    "babel-eslint": "4.x",
+    "babel-loader": "5.x",
+    "eslint": "1.x",
+    "eslint-plugin-babel": "2.x",
+    "less": "2.x",
+    "watch": "0.x"
   }
 }

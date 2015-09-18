@@ -1,28 +1,26 @@
-var path    = require('path'),
-    webpack = require('webpack');
+/*eslint-env node */
+var path    = require('path');
+var webpack = require('webpack');
 
 module.exports = {
-    entry: {
-      immybox: path.join(__dirname, 'src', 'immybox.js'),
-      'jquery.immybox': path.join(__dirname, 'src', 'jquery.immybox.js')
-    },
-    output: {
-        path: path.join(__dirname, 'build'),
-        filename: '[name].js'
-    },
-    module: {
-        loaders: [
-            {test: path.join(__dirname, 'src'), loader: 'babel-loader'}
-        ]
-    },
-    plugins: [
-      new webpack.NoErrorsPlugin(),
-      new webpack.ProvidePlugin({
-        $: 'jQuery'
-      })
-    ],
-    stats: {
-      colors: true
-    },
-    devtool: 'source-map'
+  entry: {
+    'jquery.immybox': path.join(__dirname, 'src', 'jquery.immybox.js'),
+    immybox: [path.join(__dirname, 'src', 'immybox.js')]
+  },
+  output: {
+    path: path.join(__dirname, 'build'),
+    filename: '[name].js'
+  },
+  module: {
+    loaders: [
+      {test: path.join(__dirname, 'src'), loader: 'babel-loader'}
+    ]
+  },
+  plugins: [
+    new webpack.NoErrorsPlugin()
+  ],
+  stats: {
+    colors: true
+  },
+  devtool: 'source-map'
 };
