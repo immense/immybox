@@ -1,3 +1,4 @@
+/*eslint no-console:0*/
 // Polyfills
 Number.isNaN = Number.isNaN || function(value) {
   return typeof value === 'number' && isNaN(value);
@@ -71,13 +72,14 @@ export function removeClass(element, class_name) {
     element.className = element.className.replace(reg, ' ');
   }
 }
-export function matchesSelector(element, selector) {
-  if (element.matches) {
-    return element.matches(selector);
-  } else {
-    let matches = (element.document || element.ownerDocument).querySelectorAll(selector);
-    let i = 0;
-    while (matches[i] && matches[i] !== element) i++;
-    return matches[i] ? true : false;
-  }
+
+function parentNodeMatchingSelector(element, selector) {
+  if (!element.parentNode || !element.parentNode.matches) return null;
+  if (element.parentNode.matches(selector)) return element.parentNode;
+  return parentNodeMatchingSelector(element.parentNode, selector);
+}
+
+export function nodeOrParentMatchingSelector(element, selector) {
+  if (element.matches && element.matches(selector)) return element;
+  return parentNodeMatchingSelector(element, selector);
 }

@@ -1,5 +1,5 @@
 /*eslint no-console:0*/
-import {addClass, removeClass, matchesSelector} from './utils';
+import {addClass, removeClass, nodeOrParentMatchingSelector} from './utils';
 
 const event_listeners = new Map();
 
@@ -79,8 +79,9 @@ export class ImmyBox {
       assignEvent('click', this.openResults.bind(this), this.element, listeners);
 
     assignEvent('click', event => {
-      if (matchesSelector(event.target, `li.${plugin_name}_choice`)) {
-        let value = this.valueFromElement(event.target);
+      let node = nodeOrParentMatchingSelector(event.target, `li.${plugin_name}_choice`);
+      if (node) {
+        let value = this.valueFromElement(node);
         this.selectChoiceByValue(value);
         this.hideResults();
         this._val = this.element.value;
@@ -89,12 +90,11 @@ export class ImmyBox {
     }, this.queryResultArea, listeners);
 
     assignEvent('mouseenter', event => {
-      if (matchesSelector(event.target, `li.${plugin_name}_choice`)) {
-        addClass(event.target, 'active');
+      let node = nodeOrParentMatchingSelector(event.target, `li.${plugin_name}_choice`);
+      if (node) {
+        addClass(node, 'active');
         [...this.queryResultArea.querySelectorAll(`li.${plugin_name}_choice.active`)]
-        .forEach(li => {
-          if (li !== event.target) removeClass(li, 'active');
-        });
+        .forEach(li => li !== node && removeClass(li, 'active'));
       }
     }, this.queryResultArea, listeners);
 
@@ -187,7 +187,7 @@ export class ImmyBox {
 
   // if visible, reposition the results area on window resize
   reposition() {
-    if (this.queryResultAreaVisible) this.positionResultsArea();
+    this.queryResultAreaVisible && this.positionResultsArea();
   }
 
   insertFilteredChoiceElements(query) {
@@ -337,6 +337,7 @@ export class ImmyBox {
   // public methods
 
   showResults() {
+    console.log('showing results', this.queryResultAreaVisible);
     !this.queryResultAreaVisible && document.body.appendChild(this.queryResultArea);
     this.queryResultAreaVisible = true;
     this.scroll();
@@ -401,7 +402,7 @@ export class ImmyBox {
       }
 
     removeClass(this.element, plugin_name);
-    this.queryResultAreaVisible && this.document.body.removeChild(this.queryResultArea);
+    this.queryResultAreaVisible && document.body.removeChild(this.queryResultArea);
     all_objects.delete(this.element);
   }
 
@@ -414,4 +415,31 @@ export class ImmyBox {
   static get pluginMethods() {
     return ['showResults', 'hideResults', 'getChoices', 'setChoices', 'getValue', 'setValue', 'destroy'];
   }
+  static pluginForElement(element) {
+    return all_objects.get(element);
+  }
+  static repositionAll() {
+    window.requestAnimationFrame(() => {
+      all_objects.forEach(plugin => {
+        plugin.queryResultAreaVisible && plugin.reposition();
+      });
+    });
+  }
+  static revertAll() {
+    all_objects.forEach(plugin => plugin.revert());
+  }
+  static repositionWhenScrolling(container) {
+    // use one global scoll listener to reposition any result areas that are open
+    container.addEventListener('scroll', ImmyBox.repositionAll);
+  }
 }
+
+// use one global click event listener to close/revert ones that are open
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.addEventListener('click', ImmyBox.revertAll);
+  // use one global resize listener to reposition any result areas that are open
+  window.addEventListener('resize', ImmyBox.repositionAll);
+
+});
+
+window.ImmyBox = ImmyBox;

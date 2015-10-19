@@ -3,16 +3,18 @@
   "version": "0.4.1",
   "private": true,
   "scripts": {
-    "build:less": "echo '=> compiling less' && lessc src/immybox.less build/immybox.css && echo 'Done!'",
-    "build": "echo '=> building' && webpack",
-    "lint": "echo '=> linting' && eslint src && echo 'All good!'",
-    "watch": "watch 'npm run lint -s && npm run build -s && npm run build:less -s' src",
-    "watch:lint": "watch 'npm run lint -s' src"
+    "build:less": "chalk blue '=> compiling less' && lessc src/immybox.less build/immybox.css && chalk green 'Done!'",
+    "build:js": "chalk blue '=> transpiling ES6' && webpack && chalk green 'Done!'",
+    "build": "npm run build:less -s && npm run build:js -s",
+    "lint": "chalk blue '=> linting' && eslint src && chalk green 'All good!'",
+    "watch": "chalk blue '=> building on changes to /src' && watch 'npm run lint -s && npm run build -s' src",
+    "watch:lint": "chalk blue '=> linting on changes to /src' && watch 'npm run lint -s' src"
   },
   "devDependencies": {
     "babel-core": "5.x",
     "babel-eslint": "4.x",
     "babel-loader": "5.x",
+    "chalk-cli": "1.x",
     "eslint": "1.x",
     "eslint-plugin-babel": "2.x",
     "less": "2.x",

@@ -13,14 +13,17 @@ Immybox is available in the bower repository. To install it in your bower enable
 
 `bower install immybox`
 
-## Building
+## Hacking on Immybox
 
-To build immybox from the less and coffeescript source, do the following in a node.js enabled environment:
+Do the following in a Node.js enabled environment:
 
-```
-npm install -g grunt-cli
+```bash
+# Install development dependencies:
 npm install
-grunt
+# Compile less to css
+npm run build:less
+# Compile the ES6 source to ES5 JS (for compatibility with older browsers)
+npm run build:js
 ```
 ## License
 

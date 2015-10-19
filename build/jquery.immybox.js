@@ -51,19 +51,6 @@
 	
 	var _utils = __webpack_require__(2);
 	
-	// use one global click event listener to close/revert ones that are open
-	$('html').on('click', function () {
-	  _immybox.all_objects.forEach(function (plugin) {
-	    return plugin.revert();
-	  });
-	});
-	
-	// use one global scoll/resize listener to reposition any result areas that are open
-	$(window).on('resize scroll', function () {
-	  _immybox.all_objects.forEach(function (plugin) {
-	    plugin.queryResultAreaVisible && plugin.reposition();
-	  });
-	});
 	(function ($) {
 	  $.fn.immybox = function (options) {
 	    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -205,8 +192,9 @@
 	    if (this.options.openOnClick) assignEvent('click', this.openResults.bind(this), this.element, listeners);
 	
 	    assignEvent('click', function (event) {
-	      if ((0, _utils.matchesSelector)(event.target, 'li.' + plugin_name + '_choice')) {
-	        var value = _this.valueFromElement(event.target);
+	      var node = (0, _utils.nodeOrParentMatchingSelector)(event.target, 'li.' + plugin_name + '_choice');
+	      if (node) {
+	        var value = _this.valueFromElement(node);
 	        _this.selectChoiceByValue(value);
 	        _this.hideResults();
 	        _this._val = _this.element.value;
@@ -215,10 +203,11 @@
 	    }, this.queryResultArea, listeners);
 	
 	    assignEvent('mouseenter', function (event) {
-	      if ((0, _utils.matchesSelector)(event.target, 'li.' + plugin_name + '_choice')) {
-	        (0, _utils.addClass)(event.target, 'active');
+	      var node = (0, _utils.nodeOrParentMatchingSelector)(event.target, 'li.' + plugin_name + '_choice');
+	      if (node) {
+	        (0, _utils.addClass)(node, 'active');
 	        [].concat(_toConsumableArray(_this.queryResultArea.querySelectorAll('li.' + plugin_name + '_choice.active'))).forEach(function (li) {
-	          if (li !== event.target) (0, _utils.removeClass)(li, 'active');
+	          return li !== node && (0, _utils.removeClass)(li, 'active');
 	        });
 	      }
 	    }, this.queryResultArea, listeners);
@@ -230,6 +219,8 @@
 	
 	    all_objects.set(this.element, this);
 	  }
+	
+	  // use one global click event listener to close/revert ones that are open
 	
 	  // on 'keyup', 'change', 'search'
 	  // perform a query on the choices
@@ -324,7 +315,7 @@
 	  }, {
 	    key: 'reposition',
 	    value: function reposition() {
-	      if (this.queryResultAreaVisible) this.positionResultsArea();
+	      this.queryResultAreaVisible && this.positionResultsArea();
 	    }
 	  }, {
 	    key: 'insertFilteredChoiceElements',
@@ -494,6 +485,7 @@
 	  }, {
 	    key: 'showResults',
 	    value: function showResults() {
+	      console.log('showing results', this.queryResultAreaVisible);
 	      !this.queryResultAreaVisible && document.body.appendChild(this.queryResultArea);
 	      this.queryResultAreaVisible = true;
 	      this.scroll();
@@ -608,7 +600,7 @@
 	      }
 	
 	      (0, _utils.removeClass)(this.element, plugin_name);
-	      this.queryResultAreaVisible && this.document.body.removeChild(this.queryResultArea);
+	      this.queryResultAreaVisible && document.body.removeChild(this.queryResultArea);
 	      all_objects['delete'](this.element);
 	    }
 	  }, {
@@ -632,6 +624,33 @@
 	      return this.value;
 	    }
 	  }], [{
+	    key: 'pluginForElement',
+	    value: function pluginForElement(element) {
+	      return all_objects.get(element);
+	    }
+	  }, {
+	    key: 'repositionAll',
+	    value: function repositionAll() {
+	      window.requestAnimationFrame(function () {
+	        all_objects.forEach(function (plugin) {
+	          plugin.queryResultAreaVisible && plugin.reposition();
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'revertAll',
+	    value: function revertAll() {
+	      all_objects.forEach(function (plugin) {
+	        return plugin.revert();
+	      });
+	    }
+	  }, {
+	    key: 'repositionWhenScrolling',
+	    value: function repositionWhenScrolling(container) {
+	      // use one global scoll listener to reposition any result areas that are open
+	      container.addEventListener('scroll', ImmyBox.repositionAll);
+	    }
+	  }, {
 	    key: 'defaults',
 	    set: function set(new_defaults) {
 	      Object.assign(defaults, new_defaults);
@@ -648,13 +667,21 @@
 	
 	  return ImmyBox;
 	})();
-
+	
 	exports.ImmyBox = ImmyBox;
+	document.addEventListener('DOMContentLoaded', function () {
+	  document.body.addEventListener('click', ImmyBox.revertAll);
+	  // use one global resize listener to reposition any result areas that are open
+	  window.addEventListener('resize', ImmyBox.repositionAll);
+	});
+	
+	window.ImmyBox = ImmyBox;
 
 /***/ },
 /* 2 */
 /***/ function(module, exports) {
 
+	/*eslint no-console:0*/
 	// Polyfills
 	'use strict';
 	
@@ -665,7 +692,7 @@
 	exports.hasClass = hasClass;
 	exports.addClass = addClass;
 	exports.removeClass = removeClass;
-	exports.matchesSelector = matchesSelector;
+	exports.nodeOrParentMatchingSelector = nodeOrParentMatchingSelector;
 	Number.isNaN = Number.isNaN || function (value) {
 	  return typeof value === 'number' && isNaN(value);
 	};
@@ -743,15 +770,26 @@
 	  }
 	}
 	
-	function matchesSelector(element, selector) {
-	  if (element.matches) {
-	    return element.matches(selector);
-	  } else {
-	    var matches = (element.document || element.ownerDocument).querySelectorAll(selector);
-	    var i = 0;
-	    while (matches[i] && matches[i] !== element) i++;
-	    return matches[i] ? true : false;
+	function parentNodeMatchingSelector(_x, _x2) {
+	  var _again = true;
+	
+	  _function: while (_again) {
+	    var element = _x,
+	        selector = _x2;
+	    _again = false;
+	
+	    if (!element.parentNode || !element.parentNode.matches) return null;
+	    if (element.parentNode.matches(selector)) return element.parentNode;
+	    _x = element.parentNode;
+	    _x2 = selector;
+	    _again = true;
+	    continue _function;
 	  }
+	}
+	
+	function nodeOrParentMatchingSelector(element, selector) {
+	  if (element.matches && element.matches(selector)) return element;
+	  return parentNodeMatchingSelector(element, selector);
 	}
 
 /***/ }

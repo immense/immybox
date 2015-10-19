@@ -27,15 +27,18 @@
     </style>
     <script src="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.min.js"></script>
     <script src='https://code.jquery.com/jquery-2.1.4.min.js'></script>
-    <script src='build/jquery.immybox.js'></script>
+    <script src='build/immybox.js'></script>
 
-    <script type='text/javascript'>
-      $(function() {
+    <script type="application/javascript;version=1.8">
+      // Once the DOM has been parsed and created, set up our plugins
+      document.addEventListener('DOMContentLoaded', () => {
+        // Tell ImmyBox that is should reposition any open plugins when the
+        // .mdl-layout element is scrolled
+        ImmyBox.repositionWhenScrolling(document.querySelector('.mdl-layout'));
 
         // simple example
-        $('#input-1').immybox({
+        new ImmyBox(document.getElementById('input-1'), {
           choices: [
-            {text: 'Foobar', value: {the: 'stuff'}},
             {text: 'Alabama', value: 'AL'},
             {text: 'Alaska', value: 'AK'},
             {text: 'Arizona', value: 'AZ'},
@@ -90,14 +93,14 @@
           defaultSelectedValue: 'LA'
         });
 
-        $('#input-2').immybox({
+        new ImmyBox(document.getElementById('input-2'), {
           choices: [
             {text: 'Foo', value: 'foo'},
             {text: 'Bar', value: 'bar'}
           ]
         });
 
-        $('#input-3').immybox({
+        new ImmyBox(document.getElementById('input-3'), {
           choices: [
             {text: 'Foo', value: 'foo'},
             {text: 'Bar', value: 'bar'}
@@ -105,7 +108,7 @@
           maxResults: 1
         });
 
-        $('#input-4').immybox({
+        new ImmyBox(document.getElementById('input-4'), {
           choices: [
             {text: 'Foo', value: 'foo'},
             {text: 'Bar', value: 'bar'}
@@ -113,7 +116,7 @@
           showArrow: false
         });
 
-        $('#input-5').immybox({
+        new ImmyBox(document.getElementById('input-5'), {
           choices: [
             {text: 'Foo', value: 'foo'},
             {text: 'Bar', value: 'bar'}
@@ -121,7 +124,7 @@
           openOnClick: false
         });
 
-        $('#input-6').immybox({
+        new ImmyBox(document.getElementById('input-6'), {
           choices: [
             {text: 'John Smith', value: 'jsmith', age: 31, employer: 'Smith Enterprises'},
             {text: 'Jane Doe', value: 'jdoe', age: 20, employer: 'National Security Agency'}
@@ -144,7 +147,7 @@
           }
         });
 
-        $('#input-7').immybox({
+        new ImmyBox(document.getElementById('input-7'), {
           choices: [
             {text: 'John Smith', value: 'jsmith', age: 31, employer: 'Smith Enterprises'},
             {text: 'Jane Doe', value: 'jdoe', age: 20, employer: 'National Security Agency'}
@@ -175,12 +178,33 @@
           }
         });
 
-        $('#input-8').immybox({
+        new ImmyBox(document.getElementById('input-8'), {
           choices: [
             {text: 'Foo', value: 'foo'},
             {text: 'Bar', value: 'bar'}
           ],
           defaultSelectedValue: 'bar'
+        });
+
+
+        document.getElementById('button-run-9').addEventListener('click', event => {
+          event.cancelBubble = true;
+          event.stopPropogation && event.stopPropogation();
+          let el = document.getElementById('input-9');
+          let plugin = new ImmyBox(el, {
+            choices: [
+              {text: 'Foo', value: 'foo'},
+              {text: 'Bar', value: 'bar'}
+            ]
+          });
+          plugin.showResults();
+        });
+        document.getElementById('button-reset-9').addEventListener('click', event => {
+          event.cancelBubble = true;
+          event.stopPropogation && event.stopPropogation();
+          let el = document.getElementById('input-9');
+          let plugin = ImmyBox.pluginForElement(el);
+          plugin && plugin.destroy();
         });
 
       });
@@ -196,6 +220,8 @@
         </div>
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
           <a href="#usage-demo" class="mdl-layout__tab is-active">Usage &amp; Demo</a>
+          <a href="#instance-methods" class="mdl-layout__tab">Instance Methods</a>
+          <a href="#jquery-plugin" class="mdl-layout__tab">jQuery Plugin</a>
           <a href="#knockout-integration" class="mdl-layout__tab">Knockout.js Integration</a>
         </div>
       </header>
@@ -209,6 +235,83 @@
             <a href="https://github.com/immense/immybox">View the source</a> to see the KO integration (it's pretty simple).
           </p>
         </div>
+        <div class="mdl-layout__tab-panel" id="jquery-plugin">
+          <h4>Nothing here yet</h4>
+          <p>
+            The jQuery plugin exists, but we haven't gotten the docs up to date yet. We're working on it!
+          </p>
+          <p>
+            <a href="https://github.com/immense/immybox">View the source</a> to see the jQuery plugin (it's pretty simple).
+          </p>
+        </div>
+        <div class="mdl-layout__tab-panel" id="instance-methods">
+          <section id="instance-methods-show-results" class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+              <h5><a href="#instance-methods-show-results">§</a>&nbsp;#showResults()</h5>
+              Opens the plugin instance's query result area
+            </div>
+            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                <pre><code class="language-javascript">  let el = document.getElementById('input-9');
+  let plugin = new ImmyBox(el, {
+    choices: [
+      {text: 'Foo', value: 'foo'},
+      {text: 'Bar', value: 'bar'}
+    ]
+  });
+  plugin.showResults();</code></pre>
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="button" id="button-run-9">
+                  Run
+                </button>
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="button" id="button-reset-9">
+                  Reset
+                </button>
+              </div>
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="input-9" />
+                  <label class="mdl-textfield__label" for="input-9">Select One</label>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="instance-methods-hide-results" class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+              <h5><a href="#instance-methods-hide-results">§</a>&nbsp;#hideResults()</h5>
+              Closes the plugin instance's query result area
+            </div>
+          </section>
+          <section id="instance-methods-get-choices" class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+              <h5><a href="#instance-methods-get-choices">§</a>&nbsp;#getChoices()</h5>
+              Returns the plugin instance's choice array
+            </div>
+          </section>
+          <section id="instance-methods-set-choices" class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+              <h5><a href="#instance-methods-set-choices">§</a>&nbsp;#setChoices()</h5>
+              Sets the plugin instance's choice array
+            </div>
+          </section>
+          <section id="instance-methods-get-value" class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+              <h5><a href="#instance-methods-get-value">§</a>&nbsp;#getValue()</h5>
+              Returns the plugin instance's current value
+            </div>
+          </section>
+          <section id="instance-methods-set-value" class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+              <h5><a href="#instance-methods-set-value">§</a>&nbsp;#setValue()</h5>
+              Sets the plugin instance's value
+            </div>
+          </section>
+          <section id="instance-methods-destroy" class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+              <h5><a href="#instance-methods-destroy">§</a>&nbsp;#destroy()</h5>
+              Destroys the plugin, removing all event listeners and reverting the input back into a simple text input
+            </div>
+          </section>
+        </div>
         <div class="mdl-layout__tab-panel is-active" id="usage-demo">
           <section id="simple-example" class="section--center mdl-grid mdl-grid--no-spacing">
             <div class="mdl-cell mdl-cell--12-col">
@@ -218,20 +321,21 @@
           <section class="section--center mdl-grid mdl-grid--no-spacing">
             <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
               <h5></h5>
-              Call&nbsp;
-              <code class="language-javascript">.immybox()</code>
-              &nbsp;on any&nbsp;
+              The&nbsp;
+              <code class="language-javascript">ImmyBox</code>
+              &nbsp;constructor takes any&nbsp;
               <code class="language-javascript">input[type="text"]</code>
-              &nbsp;element, and pass in some choices.
+              &nbsp;element as the first argument and an options&nbsp;
+              <code class="language-javascript">Object</code>
+              &nbsp;as the second.
             </div>
             <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-                <pre><code class="language-javascript">  $('#input-1').immybox({
+                <pre><code class="language-javascript">  let el = document.getElementById('input-1');
+  new ImmyBox(el, {
     choices: [
       {text: 'Alabama', value: 'AL'},
-      {text: 'Alaska', value: 'AK'},
       ...
-      {text: 'Wisconsin', value: 'WI'},
       {text: 'Wyoming', value: 'WY'}
     ],
     defaultSelectedValue: 'LA'
@@ -243,6 +347,7 @@
                   <label class="mdl-textfield__label" for="input-1">Select a State</label>
                 </div>
               </div>
+            </div>
           </section>
           <section id="options" class="section--center mdl-grid mdl-grid--no-spacing">
             <div class="mdl-cell mdl-cell--12-col">
@@ -262,12 +367,13 @@
             </div>
             <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-<pre><code class="language-javascript">  $('#input-2').immybox({
-  choices: [
-    {text: 'Foo', value: 'foo'},
-    {text: 'Bar', value: 'bar'}
-  ]
-});</code></pre>
+                <pre><code class="language-javascript">  let el = document.getElementById('input-2');
+  new ImmyBox(el, {
+    choices: [
+      {text: 'Foo', value: 'foo'},
+      {text: 'Bar', value: 'bar'}
+    ]
+  });</code></pre>
               </div>
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
                 <div class="mdl-textfield mdl-js-textfield">
@@ -287,7 +393,8 @@
             </div>
             <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-  <pre><code class="language-javascript">  $('#input-3').immybox({
+  <pre><code class="language-javascript">  let el = document.getElementById('input-3');
+  new ImmyBox(el, {
     choices: [
       {text: 'Foo', value: 'foo'},
       {text: 'Bar', value: 'bar'}
@@ -314,7 +421,8 @@
             </div>
             <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-  <pre><code class="language-javascript">  $('#input-4').immybox({
+  <pre><code class="language-javascript">  let el = document.getElementById('input-4');
+  new ImmyBox(el, {
     choices: [
       {text: 'Foo', value: 'foo'},
       {text: 'Bar', value: 'bar'}
@@ -341,7 +449,8 @@
             </div>
             <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-  <pre><code class="language-javascript">  $('#input-5').immybox({
+  <pre><code class="language-javascript">  let el = document.getElementById('input-5');
+  new ImmyBox(el, {
     choices: [
       {text: 'Foo', value: 'foo'},
       {text: 'Bar', value: 'bar'}
@@ -372,7 +481,8 @@
             </div>
             <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-  <pre><code class="language-javascript">  $('#input-6').immybox({
+  <pre><code class="language-javascript">  let el = document.getElementById('input-6');
+  new ImmyBox(el, {
     choices: [
       {text: 'John Smith', value: 'jsmith', age: 31, employer: 'Smith Enterprises'},
       {text: 'Jane Doe', value: 'jdoe', age: 20, employer: 'National Security Agency'}
@@ -415,7 +525,8 @@
             </div>
             <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-  <pre><code class="language-javascript">  $('#input-7').immybox({
+  <pre><code class="language-javascript">  let el = document.getElementById('input-7');
+  new ImmyBox(el, {
     choices: [
       {text: 'John Smith', value: 'jsmith', age: 31, employer: 'Smith Enterprises'},
       {text: 'Jane Doe', value: 'jdoe', age: 20, employer: 'National Security Agency'}
@@ -471,7 +582,8 @@
             </div>
             <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-  <pre><code class="language-javascript">  $('#input-8').immybox({
+  <pre><code class="language-javascript">  let el = document.getElementById('input-8');
+  new ImmyBox(el, {
     choices: [
       {text: 'Foo', value: 'foo'},
       {text: 'Bar', value: 'bar'}
@@ -487,8 +599,6 @@
               </div>
             </div>
           </section>
-        </div>
-        <div class="mdl-layout__tab-panel" id="knockout-integration">
         </div>
       </main>
     </div>
