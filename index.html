@@ -27,9 +27,9 @@
     </style>
     <script src="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.min.js"></script>
     <script src='https://code.jquery.com/jquery-2.1.4.min.js'></script>
-    <script src='build/immybox.js'></script>
+    <script src='build/immybox.min.js'></script>
 
-    <script type="application/javascript;version=1.8">
+    <script type="application/javascript">
       // Once the DOM has been parsed and created, set up our plugins
       document.addEventListener('DOMContentLoaded', () => {
         // Tell ImmyBox that is should reposition any open plugins when the
@@ -190,8 +190,8 @@
         document.getElementById('button-run-9').addEventListener('click', event => {
           event.cancelBubble = true;
           event.stopPropogation && event.stopPropogation();
-          let el = document.getElementById('input-9');
-          let plugin = new ImmyBox(el, {
+          var el = document.getElementById('input-9');
+          var plugin = new ImmyBox(el, {
             choices: [
               {text: 'Foo', value: 'foo'},
               {text: 'Bar', value: 'bar'}
@@ -202,8 +202,8 @@
         document.getElementById('button-reset-9').addEventListener('click', event => {
           event.cancelBubble = true;
           event.stopPropogation && event.stopPropogation();
-          let el = document.getElementById('input-9');
-          let plugin = ImmyBox.pluginForElement(el);
+          var el = document.getElementById('input-9');
+          var plugin = ImmyBox.pluginForElement(el);
           plugin && plugin.destroy();
         });
 

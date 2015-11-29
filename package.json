@@ -2,22 +2,27 @@
   "name": "immybox",
   "version": "0.4.1",
   "private": true,
+  "main": "build/immybox.js",
+  "jsnext:main": "src/immybox.js",
   "scripts": {
+    "uglify:js": "chalk blue '=> uglifying JS' && uglifyjs -c -m -o build/immybox.min.js -- build/immybox.js && chalk green 'Done!'",
     "build:less": "chalk blue '=> compiling less' && lessc src/immybox.less build/immybox.css && chalk green 'Done!'",
-    "build:js": "chalk blue '=> transpiling ES6' && webpack && chalk green 'Done!'",
-    "build": "npm run build:less -s && npm run build:js -s",
+    "build:js": "chalk blue '=> transpiling ES6' && rollup -c && chalk green 'Done!'",
+    "build": "npm run build:less -s && npm run build:js -s && npm run uglify:js -s",
     "lint": "chalk blue '=> linting' && eslint src && chalk green 'All good!'",
     "watch": "chalk blue '=> building on changes to /src' && watch 'npm run lint -s && npm run build -s' src",
     "watch:lint": "chalk blue '=> linting on changes to /src' && watch 'npm run lint -s' src"
   },
   "devDependencies": {
-    "babel-core": "5.x",
-    "babel-eslint": "4.x",
-    "babel-loader": "5.x",
+    "babel-preset-es2015-rollup": "1.x",
     "chalk-cli": "1.x",
     "eslint": "1.x",
     "eslint-plugin-babel": "2.x",
     "less": "2.x",
-    "watch": "0.x"
+    "rollup": "0.x",
+    "rollup-plugin-babel": "2.x",
+    "rollup-plugin-commonjs": "1.x",
+    "rollup-plugin-npm": "1.x",
+    "uglify-js": "^2.6.1"
   }
 }
