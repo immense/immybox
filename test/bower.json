@@ -5,9 +5,10 @@
   "private": false,
   "license": "MIT",
   "main": [
-    "build/immybox.js",
-    "build/jquery.immybox.js",
-    "build/immybox.css",
-    "src/immybox-arrow.png"
-  ]
+    "jquery.immybox.js",
+    "immybox.css"
+  ],
+  "devDependencies": {
+    "jasmine-jquery": "~2.1.1"
+  }
 }
