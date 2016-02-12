@@ -1,4 +1,14 @@
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else {
+		var a = factory();
+		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
+	}
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -44,12 +54,13 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*eslint no-console:0*/
 	'use strict';
 	
 	var _immybox = __webpack_require__(1);
 	
 	var _utils = __webpack_require__(2);
+	
+	/*eslint no-console:0*/
 	
 	(function ($) {
 	  $.fn.immybox = function (options) {
@@ -59,11 +70,11 @@
 	
 	    var outputs = [];
 	    this.each(function (i, element) {
-	      var plugin = _immybox.all_objects.get(element);
+	      var plugin = Immybox.all_objects.get(element);
 	      if (plugin) {
 	        // calling a method on a pre-immyboxed element
-	        (0, _utils.assert)(typeof options === 'string', _immybox.plugin_name + ' already intitialized for this element');
-	        (0, _utils.assert)(_immybox.ImmyBox.pluginMethods.includes(options), _immybox.plugin_name + ' has no method \'' + options + '\'');
+	        (0, _utils.assert)(typeof options === 'string', Immybox.plugin_name + ' already intitialized for this element');
+	        (0, _utils.assert)(_immybox.ImmyBox.pluginMethods.includes(options), Immybox.plugin_name + ' has no method \'' + options + '\'');
 	        outputs.push(plugin[options].apply(plugin, args));
 	      } else {
 	        new _immybox.ImmyBox(element, options);
@@ -77,22 +88,24 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*eslint no-console:0*/
 	'use strict';
 	
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.ImmyBox = undefined;
 	
-	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
 	var _utils = __webpack_require__(2);
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var event_listeners = new Map();
 	
@@ -111,16 +124,16 @@
 	  },
 	  formatChoice: function formatChoice(query) {
 	    if (query) {
-	      var _ret = (function () {
+	      var _ret = function () {
 	        var reg = new RegExp(query.replace(/[#-.]|[[-^]|[?|{}]/g, '\\$&'), 'gi');
 	        return {
-	          v: function (choice) {
+	          v: function v(choice) {
 	            return choice.text.replace(reg, '<span class="highlight">$&</span>');
 	          }
 	        };
-	      })();
+	      }();
 	
-	      if (typeof _ret === 'object') return _ret.v;
+	      if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
 	    } else return function (choice) {
 	      return choice.text;
 	    };
@@ -129,10 +142,8 @@
 	
 	var all_objects = new Map();
 	
-	exports.all_objects = all_objects;
 	var plugin_name = 'immybox';
 	
-	exports.plugin_name = plugin_name;
 	function assignEvent(event_name, event_handler, node, listeners) {
 	  listeners.has(node) || listeners.set(node, new Map());
 	  listeners.get(node).set(event_name, event_handler);
@@ -145,7 +156,7 @@
 	  return map;
 	}
 	
-	var ImmyBox = (function () {
+	var ImmyBox = exports.ImmyBox = function () {
 	  function ImmyBox(element, options) {
 	    var _this = this;
 	
@@ -220,10 +231,9 @@
 	    all_objects.set(this.element, this);
 	  }
 	
-	  // use one global click event listener to close/revert ones that are open
-	
 	  // on 'keyup', 'change', 'search'
 	  // perform a query on the choices
+	
 	
 	  _createClass(ImmyBox, [{
 	    key: 'doQuery',
@@ -243,6 +253,7 @@
 	
 	    // on 'keydown'
 	    // select the highlighted choice
+	
 	  }, {
 	    key: 'doSelection',
 	    value: function doSelection(event) {
@@ -292,6 +303,7 @@
 	
 	    // on 'click'
 	    // show the results box
+	
 	  }, {
 	    key: 'openResults',
 	    value: function openResults(event) {
@@ -302,6 +314,7 @@
 	    }
 	
 	    // revert or set to null after losing focus
+	
 	  }, {
 	    key: 'revert',
 	    value: function revert() {
@@ -312,6 +325,7 @@
 	    }
 	
 	    // if visible, reposition the results area on window resize
+	
 	  }, {
 	    key: 'reposition',
 	    value: function reposition() {
@@ -371,8 +385,9 @@
 	        list.setAttribute('class', plugin_name + '_noresults');
 	        list.textContent = 'no matches';
 	      }
-	      while (this.queryResultArea.lastChild) this.queryResultArea.removeChild(this.queryResultArea.lastChild);
-	      this.queryResultArea.appendChild(list);
+	      while (this.queryResultArea.lastChild) {
+	        this.queryResultArea.removeChild(this.queryResultArea.lastChild);
+	      }this.queryResultArea.appendChild(list);
 	      this.showResults();
 	    }
 	  }, {
@@ -439,6 +454,7 @@
 	    }
 	
 	    // display the selected choice in the input box
+	
 	  }, {
 	    key: 'display',
 	    value: function display() {
@@ -449,6 +465,7 @@
 	
 	    // select the first choice with matching value
 	    // Note: values should be unique
+	
 	  }, {
 	    key: 'selectChoiceByValue',
 	    value: function selectChoiceByValue(val) {
@@ -485,7 +502,6 @@
 	  }, {
 	    key: 'showResults',
 	    value: function showResults() {
-	      console.log('showing results', this.queryResultAreaVisible);
 	      !this.queryResultAreaVisible && document.body.appendChild(this.queryResultArea);
 	      this.queryResultAreaVisible = true;
 	      this.scroll();
@@ -499,6 +515,7 @@
 	    }
 	
 	    // return array of choices
+	
 	  }, {
 	    key: 'getChoices',
 	    value: function getChoices() {
@@ -540,8 +557,10 @@
 	    }
 	
 	    // get the value of the currently-selected choice
+	
 	  }, {
 	    key: 'destroy',
+	
 	
 	    // destroy this instance of the plugin
 	    value: function destroy() {
@@ -574,8 +593,8 @@
 	            _iteratorError2 = err;
 	          } finally {
 	            try {
-	              if (!_iteratorNormalCompletion2 && _iterator2['return']) {
-	                _iterator2['return']();
+	              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                _iterator2.return();
 	              }
 	            } finally {
 	              if (_didIteratorError2) {
@@ -589,8 +608,8 @@
 	        _iteratorError = err;
 	      } finally {
 	        try {
-	          if (!_iteratorNormalCompletion && _iterator['return']) {
-	            _iterator['return']();
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
 	          }
 	        } finally {
 	          if (_didIteratorError) {
@@ -601,7 +620,7 @@
 	
 	      (0, _utils.removeClass)(this.element, plugin_name);
 	      this.queryResultAreaVisible && document.body.removeChild(this.queryResultArea);
-	      all_objects['delete'](this.element);
+	      all_objects.delete(this.element);
 	    }
 	  }, {
 	    key: 'highlightedChoice',
@@ -613,9 +632,10 @@
 	    key: 'value',
 	    get: function get() {
 	      return this.selectedChoice && this.selectedChoice.choice.value || null;
-	    },
+	    }
 	
 	    // set the value of the currently-selected choice
+	    ,
 	    set: function set(new_value) {
 	      if (this.value !== new_value) {
 	        this.selectChoiceByValue(new_value);
@@ -663,29 +683,37 @@
 	    get: function get() {
 	      return ['showResults', 'hideResults', 'getChoices', 'setChoices', 'getValue', 'setValue', 'destroy'];
 	    }
+	  }, {
+	    key: 'all_objects',
+	    get: function get() {
+	      return all_objects;
+	    }
+	  }, {
+	    key: 'plugin_name',
+	    get: function get() {
+	      return plugin_name;
+	    }
 	  }]);
 	
 	  return ImmyBox;
-	})();
+	}();
 	
-	exports.ImmyBox = ImmyBox;
+	// use one global click event listener to close/revert ones that are open
+	
+	
 	document.addEventListener('DOMContentLoaded', function () {
 	  document.body.addEventListener('click', ImmyBox.revertAll);
 	  // use one global resize listener to reposition any result areas that are open
 	  window.addEventListener('resize', ImmyBox.repositionAll);
 	});
-	
-	window.ImmyBox = ImmyBox;
 
 /***/ },
 /* 2 */
 /***/ function(module, exports) {
 
-	/*eslint no-console:0*/
-	// Polyfills
 	'use strict';
 	
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	exports.assert = assert;
@@ -693,6 +721,8 @@
 	exports.addClass = addClass;
 	exports.removeClass = removeClass;
 	exports.nodeOrParentMatchingSelector = nodeOrParentMatchingSelector;
+	/*eslint no-console:0*/
+	// Polyfills
 	Number.isNaN = Number.isNaN || function (value) {
 	  return typeof value === 'number' && isNaN(value);
 	};
@@ -722,6 +752,7 @@
 	if (!Array.prototype.includes) {
 	  Array.prototype.includes = function (searchElement /*, fromIndex*/) {
 	    'use strict';
+	
 	    var O = Object(this);
 	    var len = parseInt(O.length) || 0;
 	    if (len === 0) {
@@ -750,7 +781,6 @@
 	}
 	
 	// Exported utility methods
-	
 	function assert(bool, message) {
 	  if (!bool) throw new Error(message);
 	}
@@ -758,11 +788,9 @@
 	function hasClass(element, class_name) {
 	  return !!element.className.match(new RegExp('(\\s|^)' + class_name + '(\\s|$)'));
 	}
-	
 	function addClass(element, class_name) {
 	  if (!hasClass(element, class_name)) element.className += ' ' + class_name;
 	}
-	
 	function removeClass(element, class_name) {
 	  if (hasClass(element, class_name)) {
 	    var reg = new RegExp('(\\s|^)' + class_name + '(\\s|$)');
@@ -770,21 +798,10 @@
 	  }
 	}
 	
-	function parentNodeMatchingSelector(_x, _x2) {
-	  var _again = true;
-	
-	  _function: while (_again) {
-	    var element = _x,
-	        selector = _x2;
-	    _again = false;
-	
-	    if (!element.parentNode || !element.parentNode.matches) return null;
-	    if (element.parentNode.matches(selector)) return element.parentNode;
-	    _x = element.parentNode;
-	    _x2 = selector;
-	    _again = true;
-	    continue _function;
-	  }
+	function parentNodeMatchingSelector(element, selector) {
+	  if (!element.parentNode || !element.parentNode.matches) return null;
+	  if (element.parentNode.matches(selector)) return element.parentNode;
+	  return parentNodeMatchingSelector(element.parentNode, selector);
 	}
 	
 	function nodeOrParentMatchingSelector(element, selector) {
@@ -793,5 +810,7 @@
 	}
 
 /***/ }
-/******/ ]);
+/******/ ])
+});
+;
 //# sourceMappingURL=jquery.immybox.js.map

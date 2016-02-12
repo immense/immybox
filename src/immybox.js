@@ -1,4 +1,3 @@
-/*eslint no-console:0*/
 import {addClass, removeClass, nodeOrParentMatchingSelector} from './utils';
 
 const event_listeners = new Map();
@@ -23,9 +22,9 @@ const defaults = {
   }
 };
 
-export const all_objects = new Map();
+const all_objects = new Map();
 
-export const plugin_name = 'immybox';
+const plugin_name = 'immybox';
 
 function assignEvent(event_name, event_handler, node, listeners) {
   listeners.has(node) || listeners.set(node, new Map());
@@ -337,7 +336,6 @@ export class ImmyBox {
   // public methods
 
   showResults() {
-    console.log('showing results', this.queryResultAreaVisible);
     !this.queryResultAreaVisible && document.body.appendChild(this.queryResultArea);
     this.queryResultAreaVisible = true;
     this.scroll();
@@ -432,6 +430,12 @@ export class ImmyBox {
     // use one global scoll listener to reposition any result areas that are open
     container.addEventListener('scroll', ImmyBox.repositionAll);
   }
+  static get all_objects() {
+    return all_objects;
+  }
+  static get plugin_name() {
+    return plugin_name;
+  }
 }
 
 // use one global click event listener to close/revert ones that are open
@@ -439,7 +443,4 @@ document.addEventListener('DOMContentLoaded', () => {
   document.body.addEventListener('click', ImmyBox.revertAll);
   // use one global resize listener to reposition any result areas that are open
   window.addEventListener('resize', ImmyBox.repositionAll);
-
 });
-
-window.ImmyBox = ImmyBox;
