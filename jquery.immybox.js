@@ -326,7 +326,9 @@
           this.element.val('');
         }
         if (typeof Event !== 'undefined') {
-          this._element.dispatchEvent(new Event('input'));
+          var Event = document.createEvent('Event');
+          Event.initEvent('input', false, true);
+          this._element.dispatchEvent(Event);
         }
         this._val = this.element.val();
       };
