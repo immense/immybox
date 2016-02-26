@@ -26,164 +26,8 @@
     }
     </style>
     <script src="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.min.js"></script>
-    <script src='https://code.jquery.com/jquery-2.1.4.min.js'></script>
-    <script src='jquery.immybox.min.js'></script>
-
-    <script type='text/javascript'>
-      $(function() {
-
-        // simple example
-        $('#input-1').immybox({
-          choices: [
-            {text: 'Alabama', value: 'AL'},
-            {text: 'Alaska', value: 'AK'},
-            {text: 'Arizona', value: 'AZ'},
-            {text: 'Arkansas', value: 'AR'},
-            {text: 'California', value: 'CA'},
-            {text: 'Colorado', value: 'CO'},
-            {text: 'Connecticut', value: 'CT'},
-            {text: 'Delaware', value: 'DE'},
-            {text: 'Florida', value: 'FL'},
-            {text: 'Georgia', value: 'GA'},
-            {text: 'Hawaii', value: 'HI'},
-            {text: 'Idaho', value: 'ID'},
-            {text: 'Illinois', value: 'IL'},
-            {text: 'Indiana', value: 'IN'},
-            {text: 'Iowa', value: 'IA'},
-            {text: 'Kansas', value: 'KS'},
-            {text: 'Kentucky', value: 'KY'},
-            {text: 'Louisiana', value: 'LA'},
-            {text: 'Maine', value: 'ME'},
-            {text: 'Maryland', value: 'MD'},
-            {text: 'Massachusetts', value: 'MA'},
-            {text: 'Michigan', value: 'MI'},
-            {text: 'Minnesota', value: 'MN'},
-            {text: 'Mississippi', value: 'MS'},
-            {text: 'Missouri', value: 'MO'},
-            {text: 'Montana', value: 'MT'},
-            {text: 'Nebraska', value: 'NE'},
-            {text: 'Nevada', value: 'NV'},
-            {text: 'New Hampshire', value: 'NH'},
-            {text: 'New Jersey', value: 'NJ'},
-            {text: 'New Mexico', value: 'NM'},
-            {text: 'New York', value: 'NY'},
-            {text: 'North Carolina', value: 'NC'},
-            {text: 'North Dakota', value: 'ND'},
-            {text: 'Ohio', value: 'OH'},
-            {text: 'Oklahoma', value: 'OK'},
-            {text: 'Oregon', value: 'OR'},
-            {text: 'Pennsylvania', value: 'PA'},
-            {text: 'Rhode Island', value: 'RI'},
-            {text: 'South Carolina', value: 'SC'},
-            {text: 'South Dakota', value: 'SD'},
-            {text: 'Tennessee', value: 'TN'},
-            {text: 'Texas', value: 'TX'},
-            {text: 'Utah', value: 'UT'},
-            {text: 'Vermont', value: 'VT'},
-            {text: 'Virginia', value: 'VA'},
-            {text: 'Washington', value: 'WA'},
-            {text: 'West Virginia', value: 'WV'},
-            {text: 'Wisconsin', value: 'WI'},
-            {text: 'Wyoming', value: 'WY'}
-          ],
-          defaultSelectedValue: 'LA'
-        });
-
-        $('#input-2').immybox({
-          choices: [
-            {text: 'Foo', value: 'foo'},
-            {text: 'Bar', value: 'bar'}
-          ]
-        });
-
-        $('#input-3').immybox({
-          choices: [
-            {text: 'Foo', value: 'foo'},
-            {text: 'Bar', value: 'bar'}
-          ],
-          maxResults: 1
-        });
-
-        $('#input-4').immybox({
-          choices: [
-            {text: 'Foo', value: 'foo'},
-            {text: 'Bar', value: 'bar'}
-          ],
-          showArrow: false
-        });
-
-        $('#input-5').immybox({
-          choices: [
-            {text: 'Foo', value: 'foo'},
-            {text: 'Bar', value: 'bar'}
-          ],
-          openOnClick: false
-        });
-
-        $('#input-6').immybox({
-          choices: [
-            {text: 'John Smith', value: 'jsmith', age: 31, employer: 'Smith Enterprises'},
-            {text: 'Jane Doe', value: 'jdoe', age: 20, employer: 'National Security Agency'}
-          ],
-          formatChoice: function(query) {
-            var reg = new RegExp("(" + query + ")", "i");
-            return function(choice) {
-              return "<div class='mdl-grid mdl-grid--no-spacing'>" +
-                       "<div class='mdl-cell mdl-cell--6-col'>" +
-                         [
-                           choice.text.replace(reg, "<u>$1</u>"),
-                           choice.age
-                         ].join(", ") +
-                       "</div>" +
-                       "<div class='mdl-cell mdl-cell--6-col'>" +
-                         choice.employer +
-                       "</div>" +
-                     "</div>";
-            };
-          }
-        });
-
-        $('#input-7').immybox({
-          choices: [
-            {text: 'John Smith', value: 'jsmith', age: 31, employer: 'Smith Enterprises'},
-            {text: 'Jane Doe', value: 'jdoe', age: 20, employer: 'National Security Agency'}
-          ],
-          filterFn: function(query) {
-            var lowercase_query = query.toLowerCase();
-            return function(choice) {
-              return choice.text.toLowerCase().indexOf(lowercase_query) >= 0 ||
-              String(choice.age).toLowerCase().indexOf(lowercase_query) >= 0 ||
-              choice.employer.toLowerCase().indexOf(lowercase_query) >= 0;
-            };
-          },
-          formatChoice: function(query) {
-            var reg = new RegExp("(" + query + ")", 'i');
-            return function(choice) {
-              return "<div class='mdl-grid mdl-grid--no-spacing'>" +
-                       "<div class='mdl-cell mdl-cell--6-col'>" +
-                         [
-                           choice.text.replace(reg, "<u>$1</u>"),
-                           String(choice.age).replace(reg, "<u>$1</u>")
-                         ].join(", ") +
-                       "</div>" +
-                       "<div class='mdl-cell mdl-cell--6-col'>" +
-                         choice.employer.replace(reg, "<u>$1</u>") +
-                       "</div>" +
-                     "</div>";
-            };
-          }
-        });
-
-        $('#input-8').immybox({
-          choices: [
-            {text: 'Foo', value: 'foo'},
-            {text: 'Bar', value: 'bar'}
-          ],
-          defaultSelectedValue: 'bar'
-        });
-
-      });
-    </script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="jquery.immybox.min.js"></script>
   </head>
   <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -491,6 +335,161 @@
       </main>
     </div>
     <a href="https://github.com/immense/immybox" id="view-source" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast">View Source</a>
+    <script type='text/javascript'>
+      $(function() {
+
+        // simple example
+        $('#input-1').immybox({
+          choices: [
+            {text: 'Alabama', value: 'AL'},
+            {text: 'Alaska', value: 'AK'},
+            {text: 'Arizona', value: 'AZ'},
+            {text: 'Arkansas', value: 'AR'},
+            {text: 'California', value: 'CA'},
+            {text: 'Colorado', value: 'CO'},
+            {text: 'Connecticut', value: 'CT'},
+            {text: 'Delaware', value: 'DE'},
+            {text: 'Florida', value: 'FL'},
+            {text: 'Georgia', value: 'GA'},
+            {text: 'Hawaii', value: 'HI'},
+            {text: 'Idaho', value: 'ID'},
+            {text: 'Illinois', value: 'IL'},
+            {text: 'Indiana', value: 'IN'},
+            {text: 'Iowa', value: 'IA'},
+            {text: 'Kansas', value: 'KS'},
+            {text: 'Kentucky', value: 'KY'},
+            {text: 'Louisiana', value: 'LA'},
+            {text: 'Maine', value: 'ME'},
+            {text: 'Maryland', value: 'MD'},
+            {text: 'Massachusetts', value: 'MA'},
+            {text: 'Michigan', value: 'MI'},
+            {text: 'Minnesota', value: 'MN'},
+            {text: 'Mississippi', value: 'MS'},
+            {text: 'Missouri', value: 'MO'},
+            {text: 'Montana', value: 'MT'},
+            {text: 'Nebraska', value: 'NE'},
+            {text: 'Nevada', value: 'NV'},
+            {text: 'New Hampshire', value: 'NH'},
+            {text: 'New Jersey', value: 'NJ'},
+            {text: 'New Mexico', value: 'NM'},
+            {text: 'New York', value: 'NY'},
+            {text: 'North Carolina', value: 'NC'},
+            {text: 'North Dakota', value: 'ND'},
+            {text: 'Ohio', value: 'OH'},
+            {text: 'Oklahoma', value: 'OK'},
+            {text: 'Oregon', value: 'OR'},
+            {text: 'Pennsylvania', value: 'PA'},
+            {text: 'Rhode Island', value: 'RI'},
+            {text: 'South Carolina', value: 'SC'},
+            {text: 'South Dakota', value: 'SD'},
+            {text: 'Tennessee', value: 'TN'},
+            {text: 'Texas', value: 'TX'},
+            {text: 'Utah', value: 'UT'},
+            {text: 'Vermont', value: 'VT'},
+            {text: 'Virginia', value: 'VA'},
+            {text: 'Washington', value: 'WA'},
+            {text: 'West Virginia', value: 'WV'},
+            {text: 'Wisconsin', value: 'WI'},
+            {text: 'Wyoming', value: 'WY'}
+          ],
+          defaultSelectedValue: 'LA'
+        });
+
+        $('#input-2').immybox({
+          choices: [
+            {text: 'Foo', value: 'foo'},
+            {text: 'Bar', value: 'bar'}
+          ]
+        });
+
+        $('#input-3').immybox({
+          choices: [
+            {text: 'Foo', value: 'foo'},
+            {text: 'Bar', value: 'bar'}
+          ],
+          maxResults: 1
+        });
+
+        $('#input-4').immybox({
+          choices: [
+            {text: 'Foo', value: 'foo'},
+            {text: 'Bar', value: 'bar'}
+          ],
+          showArrow: false
+        });
+
+        $('#input-5').immybox({
+          choices: [
+            {text: 'Foo', value: 'foo'},
+            {text: 'Bar', value: 'bar'}
+          ],
+          openOnClick: false
+        });
+
+        $('#input-6').immybox({
+          choices: [
+            {text: 'John Smith', value: 'jsmith', age: 31, employer: 'Smith Enterprises'},
+            {text: 'Jane Doe', value: 'jdoe', age: 20, employer: 'National Security Agency'}
+          ],
+          formatChoice: function(query) {
+            var reg = new RegExp("(" + query + ")", "i");
+            return function(choice) {
+              return "<div class='mdl-grid mdl-grid--no-spacing'>" +
+                       "<div class='mdl-cell mdl-cell--6-col'>" +
+                         [
+                           choice.text.replace(reg, "<u>$1</u>"),
+                           choice.age
+                         ].join(", ") +
+                       "</div>" +
+                       "<div class='mdl-cell mdl-cell--6-col'>" +
+                         choice.employer +
+                       "</div>" +
+                     "</div>";
+            };
+          }
+        });
+
+        $('#input-7').immybox({
+          choices: [
+            {text: 'John Smith', value: 'jsmith', age: 31, employer: 'Smith Enterprises'},
+            {text: 'Jane Doe', value: 'jdoe', age: 20, employer: 'National Security Agency'}
+          ],
+          filterFn: function(query) {
+            var lowercase_query = query.toLowerCase();
+            return function(choice) {
+              return choice.text.toLowerCase().indexOf(lowercase_query) >= 0 ||
+              String(choice.age).toLowerCase().indexOf(lowercase_query) >= 0 ||
+              choice.employer.toLowerCase().indexOf(lowercase_query) >= 0;
+            };
+          },
+          formatChoice: function(query) {
+            var reg = new RegExp("(" + query + ")", 'i');
+            return function(choice) {
+              return "<div class='mdl-grid mdl-grid--no-spacing'>" +
+                       "<div class='mdl-cell mdl-cell--6-col'>" +
+                         [
+                           choice.text.replace(reg, "<u>$1</u>"),
+                           String(choice.age).replace(reg, "<u>$1</u>")
+                         ].join(", ") +
+                       "</div>" +
+                       "<div class='mdl-cell mdl-cell--6-col'>" +
+                         choice.employer.replace(reg, "<u>$1</u>") +
+                       "</div>" +
+                     "</div>";
+            };
+          }
+        });
+
+        $('#input-8').immybox({
+          choices: [
+            {text: 'Foo', value: 'foo'},
+            {text: 'Bar', value: 'bar'}
+          ],
+          defaultSelectedValue: 'bar'
+        });
+
+      });
+    </script>
     <script type="text/javascript" src="prism.js"></script>
   </body>
 </html>
