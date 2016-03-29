@@ -189,5 +189,33 @@ document.addEventListener("DOMContentLoaded", () => {
       immybox.queryResultArea.querySelector('li:first-of-type').click();
       expect(immybox.value).toEqual(baz);
     });
+
+    it('allows choices to be reset', () => {
+      const opts = {
+        choices: [
+          {text: 'foo', value: 'foo'},
+          {text: 'bar', value: 'bar'}
+        ]
+      };
+      immybox = new ImmyBox(el, opts);
+      el.click();
+
+      el.value = 'foo';
+      el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
+      immybox.queryResultArea.querySelector('li:first-of-type').click();
+      expect(immybox.value).toEqual('foo');
+
+      immybox.setChoices([
+        {text: 'baz', value: 'baz'},
+        {text: 'quux', value: 'quux'}
+      ]);
+      expect(immybox.value).toEqual(null);
+
+      el.click();
+      el.value = 'quux';
+      el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
+      immybox.queryResultArea.querySelector('li:first-of-type').click();
+      expect(immybox.value).toEqual('quux');
+    });
   });
 });

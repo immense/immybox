@@ -157,9 +157,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.indexed_choices = this.choices.map(function (choice, index) {
 	      return { index: index, choice: choice };
 	    });
-	    this.values = this.choices.map(function (choice) {
-	      return choice.value;
-	    });
 	    this.selectedChoice = null;
 	
 	    if (this.options.showArrow) (0, _utils.addClass)(this.element, plugin_name + '_witharrow');
@@ -204,12 +201,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    all_objects.set(this.element, this);
 	  }
 	
-	  // on 'keyup', 'change', 'search'
-	  // perform a query on the choices
-	
-	
 	  _createClass(ImmyBox, [{
 	    key: 'doQuery',
+	
+	
+	    // on 'keyup', 'change', 'search'
+	    // perform a query on the choices
 	    value: function doQuery() {
 	      var query = this.element.value;
 	      if (this._val !== query) {
@@ -594,6 +591,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      (0, _utils.removeClass)(this.element, plugin_name);
 	      this.queryResultAreaVisible && document.body.removeChild(this.queryResultArea);
 	      all_objects.delete(this.element);
+	    }
+	  }, {
+	    key: 'values',
+	    get: function get() {
+	      return this.choices.map(function (choice) {
+	        return choice.value;
+	      });
 	    }
 	  }, {
 	    key: 'highlightedChoice',

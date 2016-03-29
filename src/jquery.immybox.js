@@ -5,11 +5,11 @@ import {assert} from './utils';
   $.fn.immybox = function(options, ...args) {
     let outputs = [];
     this.each((i, element) => {
-      let plugin = Immybox.all_objects.get(element);
+      let plugin = ImmyBox.all_objects.get(element);
       if (plugin) {
         // calling a method on a pre-immyboxed element
-        assert(typeof options === 'string', `${Immybox.plugin_name} already intitialized for this element`);
-        assert(ImmyBox.pluginMethods.includes(options), `${Immybox.plugin_name} has no method '${options}'`);
+        assert(typeof options === 'string', `${ImmyBox.plugin_name} already intitialized for this element`);
+        assert(ImmyBox.pluginMethods.includes(options), `${ImmyBox.plugin_name} has no method '${options}'`);
         outputs.push(plugin[options](...args));
       } else {
         new ImmyBox(element, options);

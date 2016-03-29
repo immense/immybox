@@ -58,7 +58,6 @@ export class ImmyBox {
           }))
       ].filter(choice => choice);
     this.indexed_choices = this.choices.map((choice, index) => ({index, choice}));
-    this.values  = this.choices.map(choice => choice.value);
     this.selectedChoice = null;
 
     if (this.options.showArrow)
@@ -103,6 +102,10 @@ export class ImmyBox {
     assignEvent('keydown', this.doSelection.bind(this), this.element, listeners);
 
     all_objects.set(this.element, this);
+  }
+
+  get values() {
+    return this.choices.map(choice => choice.value);
   }
 
   // on 'keyup', 'change', 'search'

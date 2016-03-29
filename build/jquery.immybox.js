@@ -70,11 +70,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    var outputs = [];
 	    this.each(function (i, element) {
-	      var plugin = Immybox.all_objects.get(element);
+	      var plugin = _immybox.ImmyBox.all_objects.get(element);
 	      if (plugin) {
 	        // calling a method on a pre-immyboxed element
-	        (0, _utils.assert)(typeof options === 'string', Immybox.plugin_name + ' already intitialized for this element');
-	        (0, _utils.assert)(_immybox.ImmyBox.pluginMethods.includes(options), Immybox.plugin_name + ' has no method \'' + options + '\'');
+	        (0, _utils.assert)(typeof options === 'string', _immybox.ImmyBox.plugin_name + ' already intitialized for this element');
+	        (0, _utils.assert)(_immybox.ImmyBox.pluginMethods.includes(options), _immybox.ImmyBox.plugin_name + ' has no method \'' + options + '\'');
 	        outputs.push(plugin[options].apply(plugin, args));
 	      } else {
 	        new _immybox.ImmyBox(element, options);
@@ -184,9 +184,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.indexed_choices = this.choices.map(function (choice, index) {
 	      return { index: index, choice: choice };
 	    });
-	    this.values = this.choices.map(function (choice) {
-	      return choice.value;
-	    });
 	    this.selectedChoice = null;
 	
 	    if (this.options.showArrow) (0, _utils.addClass)(this.element, plugin_name + '_witharrow');
@@ -231,12 +228,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    all_objects.set(this.element, this);
 	  }
 	
-	  // on 'keyup', 'change', 'search'
-	  // perform a query on the choices
-	
-	
 	  _createClass(ImmyBox, [{
 	    key: 'doQuery',
+	
+	
+	    // on 'keyup', 'change', 'search'
+	    // perform a query on the choices
 	    value: function doQuery() {
 	      var query = this.element.value;
 	      if (this._val !== query) {
@@ -621,6 +618,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      (0, _utils.removeClass)(this.element, plugin_name);
 	      this.queryResultAreaVisible && document.body.removeChild(this.queryResultArea);
 	      all_objects.delete(this.element);
+	    }
+	  }, {
+	    key: 'values',
+	    get: function get() {
+	      return this.choices.map(function (choice) {
+	        return choice.value;
+	      });
 	    }
 	  }, {
 	    key: 'highlightedChoice',
