@@ -1,7 +1,6 @@
 {
   "name": "immybox",
   "version": "1.0.0-beta1",
-  "private": true,
   "main": "build/immybox.js",
   "scripts": {
     "uglify:js": "chalk blue '=> uglifying JS' && uglifyjs -c -m -o build/immybox.min.js -- build/immybox.js && chalk green 'Done!'",
