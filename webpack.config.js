@@ -1,4 +1,6 @@
 const path = require('path');
+const webpack = require('webpack');
+const package = require('./package.json');
 
 module.exports = {
     entry: {
@@ -18,5 +20,11 @@ module.exports = {
           loader: 'babel'
         }
       ]
-    }
+    },
+    plugins: [
+      new webpack.LoaderOptionsPlugin({
+        minimize: true
+      }),
+      new webpack.BannerPlugin(`Immybox.js Version ${package.version}\n`)
+    ]
 };

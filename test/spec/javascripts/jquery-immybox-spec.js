@@ -13,10 +13,11 @@ const testChoices2 = [
   {text: 'Jane Doe', value: 'jdoe', age: 20, employer: 'National Security Agency'}
 ];
 
+var immybox;
+var el;
+
 document.addEventListener("DOMContentLoaded", () => {
   const input = document.body.removeChild(document.getElementById('input-1'));
-  var el;
-  var immybox;
 
   // Before each test, reinitialize input
   beforeEach(() => {
@@ -31,9 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
-  describe('immybox', function() {
+  describe('immybox', () => {
 
-    it('can have a default value', function() {
+    it('can have a default value', () => {
       const opts = {
         choices: testChoices1,
         defaultSelectedValue: 'LA'
@@ -42,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
       expect(immybox.values[0]).toEqual('LA');
     });
 
-    it('can have a max value', function() {
+    it('can have a max value', () => {
       const opts = {
         choices: testChoices1,
         maxResults: 2
@@ -52,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
       expect(immybox.queryResultArea.querySelectorAll('li').length).toEqual(2);
     });
 
-    it('can specify whether to show an arrow in the input', function() {
+    it('can specify whether to show an arrow in the input', () => {
       const opts = {
         choices: testChoices1,
         showArrow: false
@@ -61,7 +62,20 @@ document.addEventListener("DOMContentLoaded", () => {
       expect(el.classList).not.toContain('immybox_witharrow');
     });
 
-    describe('openOnClick option', function() {
+    it('selects the first item in the list when open', () => {
+      const opts = {
+        choices: testChoices1
+      };
+      immybox = new ImmyBox(el, opts);
+      el.click();
+      el.value = "Ala";
+      el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
+
+      const results = document.querySelectorAll('.immybox_results li');
+      expect(results[0].classList).toContain('active');
+    });
+
+    describe('openOnClick option', () => {
       it('shows results when true', () => {
         const opts = {
           choices: testChoices1,
@@ -140,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 
-    it('can filter the choices', function() {
+    it('can filter the choices', () => {
       const opts = {
         choices: testChoices2,
         filterFn(query) {
