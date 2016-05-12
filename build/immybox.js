@@ -409,7 +409,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function insertFilteredChoiceElements(query) {
 	      var _this2 = this;
 	
-	      var filteredChoices = undefined;
+	      var filteredChoices = void 0;
 	      if (query === '') filteredChoices = this.indexed_choices;else {
 	        (function () {
 	          var filter = _this2.options.filterFn(query);
