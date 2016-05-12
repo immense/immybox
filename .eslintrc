@@ -1,5 +1,4 @@
 {
-  "parser": "babel-eslint",
   "ecmaFeatures": {
     "arrowFunctions": true,
     "blockBindings": true,
@@ -15,6 +14,10 @@
     "spread": true,
     "superInFunctions": true,
     "templateStrings": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
   },
   "rules": {
     "indent": [

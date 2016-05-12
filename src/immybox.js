@@ -1,5 +1,6 @@
-/*eslint no-console:0*/
 import {addClass, removeClass, nodeOrParentMatchingSelector} from './utils';
+
+import R from 'ramda';
 
 const event_listeners = new Map();
 
@@ -23,9 +24,9 @@ const defaults = {
   }
 };
 
-export const all_objects = new Map();
+const all_objects = new Map();
 
-export const plugin_name = 'immybox';
+const plugin_name = 'immybox';
 
 function assignEvent(event_name, event_handler, node, listeners) {
   listeners.has(node) || listeners.set(node, new Map());
@@ -59,7 +60,6 @@ export class ImmyBox {
           }))
       ].filter(choice => choice);
     this.indexed_choices = this.choices.map((choice, index) => ({index, choice}));
-    this.values  = this.choices.map(choice => choice.value);
     this.selectedChoice = null;
 
     if (this.options.showArrow)
@@ -93,8 +93,10 @@ export class ImmyBox {
       let node = nodeOrParentMatchingSelector(event.target, `li.${plugin_name}_choice`);
       if (node) {
         addClass(node, 'active');
-        [...this.queryResultArea.querySelectorAll(`li.${plugin_name}_choice.active`)]
-        .forEach(li => li !== node && removeClass(li, 'active'));
+        R.forEach(
+          (li) => li !== node && removeClass(li, 'active'),
+          this.queryResultArea.querySelectorAll(`li.${plugin_name}_choice.active`)
+        );
       }
     }, this.queryResultArea, listeners);
 
@@ -104,6 +106,10 @@ export class ImmyBox {
     assignEvent('keydown', this.doSelection.bind(this), this.element, listeners);
 
     all_objects.set(this.element, this);
+  }
+
+  get values() {
+    return this.choices.map(choice => choice.value);
   }
 
   // on 'keyup', 'change', 'search'
@@ -171,10 +177,11 @@ export class ImmyBox {
     event.cancelBubble = true;
     event.stopPropogation && event.stopPropogation();
     this.revertOtherInstances();
-    if (this.selectedChoice)
+    if (this.selectedChoice) {
       this.insertFilteredChoiceElements(this.oldQuery);
-    else
+    } else {
       this.insertFilteredChoiceElements('');
+    }
   }
 
   // revert or set to null after losing focus
@@ -226,15 +233,16 @@ export class ImmyBox {
       return li;
     });
     if (results.length) {
-      if (this.valueFromElement(results[0]) === this.options.defaultSelectedValue)
-        !selected_one && addClass(results[0], 'active');
+      !selected_one && addClass(results[0], 'active');
     } else {
       list = document.createElement('p');
       list.setAttribute('class', `${plugin_name}_noresults`);
       list.textContent = 'no matches';
     }
-    while (this.queryResultArea.lastChild)
+
+    while (this.queryResultArea.lastChild) {
       this.queryResultArea.removeChild(this.queryResultArea.lastChild);
+    }
     this.queryResultArea.appendChild(list);
     this.showResults();
   }
@@ -257,10 +265,19 @@ export class ImmyBox {
     this.queryResultArea.style.width = `${input_width}px`;
     this.queryResultArea.style.left = `${input_offset.left}px`;
 
-    if (results_bottom > window_bottom)
+    if (results_bottom > window_bottom) {
       this.queryResultArea.style.top = `${input_offset.top - results_height}px`;
-    else
+    } else {
       this.queryResultArea.style.top = `${input_offset.top + input_height}px`;
+    }
+  }
+
+  set highlightedChoice(choice) {
+    let highlightedChoice = this.highlightedChoice;
+    if (highlightedChoice) {
+      removeClass(highlighted_choice, 'active');
+      addClass(choice, 'active');
+    }
   }
 
   get highlightedChoice() {
@@ -337,7 +354,6 @@ export class ImmyBox {
   // public methods
 
   showResults() {
-    console.log('showing results', this.queryResultAreaVisible);
     !this.queryResultAreaVisible && document.body.appendChild(this.queryResultArea);
     this.queryResultAreaVisible = true;
     this.scroll();
@@ -356,7 +372,7 @@ export class ImmyBox {
 
   setChoices(newChoices) {
     this.choices = newChoices;
-    if (this.options.defaultSelectedValue != null)
+    if (this.options.defaultSelectedValue != null) {
       this.choices = [
         this.choices.find(({value}) => {
           return value === this.options.defaultSelectedValue;
@@ -364,7 +380,8 @@ export class ImmyBox {
           this.choices.filter(({value}) => {
             return value !== this.options.defaultSelectedValue;
           }))
-      ].filter(choice => choice);
+        ].filter(choice => choice);
+    }
     this.indexed_choices = this.choices.map((choice, index) => ({choice, index}));
     this.selectedChoice && this.selectChoiceByValue(this.selectedChoice.choice.value);
     this.oldQuery = '';
@@ -432,6 +449,12 @@ export class ImmyBox {
     // use one global scoll listener to reposition any result areas that are open
     container.addEventListener('scroll', ImmyBox.repositionAll);
   }
+  static get all_objects() {
+    return all_objects;
+  }
+  static get plugin_name() {
+    return plugin_name;
+  }
 }
 
 // use one global click event listener to close/revert ones that are open
@@ -439,7 +462,4 @@ document.addEventListener('DOMContentLoaded', () => {
   document.body.addEventListener('click', ImmyBox.revertAll);
   // use one global resize listener to reposition any result areas that are open
   window.addEventListener('resize', ImmyBox.repositionAll);
-
 });
-
-window.ImmyBox = ImmyBox;

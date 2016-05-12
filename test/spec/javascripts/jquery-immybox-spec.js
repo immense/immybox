@@ -1,6 +1,6 @@
 var fixture;
 
-var testChoices1 = [
+const testChoices1 = [
   {text: 'Alabama', value: 'AL'},
   {text: 'Louisiana', value: 'LA'},
   {text: 'Alaska', value: 'AK'},
@@ -8,100 +8,228 @@ var testChoices1 = [
   {text: 'Wyoming', value: 'WY'}
 ];
 
-var testChoices2 = [
+const testChoices2 = [
   {text: 'John Smith', value: 'jsmith', age: 31, employer: 'Smith Enterprises'},
   {text: 'Jane Doe', value: 'jdoe', age: 20, employer: 'National Security Agency'}
-]
+];
 
-// Before each test, reinitialize input
-beforeEach(function () {
-  fixture = setFixtures('<input type="text" id="input-1" />') ;
-});
+var immybox;
+var el;
 
-// After each test, remove the input
-afterEach(function () {
-  $("#input-1").remove();
-  $(".immybox_results").remove();
-});
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.body.removeChild(document.getElementById('input-1'));
 
-
-describe('immybox options', function() {
-
-  it('can have a default value', function() {
-    $('#input-1').immybox({
-      choices: testChoices1,
-      defaultSelectedValue: 'LA'
-    });
-    expect($('#input-1').data().plugin_immybox.defaultSelectedChoice).toEqual({text: "Louisiana", value: "LA"});
+  // Before each test, reinitialize input
+  beforeEach(() => {
+    el = input.cloneNode(false);
+    document.body.appendChild(el);
   });
 
-  it('can have a max value', function() {
-    $('#input-1').immybox({
-      choices: testChoices1,
-      maxResults: 2
-    });
-    expect($('#input-1').data().plugin_immybox.options.maxResults).toEqual(2);
-  });
-
-  it('can specify whether to show an arrow in the input', function() {
-    $('#input-1').immybox({
-      choices: testChoices1,
-      showArrow: false
-    });
-    expect($('#input-1').data().plugin_immybox.options.showArrow).toEqual(false);
-  });
-
-  it('can specify whether to open on click', function() {
-    $('#input-1').immybox({
-      choices: testChoices1,
-      openOnClick: false
-    });
-    expect($('#input-1').data().plugin_immybox.options.openOnClick).toEqual(false);
-  });
-
-  it('can format the choices', function() {
-    $('#input-1').immybox({
-      choices: testChoices2,
-      formatChoice(query) {
-        const reg = new RegExp("(" + query + ")", "i");
-        return choice => (
-          "<div class='mdl-grid mdl-grid--no-spacing'>" +
-            "<div class='mdl-cell mdl-cell--6-col'>" +
-              [
-                choice.text.replace(reg, "<u>$1</u>"),
-                choice.age
-              ].join(", ") +
-            "</div>" +
-            "<div class='mdl-cell mdl-cell--6-col'>" +
-              choice.employer +
-            "</div>" +
-          "</div>"
-        );
-      }
-    });
-    $('#input-1').trigger( "click" );
-    expect($('#input-1').data().plugin_immybox.queryResultArea[0].innerHTML).toEqual('<ul><li class="immybox_choice active" data-value="jsmith"><div class="mdl-grid mdl-grid--no-spacing"><div class="mdl-cell mdl-cell--6-col"><u></u>John Smith, 31</div><div class="mdl-cell mdl-cell--6-col">Smith Enterprises</div></div></li><li class="immybox_choice" data-value="jdoe"><div class="mdl-grid mdl-grid--no-spacing"><div class="mdl-cell mdl-cell--6-col"><u></u>Jane Doe, 20</div><div class="mdl-cell mdl-cell--6-col">National Security Agency</div></div></li></ul>');
+  // After each test, remove the input
+  afterEach(() => {
+    immybox && immybox.destroy();
+    document.body.removeChild(el);
   });
 
 
-  it('can filter the choices', function() {
-    $('#input-1').immybox({
-      choices: testChoices2,
-      filterFn: query => {
-        const lowercase_query = query.toLowerCase();
-        return choice => {
-          return choice.text.toLowerCase().indexOf(lowercase_query) >= 0 ||
-            String(choice.age).toLowerCase().indexOf(lowercase_query) >= 0 ||
-            choice.employer.toLowerCase().indexOf(lowercase_query) >= 0
+  describe('immybox', () => {
+
+    it('can have a default value', () => {
+      const opts = {
+        choices: testChoices1,
+        defaultSelectedValue: 'LA'
+      };
+      immybox = new ImmyBox(el, opts);
+      expect(immybox.values[0]).toEqual('LA');
+    });
+
+    it('can have a max value', () => {
+      const opts = {
+        choices: testChoices1,
+        maxResults: 2
+      };
+      immybox = new ImmyBox(el, opts);
+      el.click();
+      expect(immybox.queryResultArea.querySelectorAll('li').length).toEqual(2);
+    });
+
+    it('can specify whether to show an arrow in the input', () => {
+      const opts = {
+        choices: testChoices1,
+        showArrow: false
+      };
+      immybox = new ImmyBox(el, opts);
+      expect(el.classList).not.toContain('immybox_witharrow');
+    });
+
+    it('selects the first item in the list when open', () => {
+      const opts = {
+        choices: testChoices1
+      };
+      immybox = new ImmyBox(el, opts);
+      el.click();
+      el.value = "Ala";
+      el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
+
+      const results = document.querySelectorAll('.immybox_results li');
+      expect(results[0].classList).toContain('active');
+    });
+
+    describe('openOnClick option', () => {
+      it('shows results when true', () => {
+        const opts = {
+          choices: testChoices1,
+          openOnClick: true
         };
-      }
+
+        immybox = new ImmyBox(el, opts);
+        el.click();
+        expect(document.querySelector('.immybox_results')).not.toBeNull();
+      });
+      it('doesnt show results when false', () => {
+        const opts = {
+          choices: testChoices1,
+          openOnClick: false
+        };
+
+        immybox = new ImmyBox(el, opts);
+        el.click();
+        expect(document.querySelector('.immybox_results')).toBeNull();
+      });
     });
-    $('#input-1').click();
-    $('#input-1').val('3');
-    $('#input-1').trigger('keyup');
-    var filterCount = $('.immybox_results li ').length;
-    expect(filterCount).toEqual(1);
 
+    describe('formatChoice option', () => {
+      const opts = {
+        choices: testChoices2,
+        formatChoice(query) {
+          const reg = new RegExp("(" + query + ")", "i");
+          return choice => (
+            '<div class="mdl-grid mdl-grid--no-spacing">' +
+              '<div class="mdl-cell mdl-cell--6-col">' +
+                [
+                  choice.text.replace(reg, "<u>$1</u>"),
+                  choice.age
+                ].join(", ") +
+              '</div>' +
+              '<div class="mdl-cell mdl-cell--6-col">' +
+                choice.employer +
+              '</div>' +
+            '</div>'
+          );
+        }
+      };
+      const empty_string_formatter = opts.formatChoice("");
+      const john_string_formatter = opts.formatChoice("John");
+
+      it('can format the choices with query', () => {
+
+        immybox = new ImmyBox(el, opts);
+
+        el.click();
+        el.value = "John";
+        el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
+
+        Array.prototype.forEach.call(immybox.queryResultArea.querySelectorAll('li'), node => {
+          const index = Number(node.getAttribute('data-immybox-value-index'));
+          const choice = testChoices2[index];
+          expect(node.innerHTML).toEqual(john_string_formatter(choice))
+        });
+      });
+
+      it('can format the choices without query', () => {
+
+        immybox = new ImmyBox(el, opts);
+
+        const empty_string_formatter = opts.formatChoice("");
+        const john_string_formatter = opts.formatChoice("John");
+
+        el.click();
+
+        Array.prototype.forEach.call(immybox.queryResultArea.querySelectorAll('li'), node => {
+          const index = Number(node.getAttribute('data-immybox-value-index'));
+          const choice = testChoices2[index];
+          expect(node.innerHTML).toEqual(empty_string_formatter(choice))
+        });
+      });
+    });
+
+
+    it('can filter the choices', () => {
+      const opts = {
+        choices: testChoices2,
+        filterFn(query) {
+          const lowercase_query = query.toLowerCase();
+          return choice => {
+            return choice.text.toLowerCase().indexOf(lowercase_query) >= 0 ||
+              String(choice.age).toLowerCase().indexOf(lowercase_query) >= 0 ||
+              choice.employer.toLowerCase().indexOf(lowercase_query) >= 0
+          };
+        }
+      };
+      immybox = new ImmyBox(el, opts);
+      el.click();
+      el.value = '3';
+      el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
+
+      expect(immybox.queryResultArea.querySelectorAll('li').length).toEqual(1);
+    });
+
+    it('accepts objects as choices', () => {
+      const foo = {foo: 'foo'};
+      const bar = {bar: 'bar'};
+      const baz = {baz: 'baz'};
+      const opts = {
+        choices: [
+          {text: 'foo', value: foo},
+          {text: 'bar', value: bar},
+          {text: 'baz', value: baz}
+        ]
+      };
+      immybox = new ImmyBox(el, opts);
+      el.click();
+
+      el.value = 'foo';
+      el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
+      immybox.queryResultArea.querySelector('li:first-of-type').click();
+      expect(immybox.value).toEqual(foo);
+
+      el.value = 'bar';
+      el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
+      immybox.queryResultArea.querySelector('li:first-of-type').click();
+      expect(immybox.value).toEqual(bar);
+
+      el.value = 'baz';
+      el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
+      immybox.queryResultArea.querySelector('li:first-of-type').click();
+      expect(immybox.value).toEqual(baz);
+    });
+
+    it('allows choices to be reset', () => {
+      const opts = {
+        choices: [
+          {text: 'foo', value: 'foo'},
+          {text: 'bar', value: 'bar'}
+        ]
+      };
+      immybox = new ImmyBox(el, opts);
+      el.click();
+
+      el.value = 'foo';
+      el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
+      immybox.queryResultArea.querySelector('li:first-of-type').click();
+      expect(immybox.value).toEqual('foo');
+
+      immybox.setChoices([
+        {text: 'baz', value: 'baz'},
+        {text: 'quux', value: 'quux'}
+      ]);
+      expect(immybox.value).toEqual(null);
+
+      el.click();
+      el.value = 'quux';
+      el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
+      immybox.queryResultArea.querySelector('li:first-of-type').click();
+      expect(immybox.value).toEqual('quux');
+    });
   });
-
 });

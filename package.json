@@ -1,29 +1,29 @@
 {
   "name": "immybox",
-  "version": "0.4.1",
-  "private": true,
+  "version": "1.0.0-beta1",
   "main": "build/immybox.js",
-  "jsnext:main": "src/immybox.js",
   "scripts": {
     "uglify:js": "chalk blue '=> uglifying JS' && uglifyjs -c -m -o build/immybox.min.js -- build/immybox.js && chalk green 'Done!'",
     "build:less": "chalk blue '=> compiling less' && lessc src/immybox.less build/immybox.css && chalk green 'Done!'",
-    "build:js": "chalk blue '=> transpiling ES6' && rollup -c && chalk green 'Done!'",
+    "build:js": "chalk blue '=> transpiling ES6' && webpack && chalk green 'Done!'",
     "build": "npm run build:less -s && npm run build:js -s && npm run uglify:js -s",
     "lint": "chalk blue '=> linting' && eslint src && chalk green 'All good!'",
     "watch": "chalk blue '=> building on changes to /src' && watch 'npm run lint -s && npm run build -s' src",
     "watch:lint": "chalk blue '=> linting on changes to /src' && watch 'npm run lint -s' src"
   },
   "devDependencies": {
-    "babel-preset-es2015-rollup": "1.x",
+    "babel-core": "^6.5.2",
+    "babel-loader": "^6.2.2",
+    "babel-plugin-ramda": "^1.1.1",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-preset-es2015-native-modules": "^6.6.0",
+    "babel-preset-es2015-webpack": "^6.4.1",
     "chalk-cli": "1.x",
     "eslint": "1.x",
     "eslint-plugin-babel": "2.x",
-    "less": "2.x",
-    "rollup": "0.x",
-    "rollup-plugin-babel": "2.x",
-    "rollup-plugin-commonjs": "1.x",
-    "rollup-plugin-npm": "1.x",
+    "less": "git://github.com/less/less.js#ec04a03f1cba3a092d5cd7f7c5d8e28bb43c1932",
+    "requirejs": "^2.1.22",
     "uglify-js": "^2.6.1",
-    "requirejs": "^2.1.22"
+    "webpack": "2.1.0-beta.6"
   }
 }
