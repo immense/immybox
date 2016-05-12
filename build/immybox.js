@@ -409,7 +409,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function insertFilteredChoiceElements(query) {
 	      var _this2 = this;
 	
-	      var filteredChoices = undefined;
+	      var filteredChoices = void 0;
 	      if (query === '') filteredChoices = this.indexed_choices;else {
 	        (function () {
 	          var filter = _this2.options.filterFn(query);
@@ -587,10 +587,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.positionResultsArea();
 	    }
 	  }, {
+	    key: 'open',
+	    value: function open() {
+	      return this.showResults();
+	    }
+	  }, {
 	    key: 'hideResults',
 	    value: function hideResults() {
 	      this.queryResultAreaVisible && document.body.removeChild(this.queryResultArea);
 	      this.queryResultAreaVisible = false;
+	    }
+	  }, {
+	    key: 'close',
+	    value: function close() {
+	      return this.hideResults();
 	    }
 	
 	    // return array of choices
@@ -603,18 +613,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'setChoices',
 	    value: function setChoices(newChoices) {
-	      var _this4 = this;
-	
 	      this.choices = newChoices;
-	      if (this.options.defaultSelectedValue != null) {
+	      var default_selected_value = this.options.defaultSelectedValue;
+	      if (default_selected_value != null) {
 	        this.choices = [this.choices.find(function (_ref6) {
 	          var value = _ref6.value;
-	
-	          return value === _this4.options.defaultSelectedValue;
+	          return value === default_selected_value;
 	        })].concat(_toConsumableArray(this.choices.filter(function (_ref7) {
 	          var value = _ref7.value;
-	
-	          return value !== _this4.options.defaultSelectedValue;
+	          return value !== default_selected_value;
 	        }))).filter(function (choice) {
 	          return choice;
 	        });
@@ -715,7 +722,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    set: function set(choice) {
 	      var highlightedChoice = this.highlightedChoice;
 	      if (highlightedChoice) {
-	        /* harmony import */__WEBPACK_IMPORTED_MODULE_1__utils__["c"].bind()(highlighted_choice, 'active');
+	        /* harmony import */__WEBPACK_IMPORTED_MODULE_1__utils__["c"].bind()(highlightedChoice, 'active');
 	        /* harmony import */__WEBPACK_IMPORTED_MODULE_1__utils__["a"].bind()(choice, 'active');
 	      }
 	    },
@@ -776,7 +783,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'pluginMethods',
 	    get: function get() {
-	      return ['showResults', 'hideResults', 'getChoices', 'setChoices', 'getValue', 'setValue', 'destroy'];
+	      return ['showResults', 'open', 'hideResults', 'close', 'getChoices', 'setChoices', 'getValue', 'setValue', 'destroy'];
 	    }
 	  }, {
 	    key: 'all_objects',

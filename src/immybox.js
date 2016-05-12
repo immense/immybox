@@ -275,7 +275,7 @@ export class ImmyBox {
   set highlightedChoice(choice) {
     let highlightedChoice = this.highlightedChoice;
     if (highlightedChoice) {
-      removeClass(highlighted_choice, 'active');
+      removeClass(highlightedChoice, 'active');
       addClass(choice, 'active');
     }
   }
@@ -360,9 +360,17 @@ export class ImmyBox {
     this.positionResultsArea();
   }
 
+  open() {
+    return this.showResults();
+  }
+
   hideResults() {
     this.queryResultAreaVisible && document.body.removeChild(this.queryResultArea);
     this.queryResultAreaVisible = false;
+  }
+
+  close() {
+    return this.hideResults();
   }
 
   // return array of choices
@@ -372,15 +380,12 @@ export class ImmyBox {
 
   setChoices(newChoices) {
     this.choices = newChoices;
-    if (this.options.defaultSelectedValue != null) {
+    const default_selected_value = this.options.defaultSelectedValue;
+    if (default_selected_value != null) {
       this.choices = [
-        this.choices.find(({value}) => {
-          return value === this.options.defaultSelectedValue;
-        }), ...(
-          this.choices.filter(({value}) => {
-            return value !== this.options.defaultSelectedValue;
-          }))
-        ].filter(choice => choice);
+        this.choices.find(({value}) => value === default_selected_value),
+        ...this.choices.filter(({value}) => value !== default_selected_value)
+      ].filter(choice => choice);
     }
     this.indexed_choices = this.choices.map((choice, index) => ({choice, index}));
     this.selectedChoice && this.selectChoiceByValue(this.selectedChoice.choice.value);
@@ -430,7 +435,17 @@ export class ImmyBox {
     return defaults;
   }
   static get pluginMethods() {
-    return ['showResults', 'hideResults', 'getChoices', 'setChoices', 'getValue', 'setValue', 'destroy'];
+    return [
+      'showResults',
+      'open',
+      'hideResults',
+      'close',
+      'getChoices',
+      'setChoices',
+      'getValue',
+      'setValue',
+      'destroy'
+    ];
   }
   static pluginForElement(element) {
     return all_objects.get(element);
