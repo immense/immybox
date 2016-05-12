@@ -232,4 +232,23 @@ document.addEventListener("DOMContentLoaded", () => {
       expect(immybox.value).toEqual('quux');
     });
   });
+
+  describe('jquery.immybox', () => {
+    describe('#open() and #close()', () => {
+      it('opens and closes the query result area', () => {
+        const opts = {
+          choices: [
+            {text: 'foo', value: 'foo'},
+            {text: 'bar', value: 'bar'}
+          ]
+        };
+        $('#input-1').immybox(opts);
+        immybox = ImmyBox.all_objects.get(el);
+        $('#input-1').immybox('open');
+        expect(document.querySelector('.immybox_results')).not.toBeNull();
+        $('#input-1').immybox('close');
+        expect(document.querySelector('.immybox_results')).toBeNull();
+      });
+    });
+  });
 });
