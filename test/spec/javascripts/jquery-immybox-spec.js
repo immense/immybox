@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
       expect(immybox.queryResultArea.querySelectorAll('li').length).toEqual(1);
     });
 
-    it('accepts objects as choices', () => {
+    it('accepts object values in choices', () => {
       const foo = {foo: 'foo'};
       const bar = {bar: 'bar'};
       const baz = {baz: 'baz'};
@@ -192,16 +192,49 @@ document.addEventListener("DOMContentLoaded", () => {
       el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
       immybox.queryResultArea.querySelector('li:first-of-type').click();
       expect(immybox.value).toEqual(foo);
+      expect(el.value).toEqual('foo');
 
       el.value = 'bar';
       el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
       immybox.queryResultArea.querySelector('li:first-of-type').click();
       expect(immybox.value).toEqual(bar);
+      expect(el.value).toEqual('bar');
 
       el.value = 'baz';
       el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
       immybox.queryResultArea.querySelector('li:first-of-type').click();
       expect(immybox.value).toEqual(baz);
+      expect(el.value).toEqual('baz');
+    });
+
+    it('accepts falsey values in choices', () => {
+      const opts = {
+        choices: [
+          {text: 'null',      value: null},
+          {text: '0',         value: 0},
+          {text: '1',         value: 1}
+        ]
+      };
+      immybox = new ImmyBox(el, opts);
+      el.click();
+
+      el.value = 'null';
+      el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
+      immybox.queryResultArea.querySelector('li:first-of-type').click();
+      expect(immybox.value).toEqual(null);
+      expect(el.value).toEqual("null");
+
+      el.value = '0';
+      el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
+      immybox.queryResultArea.querySelector('li:first-of-type').click();
+      expect(immybox.value).toEqual(0);
+      expect(el.value).toEqual("0");
+
+      el.value = '1';
+      el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
+      immybox.queryResultArea.querySelector('li:first-of-type').click();
+      expect(immybox.value).toEqual(1);
+      expect(el.value).toEqual("1");
     });
 
     it('allows choices to be reset', () => {
@@ -218,18 +251,21 @@ document.addEventListener("DOMContentLoaded", () => {
       el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
       immybox.queryResultArea.querySelector('li:first-of-type').click();
       expect(immybox.value).toEqual('foo');
+      expect(el.value).toEqual('foo');
 
       immybox.setChoices([
         {text: 'baz', value: 'baz'},
         {text: 'quux', value: 'quux'}
       ]);
-      expect(immybox.value).toEqual(null);
+      expect(immybox.value).toEqual(undefined);
+      expect(el.value).toEqual('');
 
       el.click();
       el.value = 'quux';
       el.dispatchEvent(new Event("keyup", {"bubbles":true, "cancelable":false}));
       immybox.queryResultArea.querySelector('li:first-of-type').click();
       expect(immybox.value).toEqual('quux');
+      expect(el.value).toEqual('quux');
     });
   });
 

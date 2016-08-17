@@ -1,7 +1,7 @@
 {
   "name": "immybox",
   "description": "An autocomplete-like jQuery plugin",
-  "version": "1.0.0-beta1",
+  "version": "1.0.0-beta2",
   "private": false,
   "license": "MIT",
   "main": [

@@ -9,7 +9,7 @@ const defaults = {
   maxResults: 50,
   showArrow: true,
   openOnClick: true,
-  defaultSelectedValue: undefined,
+  defaultSelectedValue: undef,
   scroll_behavior: 'smooth',
   filterFn(query) {
     let lower_query = query.toLowerCase();
@@ -27,6 +27,14 @@ const defaults = {
 const all_objects = new Map();
 
 const plugin_name = 'immybox';
+
+const undef = void 0;
+
+const _noOp = function() {};
+
+const _dispatchEvent = typeof Event !== 'undefined' ? function(el, name) {
+  el.dispatchEvent(new Event(name));
+} : _noOp;
 
 function assignEvent(event_name, event_handler, node, listeners) {
   listeners.has(node) || listeners.set(node, new Map());
@@ -324,17 +332,19 @@ export class ImmyBox {
   // display the selected choice in the input box
   display() {
     this.element.value = this.selectedChoice && this.selectedChoice.choice.text || '';
-    typeof Event !== 'undefined' && this.element.dispatchEvent(new Event('input'));
+    _dispatchEvent(this.element, 'input');
     this._val = this.element.value;
   }
 
-  // select the first choice with matching value
+  // select the first choice with matching value (matching is done via the threequals comparison)
   // Note: values should be unique
   selectChoiceByValue(val) {
     let old_val = this.value;
-    this.selectedChoice = (val && this.indexed_choices.find(({choice}) => {
-      return choice.value == val;
-    }) || null);
+    if (typeof val === 'undefined') {
+      this.selectedChoice = undef;
+    } else {
+      this.selectedChoice = this.indexed_choices.find(({choice}) => choice.value === val);
+    }
     let new_val = this.value;
     new_val !== old_val && this.element.dispatchEvent(new CustomEvent('update', {
       detail: new_val
@@ -348,7 +358,7 @@ export class ImmyBox {
 
   valueFromElement(element) {
     let index = parseInt(element.getAttribute('data-immybox-value-index'));
-    return !Number.isNaN(index) ? this.values[index] : undefined;
+    return !Number.isNaN(index) ? this.values[index] : undef;
   }
 
   // public methods
@@ -401,9 +411,15 @@ export class ImmyBox {
     this.value = value;
   }
 
+  unsetValue() {
+    if (typeof this.value !== 'undefined') {
+      this.value = undef;
+    }
+  }
+
   // get the value of the currently-selected choice
   get value() {
-    return this.selectedChoice && this.selectedChoice.choice.value || null;
+    return this.selectedChoice && this.selectedChoice.choice.value;
   }
 
   // set the value of the currently-selected choice
