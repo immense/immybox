@@ -1,5 +1,5 @@
 /*!
- * Immybox.js Version 1.0.0-beta2
+ * Immybox.js Version 1.0.0-beta3
  * 
  */
 (function webpackUniversalModuleDefinition(root, factory) {
