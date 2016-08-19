@@ -243,7 +243,7 @@ var _dispatchEvent = typeof Event !== 'undefined' ? function (el, name) {
   el.dispatchEvent(new Event(name));
 } : function () {};
 
-var defaults = {
+var _defaults = {
   choices: [],
   maxResults: 50,
   showArrow: true,
@@ -277,6 +277,8 @@ var defaults = {
     };
   }
 };
+
+var defaults = Object.assign({}, _defaults);
 
 function assignEvent(event_name, event_handler, node, listeners) {
   listeners.has(node) || listeners.set(node, new Map());
@@ -854,6 +856,11 @@ var ImmyBox = exports.ImmyBox = function () {
       return this.value;
     }
   }], [{
+    key: 'resetDefaults',
+    value: function resetDefaults() {
+      ImmyBox.defaults = _defaults;
+    }
+  }, {
     key: 'pluginForElement',
     value: function pluginForElement(element) {
       return all_objects.get(element);
@@ -1149,11 +1156,12 @@ var _utils = __webpack_require__(1);
         (0, _utils.assert)(_immybox.ImmyBox.pluginMethods.includes(options), _immybox.ImmyBox.plugin_name + ' has no method \'' + options + '\'');
         outputs.push(plugin[options].apply(plugin, args));
       } else {
-        new _immybox.ImmyBox(element, options);
+        new _immybox.ImmyBox(element, Object.assign({}, $.fn.immybox.defaults, options));
       }
     });
     return outputs.length ? outputs.length === 1 ? outputs[0] : outputs : this;
   };
+  $.fn.immybox.defaults = {};
 })(jQuery);
 
 /***/ }
