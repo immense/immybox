@@ -121,13 +121,13 @@
           showArrow: false
         });
 
-        // options -- openOnClick
+        // options -- open_on_focus
         new ImmyBox(document.getElementById('input-5'), {
           choices: [
             {text: 'Foo', value: 'foo'},
             {text: 'Bar', value: 'bar'}
           ],
-          openOnClick: false
+          open_on_focus: false
         });
 
         // options -- formatChoice
@@ -477,8 +477,8 @@ new ImmyBox(el, {
 
           <section id="options-open-on-click" class="section--center mdl-grid mdl-grid--no-spacing">
             <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-              <h5><a href="#options-open-on-click">§</a>&nbsp;openOnClick</h5>
-              Should the results list show on click, or wait for user input before showing.
+              <h5><a href="#options-open-on-click">§</a>&nbsp;open_on_focus</h5>
+              Should the results list show on focus, or wait for user input before showing.
               <br>
               Default:
               <code class="language-javascript">true</code>
@@ -491,7 +491,7 @@ new ImmyBox(el, {
     {text: 'Foo', value: 'foo'},
     {text: 'Bar', value: 'bar'}
   ],
-  openOnClick: false
+  open_on_focus: false
 });</code></pre>
               </div>
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">

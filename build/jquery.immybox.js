@@ -247,7 +247,7 @@ var defaults = {
   choices: [],
   maxResults: 50,
   showArrow: true,
-  openOnClick: true,
+  open_on_focus: true,
   defaultSelectedValue: void 0,
   scroll_behavior: 'smooth',
   no_results_text: 'no matches',
@@ -349,7 +349,18 @@ var ImmyBox = exports.ImmyBox = function () {
     this._val = this.element.value;
     this.oldQuery = this.element.value;
 
-    if (this.options.openOnClick) assignEvent('click', this.openResults.bind(this), this.element, listeners);
+    if (this.options.open_on_focus) {
+      assignEvent('focus', function (event) {
+        event.cancelBubble = true;
+        event.stopPropogation && event.stopPropogation();
+        _this.showResults();
+      }, this.element, listeners);
+    }
+    assignEvent('click', function (event) {
+      event.cancelBubble = true;
+      event.stopPropogation && event.stopPropogation();
+      _this.showResults();
+    }, this.element, listeners);
 
     assignEvent('click', function (event) {
       var node = (0, _utils.nodeOrParentMatchingSelector)(event.target, 'li.' + plugin_name + '_choice');
@@ -445,22 +456,6 @@ var ImmyBox = exports.ImmyBox = function () {
             this.revert();
             break;
         }
-      }
-    }
-
-    // on 'click'
-    // show the results box
-
-  }, {
-    key: 'openResults',
-    value: function openResults(event) {
-      event.cancelBubble = true;
-      event.stopPropogation && event.stopPropogation();
-      this.revertOtherInstances();
-      if (this.selectedChoice) {
-        this.insertFilteredChoiceElements(this.oldQuery);
-      } else {
-        this.insertFilteredChoiceElements('');
       }
     }
 
