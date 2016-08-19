@@ -3,45 +3,49 @@
   background-repeat: no-repeat;
   background-position: right center;
 }
-
-.immybox_results {
+.immybox_dropdown {
   position: absolute;
-  overflow: auto;
-  max-height: 20em;
   background-color: white;
   border: 1px solid #ccc;
   z-index: 9001;
 
-  p.immybox_moreinfo, p.immybox_noresults {
+  p.immybox_results_text, p.immybox_noresults {
     color: #ccc;
     font-style: italic;
     padding: 0 1em;
     margin: 0;
+    z-index: 9002;
   }
 
-  ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+  .immybox_results {
+    overflow: auto;
+    max-height: 20em;
+    z-index: 9002;
 
-    li {
-      padding: 0.25em 1em;
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
 
-      -o-user-select:none;
-      -moz-user-select: none;
-      -khtml-user-select: none;
-      -webkit-user-select: none;
-      user-select: none;
+      li {
+        padding: 0.25em 1em;
 
-      &.immybox_choice {
-        cursor: pointer;
+        -o-user-select:none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
 
-        &:hover, &.active {
-          background-color: #f1f1f1;
-        }
+        &.immybox_choice {
+          cursor: pointer;
 
-        .highlight {
-          text-decoration: underline;
+          &:hover, &.active {
+            background-color: #f1f1f1;
+          }
+
+          .highlight {
+            text-decoration: underline;
+          }
         }
       }
     }

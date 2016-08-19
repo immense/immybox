@@ -4,29 +4,34 @@
   background-position: right center;
 }
 
-.immybox_results {
+.immybox_dropdown {
   position: absolute;
-  overflow: auto;
-  max-height: 20em;
   background-color: white;
   border: 1px solid #ccc;
   z-index: 9001;
 }
 
-.immybox_results p.immybox_moreinfo, .immybox_results p.immybox_noresults {
+.immybox_dropdown p.immybox_results_text, .immybox_dropdown p.immybox_noresults {
   color: #ccc;
   font-style: italic;
   padding: 0 1em;
   margin: 0;
+  z-index: 9002;
 }
 
-.immybox_results ul {
+.immybox_dropdown .immybox_results {
+  overflow: auto;
+  max-height: 20em;
+  z-index: 9002;
+}
+
+.immybox_dropdown .immybox_results ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
 
-.immybox_results ul li {
+.immybox_dropdown .immybox_results ul li {
   padding: 0.25em 1em;
   -o-user-select: none;
   -moz-user-select: none;
@@ -35,15 +40,15 @@
   user-select: none;
 }
 
-.immybox_results ul li.immybox_choice {
+.immybox_dropdown .immybox_results ul li.immybox_choice {
   cursor: pointer;
 }
 
-.immybox_results ul li.immybox_choice:hover, .immybox_results ul li.immybox_choice.active {
+.immybox_dropdown .immybox_results ul li.immybox_choice:hover, .immybox_dropdown .immybox_results ul li.immybox_choice.active {
   background-color: #f1f1f1;
 }
 
-.immybox_results ul li.immybox_choice .highlight {
+.immybox_dropdown .immybox_results ul li.immybox_choice .highlight {
   text-decoration: underline;
 }
 
