@@ -319,6 +319,7 @@ var ImmyBox = exports.ImmyBox = function () {
       return { index: index, choice: choice };
     });
     this.selectedChoice = null;
+    this.scroll_position = null;
 
     if (this.options.showArrow) (0, _utils.addClass)(this.element, plugin_name + '_witharrow');
 
@@ -356,7 +357,7 @@ var ImmyBox = exports.ImmyBox = function () {
       if (node) {
         var value = _this.valueFromElement(node);
         _this.selectChoiceByValue(value);
-        _this.hideResults();
+        _this.hideResults(false);
         _this._val = _this.element.value;
         _this.element.focus();
       }
@@ -392,7 +393,7 @@ var ImmyBox = exports.ImmyBox = function () {
         if (query) {
           this.insertFilteredChoiceElements(query);
         } else {
-          this.hideResults();
+          this.hideResults(false);
           this.selectChoiceByValue(null);
         }
       }
@@ -582,6 +583,11 @@ var ImmyBox = exports.ImmyBox = function () {
       } else {
         this.dropdownArea.style.top = input_offset.top + input_height + 'px';
       }
+
+      var queryResultArea = this.dropdownArea.querySelector('.' + plugin_name + '_results');
+      if (queryResultArea && this.scroll_position != null) {
+        queryResultArea.scrollTop = this.scroll_position;
+      }
     }
   }, {
     key: 'highlightNextChoice',
@@ -617,7 +623,7 @@ var ImmyBox = exports.ImmyBox = function () {
       var highlighted_choice = this.highlightedChoice;
       if (highlighted_choice) {
         this.selectChoiceByValue(this.valueFromElement(highlighted_choice));
-        this.hideResults();
+        this.hideResults(false);
       } else this.revert();
     }
 
@@ -696,8 +702,22 @@ var ImmyBox = exports.ImmyBox = function () {
   }, {
     key: 'hideResults',
     value: function hideResults() {
-      this.dropdownAreaVisible && document.body.removeChild(this.dropdownArea);
-      this.dropdownAreaVisible = false;
+      var save_scroll_position = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
+
+      if (this.dropdownAreaVisible) {
+        if (save_scroll_position) {
+          var queryArea = this.dropdownArea.querySelector('.' + plugin_name + '_results');
+          if (queryArea) {
+            var query_position = queryArea.getBoundingClientRect();
+            var ul_position = queryArea.querySelector('ul').getBoundingClientRect();
+            this.scroll_position = query_position.y - ul_position.y;
+          }
+        } else {
+          this.scroll_position = null;
+        }
+        document.body.removeChild(this.dropdownArea);
+        this.dropdownAreaVisible = false;
+      }
     }
   }, {
     key: 'close',
