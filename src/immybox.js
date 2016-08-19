@@ -18,7 +18,7 @@ const _dispatchEvent = typeof Event !== 'undefined' ? function(el, name) {
   el.dispatchEvent(new Event(name));
 } : function() {};
 
-const defaults = {
+const _defaults = {
   choices: [],
   maxResults: 50,
   showArrow: true,
@@ -41,6 +41,8 @@ const defaults = {
       return choice => choice.text;
   }
 };
+
+const defaults = Object.assign({}, _defaults);
 
 function assignEvent(event_name, event_handler, node, listeners) {
   listeners.has(node) || listeners.set(node, new Map());
@@ -488,6 +490,9 @@ export class ImmyBox {
   }
   static get defaults() {
     return defaults;
+  }
+  static resetDefaults() {
+    ImmyBox.defaults = _defaults;
   }
   static get pluginMethods() {
     return [

@@ -12,9 +12,10 @@ import {assert} from './utils';
         assert(ImmyBox.pluginMethods.includes(options), `${ImmyBox.plugin_name} has no method '${options}'`);
         outputs.push(plugin[options](...args));
       } else {
-        new ImmyBox(element, options);
+        new ImmyBox(element, Object.assign({}, $.fn.immybox.defaults, options));
       }
     });
     return outputs.length ? (outputs.length === 1 ? outputs[0] : outputs) : this;
   };
+  $.fn.immybox.defaults = {};
 })(jQuery);

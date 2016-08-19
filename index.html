@@ -28,6 +28,7 @@
     <script src="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.min.js"></script>
     <script src='https://code.jquery.com/jquery-2.1.4.min.js'></script>
     <script src='build/immybox.min.js'></script>
+    <script src='build/jquery.immybox.js'></script>
 
     <script type="application/javascript">
       // Once the DOM has been parsed and created, set up our plugins
@@ -88,6 +89,38 @@
           {text: 'Wisconsin', value: 'WI'},
           {text: 'Wyoming', value: 'WY'}
         ];
+
+        // jquery simple example
+        $('#input-jquery-1').immybox({
+          choices: _statesChoices
+        });
+
+        $.fn.immybox.defaults = {
+          maxResults: 5,
+          showArrow: false,
+          openOnClick: false,
+          defaultSelectedValue: 'LA',
+          scroll_behavior: 'instant',
+          no_results_text: 'no results',
+          makeQueryResultsText(x, y) {
+            return `${x} matching results (out of ${y})`;
+          },
+          filterFn(query) {
+            let lower_query = query.toLowerCase();
+            return choice => choice.alwaysShow || choice.text.toLowerCase().indexOf(lower_query) >= 0;
+          },
+          formatChoice(query) {
+            if (query) {
+              let reg = new RegExp(query.replace(/[#-.]|[[-^]|[?|{}]/g, '\\$&'), 'gi');
+              return choice => choice.text.replace(reg, '<strong class="highlight">$&</strong>');
+            } else
+              return choice => choice.text;
+          }
+        };
+
+        $('#input-jquery-2').immybox({
+          choices: _statesChoices
+        });
 
         // simple example
         new ImmyBox(document.getElementById('input-1'), {
@@ -219,6 +252,35 @@
           }
         });
 
+        ImmyBox.defaults = {
+          maxResults: 5,
+          showArrow: false,
+          openOnClick: false,
+          defaultSelectedValue: 'LA',
+          scroll_behavior: 'instant',
+          no_results_text: 'no results',
+          makeQueryResultsText(x, y) {
+            return `${x} matching results (out of ${y})`;
+          },
+          filterFn(query) {
+            let lower_query = query.toLowerCase();
+            return choice => choice.alwaysShow || choice.text.toLowerCase().indexOf(lower_query) >= 0;
+          },
+          formatChoice(query) {
+            if (query) {
+              let reg = new RegExp(query.replace(/[#-.]|[[-^]|[?|{}]/g, '\\$&'), 'gi');
+              return choice => choice.text.replace(reg, '<strong class="highlight">$&</strong>');
+            } else
+              return choice => choice.text;
+          }
+        };
+
+        new ImmyBox(document.getElementById('input-12'), {
+          choices: _statesChoices
+        });
+
+        ImmyBox.resetDefaults();
+
         // Runnable 1
         function destroyRunnable1() {
           var el = document.getElementById('input-runnable-1');
@@ -272,13 +334,75 @@
           </p>
         </div>
         <div class="mdl-layout__tab-panel" id="jquery-plugin">
-          <h4>Nothing here yet</h4>
-          <p>
-            The jQuery plugin exists, but we haven't gotten the docs up to date yet. We're working on it!
-          </p>
-          <p>
-            <a href="https://github.com/immense/immybox">View the source</a> to see the jQuery plugin (it's pretty simple).
-          </p>
+          <section id="jquery-simple-example" class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+              <h5><a href="#jquery-simple-example">§</a>&nbsp;Simple Example</h5>
+
+            </div>
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                <pre><code class="language-javascript">$('#input-jquery-1').immybox({
+  choices: [
+    {text: 'Alabama', value: 'AL'},
+    ...
+    {text: 'Wyoming', value: 'WY'}
+  ]
+});</code></pre>
+              </div>
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="input-jquery-1" />
+                  <label class="mdl-textfield__label" for="input-jquery-1">Select One</label>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="jquery-global-options" class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+              <h5><a href="#jquery-global-options">§</a>&nbsp;Changing the Default Options</h5>
+              Change the default options by setting <code class="language-javascript">$.fn.immybox.defaults</code>. Changing the default jQuery options will not affect the default options for instances created using <code class="language-javascript">new ImmyBox(element)</code>
+            </div>
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+              <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                <pre><code class="language-javascript">$.fn.immybox.defaults = {
+  maxResults: 5,
+  showArrow: false,
+  openOnClick: false,
+  defaultSelectedValue: 'LA',
+  scroll_behavior: 'instant',
+  no_results_text: 'no results',
+  makeQueryResultsText(x, y) {
+    return `${x} matching results (out of ${y})`;
+  },
+  filterFn(query) {
+    let lower_query = query.toLowerCase();
+    return choice => choice.alwaysShow || choice.text.toLowerCase().indexOf(lower_query) >= 0;
+  },
+  formatChoice(query) {
+    if (query) {
+      let reg = new RegExp(query.replace(/[#-.]|[[-^]|[?|{}]/g, '\\$&amp;'), 'gi');
+      return choice => choice.text.replace(reg, '&lt;strong class="highlight"&gt;$&amp;&lt;/strong&gt;');
+    } else
+      return choice => choice.text;
+  }
+};
+
+$('#input-jquery-2').immybox({
+  choices: [
+    {text: 'Alabama', value: 'AL'},
+    ...
+    {text: 'Wyoming', value: 'WY'}
+  ]
+});</code></pre>
+              </div>
+              <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="input-jquery-2" />
+                  <label class="mdl-textfield__label" for="input-jquery-2">Select One</label>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
         <div class="mdl-layout__tab-panel" id="instance-methods">
           <section id="instance-methods-show-results" class="section--center mdl-grid mdl-grid--no-spacing">
@@ -397,9 +521,9 @@ new ImmyBox(el, {
               <code class="language-javascript">text</code>
               and
               <code class="language-javascript">value</code>
-              properties.<br>
-              Default:
-              <code class="language-javascript">[]</code>
+              properties.
+              <br>
+              <strong>Default:</strong> <code class="language-javascript">[]</code>
             </div>
             <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
@@ -424,8 +548,7 @@ new ImmyBox(el, {
               <h5><a href="#options-max-results">§</a>&nbsp;maxResults</h5>
               The maximum number of choices to show in the autocomplete list.
               <br>
-              Default:
-              <code class="language-javascript">50</code>
+              <strong>Default:</strong> <code class="language-javascript">50</code>
             </div>
             <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
@@ -452,8 +575,7 @@ new ImmyBox(el, {
               <h5><a href="#options-show-arrow">§</a>&nbsp;showArrow</h5>
               Show a small down arrow on the right side of the input.
               <br>
-              Default:
-              <code class="language-javascript">true</code>
+              <strong>Default:</strong> <code class="language-javascript">true</code>
             </div>
             <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
@@ -480,8 +602,7 @@ new ImmyBox(el, {
               <h5><a href="#options-open-on-click">§</a>&nbsp;openOnClick</h5>
               Should the results list show on click, or wait for user input before showing.
               <br>
-              Default:
-              <code class="language-javascript">true</code>
+              <strong>Default:</strong> <code class="language-javascript">true</code>
             </div>
             <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
@@ -506,14 +627,17 @@ new ImmyBox(el, {
           <section id="options-format-choice" class="section--center mdl-grid mdl-grid--no-spacing">
             <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
               <h5><a href="#options-format-choice">§</a>&nbsp;formatChoice</h5>
-              A function for formatting choices. Accepts
-              <code class="language-javascript">query</code>
-              as arguments and must return a function that takes
-              <code class="language-javascript">choice</code>
-              as argument and returns a string (optionally containing HTML). The default formatter just returns
-              <code class="language-javascript">choice.text</code>,
-              underlining all parts of it that match
-              <code class="language-javascript">query</code>.
+              A function for formatting choices
+              <br>
+              <strong>Arguments:</strong>
+              <br>
+              &emsp;<code class="language-javascript">query</code> - the string which the user entered into the text box
+              <br>
+              <strong>Return:</strong>
+              <br>
+              &emsp;<code class="language-javascript">(choice) => choice_string</code> - function that takes in a choice and returns a string (which may contain HTML)
+              <br>
+              <strong>Default:</strong> <code class="language-javascript">choice.text</code> with all parts that match <code class="language-javascript">query</code> underlined
             </div>
             <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
@@ -553,11 +677,17 @@ new ImmyBox(el, {
           <section id="options-filter-fn" class="section--center mdl-grid mdl-grid--no-spacing">
             <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
               <h5><a href="#options-filter-fn">§</a>&nbsp;filterFn</h5>
-              A function for determining whether or not a choice matches the entered query. Accepts
-              <code class="language-javascript">query</code>
-              as arguments and must return a function that takes
-              <code class="language-javascript">choice</code>
-              as argument and returns a boolean. Default function case insensitive "contains" matching.
+              A function for determining whether or not a choice matches the entered query
+              <br>
+              <strong>Arguments:</strong>
+              <br>
+              &emsp;<code class="language-javascript">query</code> - the string which the user entered into the text box
+              <br>
+              <strong>Return:</strong>
+              <br>
+              &emsp;<code class="language-javascript">(choice) => is_match</code> - function that takes in a choice and returns true if that choices matches <code class="language-javascript">query</code>, or <code class="language-javascript">false</code> if it does not
+              <br>
+              <strong>Default:</strong> case insensitive "contains" matching
             </div>
             <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
@@ -605,16 +735,14 @@ new ImmyBox(el, {
           <section id="options-default-selected-value" class="section--center mdl-grid mdl-grid--no-spacing">
             <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
               <h5><a href="#options-default-selected-value">§</a>&nbsp;defaultSelectedValue</h5>
-              The value that will be selected by default in the autocomplete list.
+              The value that will be selected by default in the autocomplete list
               <br>
-              Default:
-              <code class="language-javascript">undefined</code>
+              <strong>Possible values:</strong>
               <br>
-              Possible values:
-              <code class="language-javascript">Object</code>
-              (the value of the choice; if not found in the choices array, it will act like undefined),
-              <code class="language-javascript">undefined</code>
-              (will tell immybox that nothing should be selected by default).
+              &emsp;<code class="language-javascript">Object</code> - the value of the choice; if not found in the choices array, it will act like undefined
+              <br>
+              &emsp;<code class="language-javascript">undefined</code> - will tell immybox that nothing should be selected by default
+              <strong>Default:</strong> <code class="language-javascript">undefined</code>
             </div>
             <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
@@ -641,14 +769,13 @@ new ImmyBox(el, {
               <h5><a href="#options-scroll-behavior">§</a>&nbsp;scrollBehavior</h5>
               The behavior to use when an immybox is opened and the selected result scrolls into view
               <br>
-              Default:
-              <code class="language-javascript">'smooth'</code>
+              <strong>Possible values:</strong>
               <br>
-              Possible values:
-              <code class="language-javascript">'smooth'</code>
-              (smoothly scroll the selected choice into view),
-              <code class="language-javascript">'instant'</code>
-              (open the ImmyBox directly to the selected choice).
+              &emsp;<code class="language-javascript">'smooth'</code> smoothly scroll the selected choice into view
+              <br>
+              &emsp;<code class="language-javascript">'instant'</code> - open the ImmyBox directly to the selected choice
+              <br>
+              <strong>Default:</strong> <code class="language-javascript">'smooth'</code>
             </div>
             <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
@@ -676,12 +803,10 @@ new ImmyBox(el, {
               <h5><a href="#options-no-results-text">§</a>&nbsp;no_results_text</h5>
               The text that is displayed when no results match the current query
               <br>
-              Default:
-              <code class="language-javascript">'no matches'</code>
+              <strong>Possible values:</strong>
+              &emsp;<code class="language-javascript">String</code> - the text to display
               <br>
-              Possible values:
-              <code class="language-javascript">String</code>
-              (the text to display)
+              <strong>Default:</strong> <code class="language-javascript">'no matches'</code>
             </div>
             <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
@@ -707,16 +832,13 @@ new ImmyBox(el, {
               <code class="language-javascript">numVisibleChoices</code> and <code class="language-javascript">numChoicesMatchingFilter</code>
               as arguments and must return a string.
               <br />
-              Default:
-              <code class="language-javascript">function(x, y) {return `showing ${x} of ${y}`;}</code>
+              <strong>Possible values:</strong>
+              <br />
+              &emsp;<code class="language-javascript">Function</code> - the function to use
+              <br />
+              &emsp;<code class="language-javascript">undefined|null|false|0</code> - do not display any text
               <br>
-              Possible values:
-              <br />
-              <code class="language-javascript">Function</code>
-              (the function to use)
-              <br />
-              <code class="language-javascript">undefined|null|false|0</code>
-              (do not display any text)
+              <strong>Default:</strong> <code class="language-javascript">(x, y) => `showing ${x} of ${y}`</code>
             </div>
             <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
@@ -740,6 +862,59 @@ new ImmyBox(el, {
                 <div class="mdl-textfield mdl-js-textfield">
                   <input class="mdl-textfield__input" type="text" id="input-11" />
                   <label class="mdl-textfield__label" for="input-11">Select One</label>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="options-global-defaults" class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+              <h5><a href="#options-global-defaults">§</a>&nbsp;Changing the Default Options</h5>
+              Change the default options by setting <code class="language-javascript">ImmyBox.defaults</code>.
+              <br>
+              Changing the default ImmyBox options will also change the default options for instances created using the jQuery plugin, but will not override <code class="language-javascript">$.fn.immybox.defaults</code>
+              <br>
+              Use <code class="language-javascript">ImmyBox.resetDefaults()</code> to undo changes made to the ImmyBox default options
+            </div>
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+              <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                <pre><code class="language-javascript">ImmyBox.defaults = {
+  maxResults: 5,
+  showArrow: false,
+  openOnClick: false,
+  defaultSelectedValue: 'LA',
+  scroll_behavior: 'instant',
+  no_results_text: 'no results',
+  makeQueryResultsText(x, y) {
+    return `${x} matching results (out of ${y})`;
+  },
+  filterFn(query) {
+    let lower_query = query.toLowerCase();
+    return choice => choice.alwaysShow || choice.text.toLowerCase().indexOf(lower_query) >= 0;
+  },
+  formatChoice(query) {
+    if (query) {
+      let reg = new RegExp(query.replace(/[#-.]|[[-^]|[?|{}]/g, '\\$&amp;'), 'gi');
+      return choice => choice.text.replace(reg, '&lt;strong class="highlight"&gt;$&amp;&lt;/strong&gt;');
+    } else
+      return choice => choice.text;
+  }
+};
+
+let el = document.getElementById('input-12');
+new ImmyBox(el, {
+  choices: [
+    {text: 'Alabama', value: 'AL'},
+    ...
+    {text: 'Wyoming', value: 'WY'}
+  ]
+});
+
+ImmyBox.resetDefaults();</code></pre>
+              </div>
+              <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="input-12" />
+                  <label class="mdl-textfield__label" for="input-12">Select One</label>
                 </div>
               </div>
             </div>
