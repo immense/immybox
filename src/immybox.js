@@ -77,6 +77,7 @@ export class ImmyBox {
       ].filter(choice => choice);
     this.indexed_choices = this.choices.map((choice, index) => ({index, choice}));
     this.selectedChoice = null;
+    this.scroll_position = null;
 
     if (this.options.showArrow)
       addClass(this.element, `${plugin_name}_witharrow`);
@@ -126,7 +127,7 @@ export class ImmyBox {
       if (node) {
         let value = this.valueFromElement(node);
         this.selectChoiceByValue(value);
-        this.hideResults();
+        this.hideResults(false);
         this._val = this.element.value;
         this.element.focus();
       }
@@ -162,7 +163,7 @@ export class ImmyBox {
       if (query) {
         this.insertFilteredChoiceElements(query);
       } else {
-        this.hideResults();
+        this.hideResults(false);
         this.selectChoiceByValue(null);
       }
     }
@@ -310,6 +311,11 @@ export class ImmyBox {
     } else {
       this.dropdownArea.style.top = `${input_offset.top + input_height}px`;
     }
+
+    const queryResultArea = this.dropdownArea.querySelector(`.${plugin_name}_results`);
+    if (queryResultArea && this.scroll_position != null) {
+      queryResultArea.scrollTop = this.scroll_position;
+    }
   }
 
   set highlightedChoice(choice) {
@@ -354,7 +360,7 @@ export class ImmyBox {
     let highlighted_choice = this.highlightedChoice;
     if (highlighted_choice) {
       this.selectChoiceByValue(this.valueFromElement(highlighted_choice));
-      this.hideResults();
+      this.hideResults(false);
     } else this.revert();
   }
 
@@ -368,13 +374,13 @@ export class ImmyBox {
   // select the first choice with matching value (matching is done via the threequals comparison)
   // Note: values should be unique
   selectChoiceByValue(val) {
-    let old_val = this.value;
+    const old_val = this.value;
     if (typeof val === 'undefined') {
       this.selectedChoice = void 0;
     } else {
       this.selectedChoice = this.indexed_choices.find(({choice}) => choice.value === val);
     }
-    let new_val = this.value;
+    const new_val = this.value;
     new_val !== old_val && this.element.dispatchEvent(new CustomEvent('update', {
       detail: new_val
     }));
@@ -412,9 +418,21 @@ export class ImmyBox {
     return this.showResults();
   }
 
-  hideResults() {
-    this.dropdownAreaVisible && document.body.removeChild(this.dropdownArea);
-    this.dropdownAreaVisible = false;
+  hideResults(save_scroll_position = true) {
+    if (this.dropdownAreaVisible) {
+      if (save_scroll_position) {
+        const queryArea = this.dropdownArea.querySelector(`.${plugin_name}_results`);
+        if (queryArea) {
+          const query_position = queryArea.getBoundingClientRect();
+          const ul_position = queryArea.querySelector('ul').getBoundingClientRect();
+          this.scroll_position = query_position.y - ul_position.y;
+        }
+      } else {
+        this.scroll_position = null;
+      }
+      document.body.removeChild(this.dropdownArea);
+      this.dropdownAreaVisible = false;
+    }
   }
 
   close() {
