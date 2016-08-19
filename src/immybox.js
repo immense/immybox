@@ -1,16 +1,34 @@
 import {addClass, removeClass, nodeOrParentMatchingSelector} from './utils';
-
 import R from 'ramda';
 
 const event_listeners = new Map();
+const all_objects = new Map();
+const plugin_name = 'immybox';
+
+const removeActive = node => removeClass(node, 'active');
+const addActive = node => addClass(node, 'active');
+const removeActiveList = R.forEach(removeActive);
+
+function moveActive(from_el, to_el) {
+  removeActive(from_el);
+  addActive(to_el);
+}
+
+const _dispatchEvent = typeof Event !== 'undefined' ? function(el, name) {
+  el.dispatchEvent(new Event(name));
+} : function() {};
 
 const defaults = {
   choices: [],
   maxResults: 50,
   showArrow: true,
   openOnClick: true,
-  defaultSelectedValue: undef,
+  defaultSelectedValue: void 0,
   scroll_behavior: 'smooth',
+  no_results_text: 'no matches',
+  makeQueryResultsText(x, y) {
+    return `showing ${x} of ${y}`;
+  },
   filterFn(query) {
     let lower_query = query.toLowerCase();
     return choice => choice.text.toLowerCase().indexOf(lower_query) >= 0;
@@ -23,18 +41,6 @@ const defaults = {
       return choice => choice.text;
   }
 };
-
-const all_objects = new Map();
-
-const plugin_name = 'immybox';
-
-const undef = void 0;
-
-const _noOp = function() {};
-
-const _dispatchEvent = typeof Event !== 'undefined' ? function(el, name) {
-  el.dispatchEvent(new Event(name));
-} : _noOp;
 
 function assignEvent(event_name, event_handler, node, listeners) {
   listeners.has(node) || listeners.set(node, new Map());
@@ -58,7 +64,7 @@ export class ImmyBox {
     this.element = element;
     this.options = Object.assign({}, ImmyBox.defaults, options);
     this.choices = this.options.choices;
-    if (this.options.defaultSelectedValue != null)
+    if (typeof this.options.defaultSelectedValue !== 'undefined')
       this.choices = [
         this.choices.find(({value}) => {
           return value === this.options.defaultSelectedValue;
@@ -73,12 +79,29 @@ export class ImmyBox {
     if (this.options.showArrow)
       addClass(this.element, `${plugin_name}_witharrow`);
 
-
     this.selectChoiceByValue(this.element.value);
+
+    this.dropdownArea = document.createElement('div');
+    addClass(this.dropdownArea, `${plugin_name}_dropdown`);
+    this.dropdownAreaVisible = false;
 
     this.queryResultArea = document.createElement('div');
     addClass(this.queryResultArea, `${plugin_name}_results`);
-    this.queryResultAreaVisible = false;
+
+    this.noResultsArea = document.createElement('p');
+    addClass(this.noResultsArea, `${plugin_name}_noresults`);
+    this.noResultsArea.textContent = this.options.no_results_text || defaults.no_results_text;
+
+    if (this.options.makeQueryResultsText) {
+      if (typeof this.options.makeQueryResultsText === 'function') {
+        this.results_text_maker = this.options.makeQueryResultsText;
+      } else {
+        // user probably set options.makeQueryResultsText to true -- use the default query result text maker
+        this.results_text_maker = defaults.makeQueryResultsText;
+      }
+      this.queryResultsTextArea = document.createElement('p');
+      addClass(this.queryResultsTextArea, `${plugin_name}_results_text`);
+    }
 
     this._val = this.element.value;
     this.oldQuery = this.element.value;
@@ -100,11 +123,8 @@ export class ImmyBox {
     assignEvent('mouseenter', event => {
       let node = nodeOrParentMatchingSelector(event.target, `li.${plugin_name}_choice`);
       if (node) {
-        addClass(node, 'active');
-        R.forEach(
-          (li) => li !== node && removeClass(li, 'active'),
-          this.queryResultArea.querySelectorAll(`li.${plugin_name}_choice.active`)
-        );
+        removeActiveList(this.queryResultArea.querySelectorAll(`li.${plugin_name}_choice.active`));
+        addActive(node);
       }
     }, this.queryResultArea, listeners);
 
@@ -143,7 +163,7 @@ export class ImmyBox {
       this.display();
       this.hideResults();
     }
-    if (this.queryResultAreaVisible) {
+    if (this.dropdownAreaVisible) {
       switch (event.which) {
       case 9: // tab
         this.selectHighlightedChoice();
@@ -194,7 +214,7 @@ export class ImmyBox {
 
   // revert or set to null after losing focus
   revert() {
-    if (this.queryResultAreaVisible) {
+    if (this.dropdownAreaVisible) {
       this.display();
       this.hideResults();
     } else if (this.element.value === '') this.selectChoiceByValue(null);
@@ -202,7 +222,13 @@ export class ImmyBox {
 
   // if visible, reposition the results area on window resize
   reposition() {
-    this.queryResultAreaVisible && this.positionResultsArea();
+    this.dropdownAreaVisible && this.positionDropdownArea();
+  }
+
+  cleanNode(node) {
+    while (node.lastChild) {
+      node.removeChild(node.lastChild);
+    }
   }
 
   insertFilteredChoiceElements(query) {
@@ -214,45 +240,52 @@ export class ImmyBox {
       filteredChoices = this.indexed_choices.filter(({choice}, index) => filter(choice, index));
     }
     let truncatedChoices = filteredChoices.slice(0, this.options.maxResults);
-    if (this.defaultSelectedChoice) {
-      if (filteredChoices.indexOf(this.defaultSelectedChoice) >= 0) {
-        if (truncatedChoices.indexOf(this.defaultSelectedChoice) === -1) {
-          truncatedChoices.unshift(this.defaultSelectedChoice);
-          truncatedChoices.pop();
-        } else {
-          truncatedChoices = truncatedChoices.filter(c => c.choice.value !== this.defaultSelectedChoice.value);
-          truncatedChoices.unshift(this.defaultSelectedChoice);
+    if (truncatedChoices.length) {
+      if (this.defaultSelectedChoice) {
+        if (filteredChoices.indexOf(this.defaultSelectedChoice) >= 0) {
+          if (truncatedChoices.indexOf(this.defaultSelectedChoice) === -1) {
+            truncatedChoices.unshift(this.defaultSelectedChoice);
+            truncatedChoices.pop();
+          } else {
+            truncatedChoices = truncatedChoices.filter(c => c.choice.value !== this.defaultSelectedChoice.value);
+            truncatedChoices.unshift(this.defaultSelectedChoice);
+          }
         }
       }
-    }
-    let formatter = this.options.formatChoice(query);
-    let selected_one = false;
-    let list = document.createElement('ul');
-    let results = truncatedChoices.map(({choice, index}) => {
-      let li = document.createElement('li');
-      li.setAttribute('class', `${plugin_name}_choice`);
-      li.setAttribute('data-immybox-value-index', index);
-      li.innerHTML = formatter(choice);
-      if (this.selectedChoice && (index === this.selectedChoice.index)) {
-        selected_one = true;
-        addClass(li, 'active');
+      let formatter = this.options.formatChoice(query);
+      let selected_one = false;
+      let list = document.createElement('ul');
+      let results = truncatedChoices.map(({choice, index}) => {
+        let li = document.createElement('li');
+        li.setAttribute('class', `${plugin_name}_choice`);
+        li.setAttribute('data-immybox-value-index', index);
+        li.innerHTML = formatter(choice);
+        if (this.selectedChoice && (index === this.selectedChoice.index)) {
+          selected_one = true;
+          addActive(li);
+        }
+        list.appendChild(li);
+        return li;
+      });
+      !selected_one && addActive(results[0]);
+
+      this.cleanNode(this.dropdownArea);
+      this.cleanNode(this.queryResultArea);
+      this.queryResultArea.appendChild(list);
+      this.dropdownArea.appendChild(this.queryResultArea);
+      if (this.queryResultsTextArea) {
+        this.queryResultsTextArea.textContent = this.results_text_maker(
+          truncatedChoices.length,
+          filteredChoices.length
+        );
+        this.dropdownArea.appendChild(this.queryResultsTextArea);
       }
-      list.appendChild(li);
-      return li;
-    });
-    if (results.length) {
-      !selected_one && addClass(results[0], 'active');
     } else {
-      list = document.createElement('p');
-      list.setAttribute('class', `${plugin_name}_noresults`);
-      list.textContent = 'no matches';
+      this.cleanNode(this.dropdownArea);
+      this.dropdownArea.appendChild(this.noResultsArea);
     }
 
-    while (this.queryResultArea.lastChild) {
-      this.queryResultArea.removeChild(this.queryResultArea.lastChild);
-    }
-    this.queryResultArea.appendChild(list);
-    this.showResults();
+    this._showResults();
   }
 
   scroll() {
@@ -261,7 +294,7 @@ export class ImmyBox {
     });
   }
 
-  positionResultsArea() {
+  positionDropdownArea() {
     let input_offset = this.element.getBoundingClientRect();
     let input_height = this.element.clientHeight;
     let input_width = this.element.clientWidth;
@@ -270,21 +303,20 @@ export class ImmyBox {
     let window_bottom = window.clientHeight + window.scrollTop;
 
     // set the dimmensions and position
-    this.queryResultArea.style.width = `${input_width}px`;
-    this.queryResultArea.style.left = `${input_offset.left}px`;
+    this.dropdownArea.style.width = `${input_width}px`;
+    this.dropdownArea.style.left = `${input_offset.left}px`;
 
     if (results_bottom > window_bottom) {
-      this.queryResultArea.style.top = `${input_offset.top - results_height}px`;
+      this.dropdownArea.style.top = `${input_offset.top - results_height}px`;
     } else {
-      this.queryResultArea.style.top = `${input_offset.top + input_height}px`;
+      this.dropdownArea.style.top = `${input_offset.top + input_height}px`;
     }
   }
 
   set highlightedChoice(choice) {
     let highlightedChoice = this.highlightedChoice;
     if (highlightedChoice) {
-      removeClass(highlightedChoice, 'active');
-      addClass(choice, 'active');
+      moveActive(highlightedChoice, choice);
     }
   }
 
@@ -298,12 +330,11 @@ export class ImmyBox {
     if (highlighted_choice) {
       let next_choice = highlighted_choice.nextSibling;
       if (next_choice) {
-        removeClass(highlighted_choice, 'active');
-        addClass(next_choice, 'active');
+        moveActive(highlighted_choice, next_choice);
       }
     } else {
       let choice = this.queryResultArea.querySelector(`li.${plugin_name}_choice`);
-      if (choice) addClass(choice, 'active');
+      if (choice) addActive(choice);
     }
   }
 
@@ -312,12 +343,11 @@ export class ImmyBox {
     if (highlighted_choice) {
       let prev_choice = highlighted_choice.previousSibling;
       if (prev_choice) {
-        removeClass(highlighted_choice, 'active');
-        addClass(prev_choice, 'active');
+        moveActive(highlighted_choice, prev_choice);
       }
     } else {
       let choice = this.queryResultArea.querySelector(`li.${plugin_name}_choice:last-child`);
-      if (choice) addClass(choice, 'active');
+      if (choice) addActive(choice);
     }
   }
 
@@ -341,7 +371,7 @@ export class ImmyBox {
   selectChoiceByValue(val) {
     let old_val = this.value;
     if (typeof val === 'undefined') {
-      this.selectedChoice = undef;
+      this.selectedChoice = void 0;
     } else {
       this.selectedChoice = this.indexed_choices.find(({choice}) => choice.value === val);
     }
@@ -358,16 +388,25 @@ export class ImmyBox {
 
   valueFromElement(element) {
     let index = parseInt(element.getAttribute('data-immybox-value-index'));
-    return !Number.isNaN(index) ? this.values[index] : undef;
+    return !Number.isNaN(index) ? this.values[index] : void 0;
+  }
+
+  _showResults() {
+    !this.dropdownAreaVisible && document.body.appendChild(this.dropdownArea);
+    this.dropdownAreaVisible = true;
+    this.scroll();
+    this.positionDropdownArea();
   }
 
   // public methods
 
   showResults() {
-    !this.queryResultAreaVisible && document.body.appendChild(this.queryResultArea);
-    this.queryResultAreaVisible = true;
-    this.scroll();
-    this.positionResultsArea();
+    this.revertOtherInstances();
+    if (this.selectedChoice) {
+      this.insertFilteredChoiceElements(this.oldQuery);
+    } else {
+      this.insertFilteredChoiceElements('');
+    }
   }
 
   open() {
@@ -375,8 +414,8 @@ export class ImmyBox {
   }
 
   hideResults() {
-    this.queryResultAreaVisible && document.body.removeChild(this.queryResultArea);
-    this.queryResultAreaVisible = false;
+    this.dropdownAreaVisible && document.body.removeChild(this.dropdownArea);
+    this.dropdownAreaVisible = false;
   }
 
   close() {
@@ -391,7 +430,7 @@ export class ImmyBox {
   setChoices(newChoices) {
     this.choices = newChoices;
     const default_selected_value = this.options.defaultSelectedValue;
-    if (default_selected_value != null) {
+    if (typeof default_selected_value !== 'undefined') {
       this.choices = [
         this.choices.find(({value}) => value === default_selected_value),
         ...this.choices.filter(({value}) => value !== default_selected_value)
@@ -413,7 +452,7 @@ export class ImmyBox {
 
   unsetValue() {
     if (typeof this.value !== 'undefined') {
-      this.value = undef;
+      this.value = void 0;
     }
   }
 
@@ -440,7 +479,7 @@ export class ImmyBox {
       }
 
     removeClass(this.element, plugin_name);
-    this.queryResultAreaVisible && document.body.removeChild(this.queryResultArea);
+    this.hideResults();
     all_objects.delete(this.element);
   }
 
@@ -469,7 +508,7 @@ export class ImmyBox {
   static repositionAll() {
     window.requestAnimationFrame(() => {
       all_objects.forEach(plugin => {
-        plugin.queryResultAreaVisible && plugin.reposition();
+        plugin.dropdownAreaVisible && plugin.reposition();
       });
     });
   }

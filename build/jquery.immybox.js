@@ -223,14 +223,37 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var event_listeners = new Map();
+var all_objects = new Map();
+var plugin_name = 'immybox';
+
+var removeActive = function removeActive(node) {
+  return (0, _utils.removeClass)(node, 'active');
+};
+var addActive = function addActive(node) {
+  return (0, _utils.addClass)(node, 'active');
+};
+var removeActiveList = (0, _forEach2.default)(removeActive);
+
+function moveActive(from_el, to_el) {
+  removeActive(from_el);
+  addActive(to_el);
+}
+
+var _dispatchEvent = typeof Event !== 'undefined' ? function (el, name) {
+  el.dispatchEvent(new Event(name));
+} : function () {};
 
 var defaults = {
   choices: [],
   maxResults: 50,
   showArrow: true,
   openOnClick: true,
-  defaultSelectedValue: undef,
+  defaultSelectedValue: void 0,
   scroll_behavior: 'smooth',
+  no_results_text: 'no matches',
+  makeQueryResultsText: function makeQueryResultsText(x, y) {
+    return 'showing ' + x + ' of ' + y;
+  },
   filterFn: function filterFn(query) {
     var lower_query = query.toLowerCase();
     return function (choice) {
@@ -254,18 +277,6 @@ var defaults = {
     };
   }
 };
-
-var all_objects = new Map();
-
-var plugin_name = 'immybox';
-
-var undef = void 0;
-
-var _noOp = function _noOp() {};
-
-var _dispatchEvent = typeof Event !== 'undefined' ? function (el, name) {
-  el.dispatchEvent(new Event(name));
-} : _noOp;
 
 function assignEvent(event_name, event_handler, node, listeners) {
   listeners.has(node) || listeners.set(node, new Map());
@@ -293,7 +304,7 @@ var ImmyBox = exports.ImmyBox = function () {
     this.element = element;
     this.options = Object.assign({}, ImmyBox.defaults, options);
     this.choices = this.options.choices;
-    if (this.options.defaultSelectedValue != null) this.choices = [this.choices.find(function (_ref) {
+    if (typeof this.options.defaultSelectedValue !== 'undefined') this.choices = [this.choices.find(function (_ref) {
       var value = _ref.value;
 
       return value === _this.options.defaultSelectedValue;
@@ -313,9 +324,27 @@ var ImmyBox = exports.ImmyBox = function () {
 
     this.selectChoiceByValue(this.element.value);
 
+    this.dropdownArea = document.createElement('div');
+    (0, _utils.addClass)(this.dropdownArea, plugin_name + '_dropdown');
+    this.dropdownAreaVisible = false;
+
     this.queryResultArea = document.createElement('div');
     (0, _utils.addClass)(this.queryResultArea, plugin_name + '_results');
-    this.queryResultAreaVisible = false;
+
+    this.noResultsArea = document.createElement('p');
+    (0, _utils.addClass)(this.noResultsArea, plugin_name + '_noresults');
+    this.noResultsArea.textContent = this.options.no_results_text || defaults.no_results_text;
+
+    if (this.options.makeQueryResultsText) {
+      if (typeof this.options.makeQueryResultsText === 'function') {
+        this.results_text_maker = this.options.makeQueryResultsText;
+      } else {
+        // user probably set options.makeQueryResultsText to true -- use the default query result text maker
+        this.results_text_maker = defaults.makeQueryResultsText;
+      }
+      this.queryResultsTextArea = document.createElement('p');
+      (0, _utils.addClass)(this.queryResultsTextArea, plugin_name + '_results_text');
+    }
 
     this._val = this.element.value;
     this.oldQuery = this.element.value;
@@ -336,10 +365,8 @@ var ImmyBox = exports.ImmyBox = function () {
     assignEvent('mouseenter', function (event) {
       var node = (0, _utils.nodeOrParentMatchingSelector)(event.target, 'li.' + plugin_name + '_choice');
       if (node) {
-        (0, _utils.addClass)(node, 'active');
-        (0, _forEach2.default)(function (li) {
-          return li !== node && (0, _utils.removeClass)(li, 'active');
-        }, _this.queryResultArea.querySelectorAll('li.' + plugin_name + '_choice.active'));
+        removeActiveList(_this.queryResultArea.querySelectorAll('li.' + plugin_name + '_choice.active'));
+        addActive(node);
       }
     }, this.queryResultArea, listeners);
 
@@ -382,7 +409,7 @@ var ImmyBox = exports.ImmyBox = function () {
         this.display();
         this.hideResults();
       }
-      if (this.queryResultAreaVisible) {
+      if (this.dropdownAreaVisible) {
         switch (event.which) {
           case 9:
             // tab
@@ -442,7 +469,7 @@ var ImmyBox = exports.ImmyBox = function () {
   }, {
     key: 'revert',
     value: function revert() {
-      if (this.queryResultAreaVisible) {
+      if (this.dropdownAreaVisible) {
         this.display();
         this.hideResults();
       } else if (this.element.value === '') this.selectChoiceByValue(null);
@@ -453,7 +480,14 @@ var ImmyBox = exports.ImmyBox = function () {
   }, {
     key: 'reposition',
     value: function reposition() {
-      this.queryResultAreaVisible && this.positionResultsArea();
+      this.dropdownAreaVisible && this.positionDropdownArea();
+    }
+  }, {
+    key: 'cleanNode',
+    value: function cleanNode(node) {
+      while (node.lastChild) {
+        node.removeChild(node.lastChild);
+      }
     }
   }, {
     key: 'insertFilteredChoiceElements',
@@ -471,50 +505,56 @@ var ImmyBox = exports.ImmyBox = function () {
         })();
       }
       var truncatedChoices = filteredChoices.slice(0, this.options.maxResults);
-      if (this.defaultSelectedChoice) {
-        if (filteredChoices.indexOf(this.defaultSelectedChoice) >= 0) {
-          if (truncatedChoices.indexOf(this.defaultSelectedChoice) === -1) {
-            truncatedChoices.unshift(this.defaultSelectedChoice);
-            truncatedChoices.pop();
-          } else {
-            truncatedChoices = truncatedChoices.filter(function (c) {
-              return c.choice.value !== _this2.defaultSelectedChoice.value;
-            });
-            truncatedChoices.unshift(this.defaultSelectedChoice);
+      if (truncatedChoices.length) {
+        (function () {
+          if (_this2.defaultSelectedChoice) {
+            if (filteredChoices.indexOf(_this2.defaultSelectedChoice) >= 0) {
+              if (truncatedChoices.indexOf(_this2.defaultSelectedChoice) === -1) {
+                truncatedChoices.unshift(_this2.defaultSelectedChoice);
+                truncatedChoices.pop();
+              } else {
+                truncatedChoices = truncatedChoices.filter(function (c) {
+                  return c.choice.value !== _this2.defaultSelectedChoice.value;
+                });
+                truncatedChoices.unshift(_this2.defaultSelectedChoice);
+              }
+            }
           }
-        }
-      }
-      var formatter = this.options.formatChoice(query);
-      var selected_one = false;
-      var list = document.createElement('ul');
-      var results = truncatedChoices.map(function (_ref4) {
-        var choice = _ref4.choice;
-        var index = _ref4.index;
+          var formatter = _this2.options.formatChoice(query);
+          var selected_one = false;
+          var list = document.createElement('ul');
+          var results = truncatedChoices.map(function (_ref4) {
+            var choice = _ref4.choice;
+            var index = _ref4.index;
 
-        var li = document.createElement('li');
-        li.setAttribute('class', plugin_name + '_choice');
-        li.setAttribute('data-immybox-value-index', index);
-        li.innerHTML = formatter(choice);
-        if (_this2.selectedChoice && index === _this2.selectedChoice.index) {
-          selected_one = true;
-          (0, _utils.addClass)(li, 'active');
-        }
-        list.appendChild(li);
-        return li;
-      });
-      if (results.length) {
-        !selected_one && (0, _utils.addClass)(results[0], 'active');
+            var li = document.createElement('li');
+            li.setAttribute('class', plugin_name + '_choice');
+            li.setAttribute('data-immybox-value-index', index);
+            li.innerHTML = formatter(choice);
+            if (_this2.selectedChoice && index === _this2.selectedChoice.index) {
+              selected_one = true;
+              addActive(li);
+            }
+            list.appendChild(li);
+            return li;
+          });
+          !selected_one && addActive(results[0]);
+
+          _this2.cleanNode(_this2.dropdownArea);
+          _this2.cleanNode(_this2.queryResultArea);
+          _this2.queryResultArea.appendChild(list);
+          _this2.dropdownArea.appendChild(_this2.queryResultArea);
+          if (_this2.queryResultsTextArea) {
+            _this2.queryResultsTextArea.textContent = _this2.results_text_maker(truncatedChoices.length, filteredChoices.length);
+            _this2.dropdownArea.appendChild(_this2.queryResultsTextArea);
+          }
+        })();
       } else {
-        list = document.createElement('p');
-        list.setAttribute('class', plugin_name + '_noresults');
-        list.textContent = 'no matches';
+        this.cleanNode(this.dropdownArea);
+        this.dropdownArea.appendChild(this.noResultsArea);
       }
 
-      while (this.queryResultArea.lastChild) {
-        this.queryResultArea.removeChild(this.queryResultArea.lastChild);
-      }
-      this.queryResultArea.appendChild(list);
-      this.showResults();
+      this._showResults();
     }
   }, {
     key: 'scroll',
@@ -524,8 +564,8 @@ var ImmyBox = exports.ImmyBox = function () {
       });
     }
   }, {
-    key: 'positionResultsArea',
-    value: function positionResultsArea() {
+    key: 'positionDropdownArea',
+    value: function positionDropdownArea() {
       var input_offset = this.element.getBoundingClientRect();
       var input_height = this.element.clientHeight;
       var input_width = this.element.clientWidth;
@@ -534,13 +574,13 @@ var ImmyBox = exports.ImmyBox = function () {
       var window_bottom = window.clientHeight + window.scrollTop;
 
       // set the dimmensions and position
-      this.queryResultArea.style.width = input_width + 'px';
-      this.queryResultArea.style.left = input_offset.left + 'px';
+      this.dropdownArea.style.width = input_width + 'px';
+      this.dropdownArea.style.left = input_offset.left + 'px';
 
       if (results_bottom > window_bottom) {
-        this.queryResultArea.style.top = input_offset.top - results_height + 'px';
+        this.dropdownArea.style.top = input_offset.top - results_height + 'px';
       } else {
-        this.queryResultArea.style.top = input_offset.top + input_height + 'px';
+        this.dropdownArea.style.top = input_offset.top + input_height + 'px';
       }
     }
   }, {
@@ -550,12 +590,11 @@ var ImmyBox = exports.ImmyBox = function () {
       if (highlighted_choice) {
         var next_choice = highlighted_choice.nextSibling;
         if (next_choice) {
-          (0, _utils.removeClass)(highlighted_choice, 'active');
-          (0, _utils.addClass)(next_choice, 'active');
+          moveActive(highlighted_choice, next_choice);
         }
       } else {
         var choice = this.queryResultArea.querySelector('li.' + plugin_name + '_choice');
-        if (choice) (0, _utils.addClass)(choice, 'active');
+        if (choice) addActive(choice);
       }
     }
   }, {
@@ -565,12 +604,11 @@ var ImmyBox = exports.ImmyBox = function () {
       if (highlighted_choice) {
         var prev_choice = highlighted_choice.previousSibling;
         if (prev_choice) {
-          (0, _utils.removeClass)(highlighted_choice, 'active');
-          (0, _utils.addClass)(prev_choice, 'active');
+          moveActive(highlighted_choice, prev_choice);
         }
       } else {
         var choice = this.queryResultArea.querySelector('li.' + plugin_name + '_choice:last-child');
-        if (choice) (0, _utils.addClass)(choice, 'active');
+        if (choice) addActive(choice);
       }
     }
   }, {
@@ -601,7 +639,7 @@ var ImmyBox = exports.ImmyBox = function () {
     value: function selectChoiceByValue(val) {
       var old_val = this.value;
       if (typeof val === 'undefined') {
-        this.selectedChoice = undef;
+        this.selectedChoice = void 0;
       } else {
         this.selectedChoice = this.indexed_choices.find(function (_ref5) {
           var choice = _ref5.choice;
@@ -627,7 +665,15 @@ var ImmyBox = exports.ImmyBox = function () {
     key: 'valueFromElement',
     value: function valueFromElement(element) {
       var index = parseInt(element.getAttribute('data-immybox-value-index'));
-      return !Number.isNaN(index) ? this.values[index] : undef;
+      return !Number.isNaN(index) ? this.values[index] : void 0;
+    }
+  }, {
+    key: '_showResults',
+    value: function _showResults() {
+      !this.dropdownAreaVisible && document.body.appendChild(this.dropdownArea);
+      this.dropdownAreaVisible = true;
+      this.scroll();
+      this.positionDropdownArea();
     }
 
     // public methods
@@ -635,10 +681,12 @@ var ImmyBox = exports.ImmyBox = function () {
   }, {
     key: 'showResults',
     value: function showResults() {
-      !this.queryResultAreaVisible && document.body.appendChild(this.queryResultArea);
-      this.queryResultAreaVisible = true;
-      this.scroll();
-      this.positionResultsArea();
+      this.revertOtherInstances();
+      if (this.selectedChoice) {
+        this.insertFilteredChoiceElements(this.oldQuery);
+      } else {
+        this.insertFilteredChoiceElements('');
+      }
     }
   }, {
     key: 'open',
@@ -648,8 +696,8 @@ var ImmyBox = exports.ImmyBox = function () {
   }, {
     key: 'hideResults',
     value: function hideResults() {
-      this.queryResultAreaVisible && document.body.removeChild(this.queryResultArea);
-      this.queryResultAreaVisible = false;
+      this.dropdownAreaVisible && document.body.removeChild(this.dropdownArea);
+      this.dropdownAreaVisible = false;
     }
   }, {
     key: 'close',
@@ -669,7 +717,7 @@ var ImmyBox = exports.ImmyBox = function () {
     value: function setChoices(newChoices) {
       this.choices = newChoices;
       var default_selected_value = this.options.defaultSelectedValue;
-      if (default_selected_value != null) {
+      if (typeof default_selected_value !== 'undefined') {
         this.choices = [this.choices.find(function (_ref6) {
           var value = _ref6.value;
           return value === default_selected_value;
@@ -701,7 +749,7 @@ var ImmyBox = exports.ImmyBox = function () {
     key: 'unsetValue',
     value: function unsetValue() {
       if (typeof this.value !== 'undefined') {
-        this.value = undef;
+        this.value = void 0;
       }
     }
 
@@ -768,7 +816,7 @@ var ImmyBox = exports.ImmyBox = function () {
       }
 
       (0, _utils.removeClass)(this.element, plugin_name);
-      this.queryResultAreaVisible && document.body.removeChild(this.queryResultArea);
+      this.hideResults();
       all_objects.delete(this.element);
     }
   }, {
@@ -783,8 +831,7 @@ var ImmyBox = exports.ImmyBox = function () {
     set: function set(choice) {
       var highlightedChoice = this.highlightedChoice;
       if (highlightedChoice) {
-        (0, _utils.removeClass)(highlightedChoice, 'active');
-        (0, _utils.addClass)(choice, 'active');
+        moveActive(highlightedChoice, choice);
       }
     },
     get: function get() {
@@ -816,7 +863,7 @@ var ImmyBox = exports.ImmyBox = function () {
     value: function repositionAll() {
       window.requestAnimationFrame(function () {
         all_objects.forEach(function (plugin) {
-          plugin.queryResultAreaVisible && plugin.reposition();
+          plugin.dropdownAreaVisible && plugin.reposition();
         });
       });
     }

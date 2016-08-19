@@ -36,63 +36,66 @@
         // .mdl-layout element is scrolled
         ImmyBox.repositionWhenScrolling(document.querySelector('.mdl-layout'));
 
+        const _statesChoices = [
+          {text: 'Alabama', value: 'AL'},
+          {text: 'Alaska', value: 'AK'},
+          {text: 'Arizona', value: 'AZ'},
+          {text: 'Arkansas', value: 'AR'},
+          {text: 'California', value: 'CA'},
+          {text: 'Colorado', value: 'CO'},
+          {text: 'Connecticut', value: 'CT'},
+          {text: 'Delaware', value: 'DE'},
+          {text: 'Florida', value: 'FL'},
+          {text: 'Georgia', value: 'GA'},
+          {text: 'Hawaii', value: 'HI'},
+          {text: 'Idaho', value: 'ID'},
+          {text: 'Illinois', value: 'IL'},
+          {text: 'Indiana', value: 'IN'},
+          {text: 'Iowa', value: 'IA'},
+          {text: 'Kansas', value: 'KS'},
+          {text: 'Kentucky', value: 'KY'},
+          {text: 'Louisiana', value: 'LA'},
+          {text: 'Maine', value: 'ME'},
+          {text: 'Maryland', value: 'MD'},
+          {text: 'Massachusetts', value: 'MA'},
+          {text: 'Michigan', value: 'MI'},
+          {text: 'Minnesota', value: 'MN'},
+          {text: 'Mississippi', value: 'MS'},
+          {text: 'Missouri', value: 'MO'},
+          {text: 'Montana', value: 'MT'},
+          {text: 'Nebraska', value: 'NE'},
+          {text: 'Nevada', value: 'NV'},
+          {text: 'New Hampshire', value: 'NH'},
+          {text: 'New Jersey', value: 'NJ'},
+          {text: 'New Mexico', value: 'NM'},
+          {text: 'New York', value: 'NY'},
+          {text: 'North Carolina', value: 'NC'},
+          {text: 'North Dakota', value: 'ND'},
+          {text: 'Ohio', value: 'OH'},
+          {text: 'Oklahoma', value: 'OK'},
+          {text: 'Oregon', value: 'OR'},
+          {text: 'Pennsylvania', value: 'PA'},
+          {text: 'Rhode Island', value: 'RI'},
+          {text: 'South Carolina', value: 'SC'},
+          {text: 'South Dakota', value: 'SD'},
+          {text: 'Tennessee', value: 'TN'},
+          {text: 'Texas', value: 'TX'},
+          {text: 'Utah', value: 'UT'},
+          {text: 'Vermont', value: 'VT'},
+          {text: 'Virginia', value: 'VA'},
+          {text: 'Washington', value: 'WA'},
+          {text: 'West Virginia', value: 'WV'},
+          {text: 'Wisconsin', value: 'WI'},
+          {text: 'Wyoming', value: 'WY'}
+        ];
+
         // simple example
         new ImmyBox(document.getElementById('input-1'), {
-          choices: [
-            {text: 'Alabama', value: 'AL'},
-            {text: 'Alaska', value: 'AK'},
-            {text: 'Arizona', value: 'AZ'},
-            {text: 'Arkansas', value: 'AR'},
-            {text: 'California', value: 'CA'},
-            {text: 'Colorado', value: 'CO'},
-            {text: 'Connecticut', value: 'CT'},
-            {text: 'Delaware', value: 'DE'},
-            {text: 'Florida', value: 'FL'},
-            {text: 'Georgia', value: 'GA'},
-            {text: 'Hawaii', value: 'HI'},
-            {text: 'Idaho', value: 'ID'},
-            {text: 'Illinois', value: 'IL'},
-            {text: 'Indiana', value: 'IN'},
-            {text: 'Iowa', value: 'IA'},
-            {text: 'Kansas', value: 'KS'},
-            {text: 'Kentucky', value: 'KY'},
-            {text: 'Louisiana', value: 'LA'},
-            {text: 'Maine', value: 'ME'},
-            {text: 'Maryland', value: 'MD'},
-            {text: 'Massachusetts', value: 'MA'},
-            {text: 'Michigan', value: 'MI'},
-            {text: 'Minnesota', value: 'MN'},
-            {text: 'Mississippi', value: 'MS'},
-            {text: 'Missouri', value: 'MO'},
-            {text: 'Montana', value: 'MT'},
-            {text: 'Nebraska', value: 'NE'},
-            {text: 'Nevada', value: 'NV'},
-            {text: 'New Hampshire', value: 'NH'},
-            {text: 'New Jersey', value: 'NJ'},
-            {text: 'New Mexico', value: 'NM'},
-            {text: 'New York', value: 'NY'},
-            {text: 'North Carolina', value: 'NC'},
-            {text: 'North Dakota', value: 'ND'},
-            {text: 'Ohio', value: 'OH'},
-            {text: 'Oklahoma', value: 'OK'},
-            {text: 'Oregon', value: 'OR'},
-            {text: 'Pennsylvania', value: 'PA'},
-            {text: 'Rhode Island', value: 'RI'},
-            {text: 'South Carolina', value: 'SC'},
-            {text: 'South Dakota', value: 'SD'},
-            {text: 'Tennessee', value: 'TN'},
-            {text: 'Texas', value: 'TX'},
-            {text: 'Utah', value: 'UT'},
-            {text: 'Vermont', value: 'VT'},
-            {text: 'Virginia', value: 'VA'},
-            {text: 'Washington', value: 'WA'},
-            {text: 'West Virginia', value: 'WV'},
-            {text: 'Wisconsin', value: 'WI'},
-            {text: 'Wyoming', value: 'WY'}
-          ],
+          choices: _statesChoices,
           defaultSelectedValue: 'LA'
         });
 
+        // options -- choices
         new ImmyBox(document.getElementById('input-2'), {
           choices: [
             {text: 'Foo', value: 'foo'},
@@ -100,6 +103,7 @@
           ]
         });
 
+        // options -- maxResults
         new ImmyBox(document.getElementById('input-3'), {
           choices: [
             {text: 'Foo', value: 'foo'},
@@ -108,6 +112,7 @@
           maxResults: 1
         });
 
+        // options -- showArrow
         new ImmyBox(document.getElementById('input-4'), {
           choices: [
             {text: 'Foo', value: 'foo'},
@@ -116,6 +121,7 @@
           showArrow: false
         });
 
+        // options -- openOnClick
         new ImmyBox(document.getElementById('input-5'), {
           choices: [
             {text: 'Foo', value: 'foo'},
@@ -124,6 +130,7 @@
           openOnClick: false
         });
 
+        // options -- formatChoice
         new ImmyBox(document.getElementById('input-6'), {
           choices: [
             {text: 'John Smith', value: 'jsmith', age: 31, employer: 'Smith Enterprises'},
@@ -147,6 +154,7 @@
           }
         });
 
+        // options -- filterFn
         new ImmyBox(document.getElementById('input-7'), {
           choices: [
             {text: 'John Smith', value: 'jsmith', age: 31, employer: 'Smith Enterprises'},
@@ -178,6 +186,7 @@
           }
         });
 
+        // options -- defaultSelectedValue
         new ImmyBox(document.getElementById('input-8'), {
           choices: [
             {text: 'Foo', value: 'foo'},
@@ -186,11 +195,41 @@
           defaultSelectedValue: 'bar'
         });
 
+        // options -- scroll_behavior
+        new ImmyBox(document.getElementById('input-9'), {
+          choices: _statesChoices,
+          scroll_behavior: 'instant'
+        });
 
-        document.getElementById('button-run-9').addEventListener('click', event => {
+        // options -- no_results_text
+        new ImmyBox(document.getElementById('input-10'), {
+          choices: [],
+          no_results_text: 'No Schmeckles Available'
+        });
+
+        // options -- makeQueryResultsText
+        new ImmyBox(document.getElementById('input-11'), {
+          choices: _statesChoices,
+          maxResults: 10,
+          makeQueryResultsText(numVisibleChoices, numChoicesMatchingFilter) {
+            if (numChoicesMatchingFilter === numVisibleChoices) {
+              return `Showing all ${numChoicesMatchingFilter} matching states`;
+            }
+            return `${numChoicesMatchingFilter} states match; displaying ${numVisibleChoices} of them`;
+          }
+        });
+
+        // Runnable 1
+        function destroyRunnable1() {
+          var el = document.getElementById('input-runnable-1');
+          var plugin = ImmyBox.pluginForElement(el);
+          plugin && plugin.destroy();
+        }
+        document.getElementById('button-run-1').addEventListener('click', event => {
+          if (window.plugin) destroyRunnable1();
           event.cancelBubble = true;
           event.stopPropogation && event.stopPropogation();
-          var el = document.getElementById('input-9');
+          var el = document.getElementById('input-runnable-1');
           var plugin = new ImmyBox(el, {
             choices: [
               {text: 'Foo', value: 'foo'},
@@ -199,14 +238,11 @@
           });
           plugin.showResults();
         });
-        document.getElementById('button-reset-9').addEventListener('click', event => {
+        document.getElementById('button-reset-1').addEventListener('click', event => {
           event.cancelBubble = true;
           event.stopPropogation && event.stopPropogation();
-          var el = document.getElementById('input-9');
-          var plugin = ImmyBox.pluginForElement(el);
-          plugin && plugin.destroy();
+          destroyRunnable1();
         });
-
       });
     </script>
   </head>
@@ -246,31 +282,31 @@
         </div>
         <div class="mdl-layout__tab-panel" id="instance-methods">
           <section id="instance-methods-show-results" class="section--center mdl-grid mdl-grid--no-spacing">
-            <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
               <h5><a href="#instance-methods-show-results">§</a>&nbsp;#showResults()</h5>
               Opens the plugin instance's query result area
             </div>
-            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-                <pre><code class="language-javascript">  let el = document.getElementById('input-9');
-  let plugin = new ImmyBox(el, {
-    choices: [
-      {text: 'Foo', value: 'foo'},
-      {text: 'Bar', value: 'bar'}
-    ]
-  });
-  plugin.showResults();</code></pre>
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="button" id="button-run-9">
+                <pre><code class="language-javascript">let el = document.getElementById('input-runnable-1');
+let plugin = new ImmyBox(el, {
+  choices: [
+    {text: 'Foo', value: 'foo'},
+    {text: 'Bar', value: 'bar'}
+  ]
+});
+plugin.showResults();</code></pre>
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="button" id="button-run-1">
                   Run
                 </button>
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="button" id="button-reset-9">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="button" id="button-reset-1">
                   Reset
                 </button>
               </div>
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
                 <div class="mdl-textfield mdl-js-textfield">
-                  <input class="mdl-textfield__input" type="text" id="input-9" />
-                  <label class="mdl-textfield__label" for="input-9">Select One</label>
+                  <input class="mdl-textfield__input" type="text" id="input-runnable-1" />
+                  <label class="mdl-textfield__label" for="input-runnable-1">Select One</label>
                 </div>
               </div>
             </div>
@@ -319,7 +355,7 @@
             </div>
           </section>
           <section class="section--center mdl-grid mdl-grid--no-spacing">
-            <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
               <h5></h5>
               The&nbsp;
               <code class="language-javascript">ImmyBox</code>
@@ -329,17 +365,17 @@
               <code class="language-javascript">Object</code>
               &nbsp;as the second.
             </div>
-            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-                <pre><code class="language-javascript">  let el = document.getElementById('input-1');
-  new ImmyBox(el, {
-    choices: [
-      {text: 'Alabama', value: 'AL'},
-      ...
-      {text: 'Wyoming', value: 'WY'}
-    ],
-    defaultSelectedValue: 'LA'
-  });</code></pre>
+                <pre><code class="language-javascript">let el = document.getElementById('input-1');
+new ImmyBox(el, {
+  choices: [
+    {text: 'Alabama', value: 'AL'},
+    ...
+    {text: 'Wyoming', value: 'WY'}
+  ],
+  defaultSelectedValue: 'LA'
+});</code></pre>
               </div>
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
                 <div class="mdl-textfield mdl-js-textfield">
@@ -355,7 +391,7 @@
             </div>
           </section>
           <section id="options-choices" class="section--center mdl-grid mdl-grid--no-spacing">
-            <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
               <h5><a href="#options-choices">§</a>&nbsp;choices</h5>
               An array of choice objects used to populate the autocomplete list. Each object should have at least&nbsp;
               <code class="language-javascript">text</code>
@@ -365,15 +401,15 @@
               Default:
               <code class="language-javascript">[]</code>
             </div>
-            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-                <pre><code class="language-javascript">  let el = document.getElementById('input-2');
-  new ImmyBox(el, {
-    choices: [
-      {text: 'Foo', value: 'foo'},
-      {text: 'Bar', value: 'bar'}
-    ]
-  });</code></pre>
+                <pre><code class="language-javascript">let el = document.getElementById('input-2');
+new ImmyBox(el, {
+  choices: [
+    {text: 'Foo', value: 'foo'},
+    {text: 'Bar', value: 'bar'}
+  ]
+});</code></pre>
               </div>
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
                 <div class="mdl-textfield mdl-js-textfield">
@@ -384,23 +420,23 @@
             </div>
           </section>
           <section id="options-max-results" class="section--center mdl-grid mdl-grid--no-spacing">
-            <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
               <h5><a href="#options-max-results">§</a>&nbsp;maxResults</h5>
               The maximum number of choices to show in the autocomplete list.
               <br>
               Default:
               <code class="language-javascript">50</code>
             </div>
-            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-  <pre><code class="language-javascript">  let el = document.getElementById('input-3');
-  new ImmyBox(el, {
-    choices: [
-      {text: 'Foo', value: 'foo'},
-      {text: 'Bar', value: 'bar'}
-    ],
-    maxResults: 1
-  });</code></pre>
+                <pre><code class="language-javascript">let el = document.getElementById('input-3');
+new ImmyBox(el, {
+  choices: [
+    {text: 'Foo', value: 'foo'},
+    {text: 'Bar', value: 'bar'}
+  ],
+  maxResults: 1
+});</code></pre>
               </div>
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
                 <div class="mdl-textfield mdl-js-textfield">
@@ -412,23 +448,23 @@
           </section>
 
           <section id="options-show-arrow" class="section--center mdl-grid mdl-grid--no-spacing">
-            <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
               <h5><a href="#options-show-arrow">§</a>&nbsp;showArrow</h5>
               Show a small down arrow on the right side of the input.
               <br>
               Default:
               <code class="language-javascript">true</code>
             </div>
-            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-  <pre><code class="language-javascript">  let el = document.getElementById('input-4');
-  new ImmyBox(el, {
-    choices: [
-      {text: 'Foo', value: 'foo'},
-      {text: 'Bar', value: 'bar'}
-    ],
-    showArrow: false
-  });</code></pre>
+                <pre><code class="language-javascript">let el = document.getElementById('input-4');
+new ImmyBox(el, {
+  choices: [
+    {text: 'Foo', value: 'foo'},
+    {text: 'Bar', value: 'bar'}
+  ],
+  showArrow: false
+});</code></pre>
               </div>
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
                 <div class="mdl-textfield mdl-js-textfield">
@@ -440,23 +476,23 @@
           </section>
 
           <section id="options-open-on-click" class="section--center mdl-grid mdl-grid--no-spacing">
-            <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
               <h5><a href="#options-open-on-click">§</a>&nbsp;openOnClick</h5>
               Should the results list show on click, or wait for user input before showing.
               <br>
               Default:
               <code class="language-javascript">true</code>
             </div>
-            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-  <pre><code class="language-javascript">  let el = document.getElementById('input-5');
-  new ImmyBox(el, {
-    choices: [
-      {text: 'Foo', value: 'foo'},
-      {text: 'Bar', value: 'bar'}
-    ],
-    openOnClick: false
-  });</code></pre>
+                <pre><code class="language-javascript">let el = document.getElementById('input-5');
+new ImmyBox(el, {
+  choices: [
+    {text: 'Foo', value: 'foo'},
+    {text: 'Bar', value: 'bar'}
+  ],
+  openOnClick: false
+});</code></pre>
               </div>
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
                 <div class="mdl-textfield mdl-js-textfield">
@@ -468,7 +504,7 @@
           </section>
 
           <section id="options-format-choice" class="section--center mdl-grid mdl-grid--no-spacing">
-            <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
               <h5><a href="#options-format-choice">§</a>&nbsp;formatChoice</h5>
               A function for formatting choices. Accepts
               <code class="language-javascript">query</code>
@@ -479,31 +515,31 @@
               underlining all parts of it that match
               <code class="language-javascript">query</code>.
             </div>
-            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-  <pre><code class="language-javascript">  let el = document.getElementById('input-6');
-  new ImmyBox(el, {
-    choices: [
-      {text: 'John Smith', value: 'jsmith', age: 31, employer: 'Smith Enterprises'},
-      {text: 'Jane Doe', value: 'jdoe', age: 20, employer: 'National Security Agency'}
-    ],
-    formatChoice(query) {
-      const reg = new RegExp("(" + query + ")", "i");
-      return choice => (
-        "&lt;div class='mdl-grid mdl-grid--no-spacing'&gt;" +
-          "&lt;div class='mdl-cell mdl-cell--6-col'&gt;" +
-            [
-              choice.text.replace(reg, "&lt;u&gt;$1&lt;/u&gt;"),
-              choice.age
-            ].join(", ") +
-          "&lt;/div&gt;" +
-          "&lt;div class='mdl-cell mdl-cell--6-col'&gt;" +
-            choice.employer +
-          "&lt;/div&gt;" +
-        "&lt;/div&gt;"
-      );
-    }
-  });</code></pre>
+                <pre><code class="language-javascript">let el = document.getElementById('input-6');
+new ImmyBox(el, {
+  choices: [
+    {text: 'John Smith', value: 'jsmith', age: 31, employer: 'Smith Enterprises'},
+    {text: 'Jane Doe', value: 'jdoe', age: 20, employer: 'National Security Agency'}
+  ],
+  formatChoice(query) {
+    const reg = new RegExp("(" + query + ")", "i");
+    return choice => (
+      "&lt;div class='mdl-grid mdl-grid--no-spacing'&gt;" +
+        "&lt;div class='mdl-cell mdl-cell--6-col'&gt;" +
+          [
+            choice.text.replace(reg, "&lt;u&gt;$1&lt;/u&gt;"),
+            choice.age
+          ].join(", ") +
+        "&lt;/div&gt;" +
+        "&lt;div class='mdl-cell mdl-cell--6-col'&gt;" +
+          choice.employer +
+        "&lt;/div&gt;" +
+      "&lt;/div&gt;"
+    );
+  }
+});</code></pre>
               </div>
               <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
                 <div class="mdl-textfield mdl-js-textfield">
@@ -515,7 +551,7 @@
           </section>
 
           <section id="options-filter-fn" class="section--center mdl-grid mdl-grid--no-spacing">
-            <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
               <h5><a href="#options-filter-fn">§</a>&nbsp;filterFn</h5>
               A function for determining whether or not a choice matches the entered query. Accepts
               <code class="language-javascript">query</code>
@@ -523,39 +559,39 @@
               <code class="language-javascript">choice</code>
               as argument and returns a boolean. Default function case insensitive "contains" matching.
             </div>
-            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-  <pre><code class="language-javascript">  let el = document.getElementById('input-7');
-  new ImmyBox(el, {
-    choices: [
-      {text: 'John Smith', value: 'jsmith', age: 31, employer: 'Smith Enterprises'},
-      {text: 'Jane Doe', value: 'jdoe', age: 20, employer: 'National Security Agency'}
-    ],
-    filterFn(query) {
-      const lowercase_query = query.toLowerCase();
-      return choice => (
-        choice.text.toLowerCase().indexOf(lowercase_query) >= 0 ||
-        String(choice.age).toLowerCase().indexOf(lowercase_query) >= 0 ||
-        choice.employer.toLowerCase().indexOf(lowercase_query) >= 0
-      );
-    },
-    formatChoice(query) {
-      const reg = new RegExp("(" + query + ")", 'i');
-      return choice => (
-        "&lt;div class='mdl-grid mdl-grid--no-spacing'&gt;" +
-          "&lt;div class='mdl-cell mdl-cell--6-col'&gt;" +
-            [
-              choice.text.replace(reg, "&lt;u&gt;$1&lt;/u&gt;"),
-              String(choice.age).replace(reg, "&lt;u&gt;$1&lt;/u&gt;")
-            ].join(", ") +
-          "&lt;/div&gt;" +
-          "&lt;div class='mdl-cell mdl-cell--6-col'&gt;" +
-            choice.employer.replace(reg, "&lt;u&gt;$1&lt;/u&gt;") +
-          "&lt;/div&gt;" +
-        "&lt;/div&gt;"
-      );
-    }
-  });</code></pre>
+                <pre><code class="language-javascript">let el = document.getElementById('input-7');
+new ImmyBox(el, {
+  choices: [
+    {text: 'John Smith', value: 'jsmith', age: 31, employer: 'Smith Enterprises'},
+    {text: 'Jane Doe', value: 'jdoe', age: 20, employer: 'National Security Agency'}
+  ],
+  filterFn(query) {
+    const lowercase_query = query.toLowerCase();
+    return choice => (
+      choice.text.toLowerCase().indexOf(lowercase_query) >= 0 ||
+      String(choice.age).toLowerCase().indexOf(lowercase_query) >= 0 ||
+      choice.employer.toLowerCase().indexOf(lowercase_query) >= 0
+    );
+  },
+  formatChoice(query) {
+    const reg = new RegExp("(" + query + ")", 'i');
+    return choice => (
+      "&lt;div class='mdl-grid mdl-grid--no-spacing'&gt;" +
+        "&lt;div class='mdl-cell mdl-cell--6-col'&gt;" +
+          [
+            choice.text.replace(reg, "&lt;u&gt;$1&lt;/u&gt;"),
+            String(choice.age).replace(reg, "&lt;u&gt;$1&lt;/u&gt;")
+          ].join(", ") +
+        "&lt;/div&gt;" +
+        "&lt;div class='mdl-cell mdl-cell--6-col'&gt;" +
+          choice.employer.replace(reg, "&lt;u&gt;$1&lt;/u&gt;") +
+        "&lt;/div&gt;" +
+      "&lt;/div&gt;"
+    );
+  }
+});</code></pre>
               </div>
               <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
                 <div class="mdl-textfield mdl-js-textfield">
@@ -567,7 +603,7 @@
           </section>
 
           <section id="options-default-selected-value" class="section--center mdl-grid mdl-grid--no-spacing">
-            <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
               <h5><a href="#options-default-selected-value">§</a>&nbsp;defaultSelectedValue</h5>
               The value that will be selected by default in the autocomplete list.
               <br>
@@ -575,26 +611,135 @@
               <code class="language-javascript">undefined</code>
               <br>
               Possible values:
-              <code class="language-javascript">String</code>
-              (the value of the choice; if not found in the choices array, it will act like null),
-              <code class="language-javascript">null</code>
+              <code class="language-javascript">Object</code>
+              (the value of the choice; if not found in the choices array, it will act like undefined),
+              <code class="language-javascript">undefined</code>
               (will tell immybox that nothing should be selected by default).
             </div>
-            <div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-  <pre><code class="language-javascript">  let el = document.getElementById('input-8');
-  new ImmyBox(el, {
-    choices: [
-      {text: 'Foo', value: 'foo'},
-      {text: 'Bar', value: 'bar'}
-    ],
-    defaultSelectedValue: 'bar'
-  });</code></pre>
+                <pre><code class="language-javascript">let el = document.getElementById('input-8');
+new ImmyBox(el, {
+  choices: [
+    {text: 'Foo', value: 'foo'},
+    {text: 'Bar', value: 'bar'}
+  ],
+  defaultSelectedValue: 'bar'
+});</code></pre>
               </div>
               <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
                 <div class="mdl-textfield mdl-js-textfield">
                   <input class="mdl-textfield__input" type="text" id="input-8" />
                   <label class="mdl-textfield__label" for="input-8">Select One</label>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="options-scroll-behavior" class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+              <h5><a href="#options-scroll-behavior">§</a>&nbsp;scrollBehavior</h5>
+              The behavior to use when an immybox is opened and the selected result scrolls into view
+              <br>
+              Default:
+              <code class="language-javascript">'smooth'</code>
+              <br>
+              Possible values:
+              <code class="language-javascript">'smooth'</code>
+              (smoothly scroll the selected choice into view),
+              <code class="language-javascript">'instant'</code>
+              (open the ImmyBox directly to the selected choice).
+            </div>
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                <pre><code class="language-javascript">let el = document.getElementById('input-9');
+new ImmyBox(el, {
+  choices: [
+    {text: 'Alabama', value: 'AL'},
+    ...
+    {text: 'Wyoming', value: 'WY'}
+  ],
+  scroll_behavior: 'instant'
+});</code></pre>
+              </div>
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="input-9" />
+                  <label class="mdl-textfield__label" for="input-9">Select One</label>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="options-no-results-text" class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+              <h5><a href="#options-no-results-text">§</a>&nbsp;no_results_text</h5>
+              The text that is displayed when no results match the current query
+              <br>
+              Default:
+              <code class="language-javascript">'no matches'</code>
+              <br>
+              Possible values:
+              <code class="language-javascript">String</code>
+              (the text to display)
+            </div>
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                <pre><code class="language-javascript">let el = document.getElementById('input-10');
+new ImmyBox(el, {
+  choices: [],
+  no_results_text: 'No Schmeckles Available'
+});</code></pre>
+              </div>
+              <div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="input-10" />
+                  <label class="mdl-textfield__label" for="input-10">Select One</label>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="options-make-query-results-text" class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+              <h5><a href="#options-make-query-results-text">§</a>&nbsp;makeQueryResultsText</h5>
+              A function for producing the 'showing x of y' text below the query result area. Accepts
+              <code class="language-javascript">numVisibleChoices</code> and <code class="language-javascript">numChoicesMatchingFilter</code>
+              as arguments and must return a string.
+              <br />
+              Default:
+              <code class="language-javascript">function(x, y) {return `showing ${x} of ${y}`;}</code>
+              <br>
+              Possible values:
+              <br />
+              <code class="language-javascript">Function</code>
+              (the function to use)
+              <br />
+              <code class="language-javascript">undefined|null|false|0</code>
+              (do not display any text)
+            </div>
+            <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid">
+              <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                <pre><code class="language-javascript">let el = document.getElementById('input-11');
+new ImmyBox(el, {
+  choices: [
+    {text: 'Alabama', value: 'AL'},
+    ...
+    {text: 'Wyoming', value: 'WY'}
+  ],
+  maxResults: 10,
+  makeQueryResultsText(numVisibleChoices, numChoicesMatchingFilter) {
+    if (numChoicesMatchingFilter === numVisibleChoices) {
+      return `Showing all ${numChoicesMatchingFilter} matching states`;
+    }
+    return `${numChoicesMatchingFilter} states match; displaying ${numVisibleChoices} of them`;
+  }
+});</code></pre>
+              </div>
+              <div class="mdl-cell mdl-cell--12-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="input-11" />
+                  <label class="mdl-textfield__label" for="input-11">Select One</label>
                 </div>
               </div>
             </div>
