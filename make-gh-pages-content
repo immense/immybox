@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const path = require('path');
+const rimraf = require('rimraf');
+
+
+fs.readdir(__dirname, (err, files) => {
+  if (err) throw err;
+  for (let file of files) {
+    if (!['build', 'demo', '.git'].includes(file)) {
+      rimraf.sync(file);
+    }
+  }
+  fs.writeFile(path.join(__dirname, 'CNAME'), 'immybox.js.org');
+  fs.renameSync(path.join(__dirname, 'demo', 'index.html'), path.join(__dirname, 'index.html'));
+  fs.renameSync(path.join(__dirname, 'demo', 'index.js'), path.join(__dirname, 'index.js'));
+  fs.renameSync(path.join(__dirname, 'demo', 'prism.js'), path.join(__dirname, 'prism.js'));
+  fs.renameSync(path.join(__dirname, 'demo', 'styles.css'), path.join(__dirname, 'styles.css'));
+  rimraf.sync(path.join(__dirname, 'demo'));
+});

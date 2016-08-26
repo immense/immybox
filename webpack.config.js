@@ -30,9 +30,9 @@ module.exports = [{
       immybox: "ImmyBox"
     }
   }, {
-    entry: './demo.js',
+    entry: './demo/index.js',
     output: {
-      filename: "demo-build.js"
+      filename: "./demo/index-es5.js"
     },
     module: {
       loaders: [
