@@ -113,7 +113,7 @@ export class ImmyBox {
       assignEvent('focus', event => {
         event.cancelBubble = true;
         event.stopPropogation && event.stopPropogation();
-        this.showResults();  
+        this.showResults();
       }, this.element, listeners);
     }
     assignEvent('click', event => {

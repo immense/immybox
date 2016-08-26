@@ -1,18 +1,18 @@
 const path = require('path');
 const webpack = require('webpack');
+const UnminifiedWebpackPlugin = require('unminified-webpack-plugin');
 const package = require('./package.json');
 
-module.exports = {
+module.exports = [{
     entry: {
       'jquery.immybox': './src/jquery.immybox.js',
       immybox: ['./src/immybox.js']
     },
     output: {
-      filename: "[name].js",
+      filename: "[name].min.js",
       path: `${__dirname}/build`,
       libraryTarget: 'umd'
     },
-    devtool: 'source-map',
     module: {
       loaders: [
         {
@@ -22,9 +22,25 @@ module.exports = {
       ]
     },
     plugins: [
-      new webpack.LoaderOptionsPlugin({
-        minimize: true
-      }),
-      new webpack.BannerPlugin(`Immybox.js Version ${package.version}\n`)
-    ]
-};
+      new webpack.BannerPlugin(`Immybox.js Version ${package.version}\n`),
+      new webpack.optimize.UglifyJsPlugin(),
+      new UnminifiedWebpackPlugin()
+    ],
+    externals: {
+      immybox: "ImmyBox"
+    }
+  }, {
+    entry: './demo.js',
+    output: {
+      filename: "demo-build.js"
+    },
+    module: {
+      loaders: [
+        {
+          test: /\.js$/,
+          loader: 'babel'
+        }
+      ]
+    }
+  }
+];

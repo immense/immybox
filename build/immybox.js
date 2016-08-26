@@ -1,7 +1,3 @@
-/*!
- * Immybox.js Version 1.0.0-beta3
- * 
- */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -15,41 +11,41 @@
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
+
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
+
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-/******/
+
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
+
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-/******/
+
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
-/******/
+
+
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/
+
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
+
 /******/ 	// identity function for calling harmory imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
+
 /******/ 	// define getter function for harmory exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		Object.defineProperty(exports, name, {
@@ -58,7 +54,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 			get: getter
 /******/ 		});
 /******/ 	};
-/******/
+
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -67,30 +63,19 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-/******/
+
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
-/******/
+
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 10);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
-
-module.exports = function _isPlaceholder(a) {
-  return a != null &&
-         typeof a === 'object' &&
-         a['@@functional/placeholder'] === true;
-};
-
-
-/***/ },
-/* 1 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -193,6 +178,17 @@ function nodeOrParentMatchingSelector(element, selector) {
 }
 
 /***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+module.exports = function _isPlaceholder(a) {
+  return a != null &&
+         typeof a === 'object' &&
+         a['@@functional/placeholder'] === true;
+};
+
+
+/***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -204,7 +200,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ImmyBox = undefined;
 
-var _forEach = __webpack_require__(3);
+var _forEach = __webpack_require__(4);
 
 var _forEach2 = _interopRequireDefault(_forEach);
 
@@ -214,7 +210,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-var _utils = __webpack_require__(1);
+var _utils = __webpack_require__(0);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -940,11 +936,12 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /***/ },
-/* 3 */
+/* 3 */,
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-var _checkForMethod = __webpack_require__(4);
-var _curry2 = __webpack_require__(6);
+var _checkForMethod = __webpack_require__(5);
+var _curry2 = __webpack_require__(7);
 
 
 /**
@@ -992,11 +989,11 @@ module.exports = _curry2(_checkForMethod('forEach', function forEach(fn, list) {
 
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-var _isArray = __webpack_require__(7);
-var _slice = __webpack_require__(8);
+var _isArray = __webpack_require__(8);
+var _slice = __webpack_require__(9);
 
 
 /**
@@ -1024,10 +1021,10 @@ module.exports = function _checkForMethod(methodname, fn) {
 
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-var _isPlaceholder = __webpack_require__(0);
+var _isPlaceholder = __webpack_require__(1);
 
 
 /**
@@ -1050,11 +1047,11 @@ module.exports = function _curry1(fn) {
 
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-var _curry1 = __webpack_require__(5);
-var _isPlaceholder = __webpack_require__(0);
+var _curry1 = __webpack_require__(6);
+var _isPlaceholder = __webpack_require__(1);
 
 
 /**
@@ -1084,7 +1081,7 @@ module.exports = function _curry2(fn) {
 
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 /**
@@ -1107,7 +1104,7 @@ module.exports = Array.isArray || function _isArray(val) {
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 /**
@@ -1145,8 +1142,8 @@ module.exports = function _slice(args, from, to) {
 
 
 /***/ },
-/* 9 */,
-/* 10 */
+/* 10 */,
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(2);
@@ -1156,4 +1153,3 @@ module.exports = __webpack_require__(2);
 /******/ ])
 });
 ;
-//# sourceMappingURL=immybox.js.map

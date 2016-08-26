@@ -1,5 +1,5 @@
 /*eslint no-console:0*/
-import {ImmyBox} from './immybox';
+import ImmyBox from 'immybox';
 import {assert} from './utils';
 (function($) {
   $.fn.immybox = function(options, ...args) {

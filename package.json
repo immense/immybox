@@ -22,6 +22,7 @@
     "node-sass": "3.x",
     "requirejs": "2.x",
     "uglify-js": "2.x",
+    "unminified-webpack-plugin": "^1.1.0",
     "webpack": "2.1.0-beta.20"
   }
 }
