@@ -1,0 +1,15 @@
+{
+  "name": "immybox",
+  "description": "An autocomplete-like jQuery plugin",
+  "version": "0.4.2",
+  "private": false,
+  "license": "MIT",
+  "main": [
+    "jquery.immybox.js",
+    "immybox.css"
+  ],
+  "dependencies": {
+    "jasmine-core": "jasmine#^2.4.1",
+    "jquery": "^3.1.0"
+  }
+}

@@ -1,11 +1,13 @@
 {
   "name": "immybox",
   "description": "An autocomplete-like jQuery plugin",
-  "version": "0.4.2",
+  "version": "1.0.0-beta3",
   "private": false,
   "license": "MIT",
   "main": [
-    "jquery.immybox.js",
-    "immybox.css"
+    "build/immybox.js",
+    "build/jquery.immybox.js",
+    "build/immybox.css",
+    "src/immybox-arrow.png"
   ]
 }
