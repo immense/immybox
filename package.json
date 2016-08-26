@@ -3,10 +3,9 @@
   "version": "1.0.0-beta3",
   "main": "build/immybox.js",
   "scripts": {
-    "uglify:js": "chalk blue '=> uglifying JS' && uglifyjs -c -m -o build/immybox.min.js -- build/immybox.js && chalk green 'Done!'",
     "build:css": "chalk blue '=> compiling scss to css' && node-sass src/immybox.scss --output-style expanded > build/immybox.css && chalk green 'Done!'",
     "build:js": "chalk blue '=> transpiling ES6' && webpack && chalk green 'Done!'",
-    "build": "npm run build:css -s && npm run build:js -s && npm run uglify:js -s",
+    "build": "npm run build:css -s && npm run build:js -s && cp src/immybox-arrow.png demo/immybox-arrow.png",
     "lint": "chalk blue '=> linting' && eslint src && chalk green 'All good!'",
     "watch": "chalk blue '=> building on changes to /src' && watch 'npm run lint -s && npm run build -s' src",
     "watch:lint": "chalk blue '=> linting on changes to /src' && watch 'npm run lint -s' src"
