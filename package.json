@@ -8,7 +8,7 @@
   "devDependencies": {
     "grunt": "*",
     "grunt-contrib-uglify": "*",
-    "grunt-contrib-coffee": "*",
+    "grunt-contrib-coffee": "<2",
     "grunt-contrib-less": "*"
   }
 }
